@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_button</item>
+    </style>
+
+    <style name="CustomButtonStyle2" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_button_2</item>
+    </style>
+
+    <style name="CustomButtonStyle3" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_button_3</item>
+    </style>
+
+    <style name="CustomButtonStyle4" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_button_4</item>
+    </style>
+
+    <style name="CustomButtonStyle5" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/darkerYellow</item>
+        <item name="android:background">@drawable/custom_button_5</item>
+    </style>
+
+    <style name="CustomTextEditStyle" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_text_edit</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+</resources>

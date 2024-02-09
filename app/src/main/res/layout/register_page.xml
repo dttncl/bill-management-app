@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="top"
+    android:layout_width="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundRegister"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/bill_bee"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_text_nobg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="0dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewCreateYourAccount"
+
+            />
+
+        <TextView
+            android:id="@+id/textViewCreateYourAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create your account"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewFirstName"
+            />
+
+        <TextView
+            android:id="@+id/textViewFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="First Name*"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextFirstName"
+            />
+
+        <EditText
+            android:id="@+id/editTextFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewLastName"
+            />
+
+        <TextView
+            android:id="@+id/textViewLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last Name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextLastName"
+            />
+
+        <EditText
+            android:id="@+id/editTextLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewEmail"
+            />
+
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email*"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextEmail"
+            />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewPhone"
+            />
+
+        <TextView
+            android:id="@+id/textViewPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextPhone"
+            />
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewPassword"
+            />
+
+        <TextView
+            android:id="@+id/textViewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password*"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextPassword"
+            />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewConfirmPassword"
+            />
+
+        <TextView
+            android:id="@+id/textViewConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ConfirmPassword*"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="30dp"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@id/editTextConfirmPassword"
+            />
+
+        <EditText
+            android:id="@+id/editTextConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomTextEditStyle"
+            android:layout_marginBottom="20dp"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="100dp"
+            app:layout_constraintBottom_toTopOf="@id/buttonSignUpCreateYourAccountPage"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSignUpCreateYourAccountPage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            style="@style/CustomButtonStyle5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textAllCaps="false"
+            android:textSize="20dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomPageCreateAccountLinearLayout"
+            >
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <LinearLayout
+            android:id="@+id/bottomPageCreateAccountLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/textViewBottomOfLoginPage"
+                android:layout_width="wrap_content"
+                android:layout_height="23dp"
+                android:layout_marginBottom="20dp"
+                android:text="Already have an account?" />
+
+            <Button
+                android:id="@+id/buttonBottomOfLoginPage"
+                style="@style/CustomButtonStyle4"
+                android:layout_width="41dp"
+                android:layout_height="23dp"
+                android:layout_marginLeft="0dp"
+                android:padding="0dp"
+                android:text="Log in!"
+                android:textAllCaps="false"
+                android:textSize="12dp"
+                android:textStyle="normal" />
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
