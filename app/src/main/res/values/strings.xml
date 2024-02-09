@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">bill-management-app</string>
+    <string name="get_started">Get Started</string>
 </resources>
