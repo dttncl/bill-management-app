@@ -11,8 +11,8 @@
         android:textStyle="bold"
         android:textSize="17dp"
         android:text="Client ID"
-        android:drawableRight="@drawable/baseline_sort_24"
-        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/baseline_sort_24"
+        android:drawablePadding="5dp"
         android:paddingTop="10dp"/>
 
     <TextView
