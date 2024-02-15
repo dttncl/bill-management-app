@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/background_shape">
+        <shape android:shape="rectangle">
+            <solid android:color="#97D6D6D6" />
+            <padding android:top="10dp" android:right="10dp" android:left="10dp" android:bottom="10dp" />
+            <corners android:topRightRadius="10dp" android:bottomRightRadius="10dp" />
+        </shape>
+    </item>
+
+    <item android:id="@+id/icon_drawable" android:drawable="@drawable/baseline_calendar_month_24" />
+
+</layer-list>
