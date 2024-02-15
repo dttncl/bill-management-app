@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".bill_details">
+
+    <include layout="@layout/background_bills" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutProfilePage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="@+id/imageViewProfilePage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imageViewThreeBarsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_menu_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            android:gravity="start"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/imageViewLogoutIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_logout_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            android:gravity="end"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewAvailableCredit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello, Anakin"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:paddingStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutProfilePage"/>
+
+    <TextView
+        android:id="@+id/textViewAvailableCreditNumeric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="$750.00"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:paddingStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewAvailableCredit"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutAvailableCredit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAvailableCreditNumeric"
+        android:orientation="horizontal"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_credit_card_24"/>
+
+        <TextView
+            android:id="@+id/textViewAvailableCreditWithIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available Credit"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewDueDateFormat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutAvailableCredit"
+        android:text="02/24/2024"
+        android:paddingStart="20dp"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/textViewDueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDueDateFormat"
+        android:text="Due Date"
+        android:paddingStart="20dp"
+        android:textSize="12dp"/>
+
+    <TextView
+        android:id="@+id/textViewBillerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Biller Name"
+        android:textSize="12dp"
+        android:paddingStart="20dp"
+        android:paddingTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDueDate"/>
+
+    <TextView
+        android:id="@+id/textViewBillerNameBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fido"
+        android:textSize="30dp"
+        android:paddingStart="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewBillerName"/>
+
+    <TextView
+        android:id="@+id/textViewAccountNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Account Number"
+        android:textSize="12dp"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewBillerNameBold"/>
+
+    <TextView
+        android:id="@+id/textViewAccountNumberFormat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="123456789"
+        android:textSize="25dp"
+        android:paddingStart="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAccountNumber"/>
+
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="12dp"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAccountNumberFormat"/>
+
+    <TextView
+        android:id="@+id/textViewStatusChangeable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Unpaid"
+        android:textSize="20dp"
+        android:paddingStart="20dp"
+        android:textColor="@color/red"
+        app:layout_constraintTop_toBottomOf="@+id/textStatus"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/textViewPaymentAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="12dp"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textViewPaymentAmountBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$200.50"
+            android:textSize="50dp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPaymentAmount"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonPayNow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PAY NOW"
+            style="@style/CustomButtonStyle5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textAllCaps="false"
+            android:textSize="20dp"
+            android:layout_marginHorizontal="110dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomPageCreateAccountLinearLayout"
+            >
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutBottomButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:paddingBottom="30dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonAddCredit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Credit"
+                style="@style/CustomButtonStyle7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:paddingHorizontal="20dp"
+                android:layout_marginRight="20dp"
+                >
+            </androidx.appcompat.widget.AppCompatButton>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE"
+                style="@style/CustomButtonStyle6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:paddingHorizontal="20dp"
+                android:layout_marginLeft="20dp"
+                >
+            </androidx.appcompat.widget.AppCompatButton>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
