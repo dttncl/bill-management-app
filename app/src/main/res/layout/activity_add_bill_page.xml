@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".bill_details">
 
-    <include layout="@layout/background_bills" />
+    <include
+        layout="@layout/background_bills"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
         android:id="@+id/linearLayoutProfilePage"

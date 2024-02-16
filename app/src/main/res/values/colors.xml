@@ -8,4 +8,5 @@
     <color name="lighterYellow">#FFFFFBEB</color>
     <color name="darkButton">#FF393E41</color>
     <color name="red">#E91E63</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

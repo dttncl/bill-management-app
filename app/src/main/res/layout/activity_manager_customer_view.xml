@@ -5,9 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
-
+    
     <ImageView
         android:id="@+id/bg"
         android:layout_width="match_parent"
@@ -37,6 +35,7 @@
         android:letterSpacing="0.2"/>
 
     <RelativeLayout
+        android:id="@+id/customerContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -55,7 +54,7 @@
             android:id="@+id/transactionsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Transactions"
+            android:text="Transaction History"
             android:layout_below="@id/customerLayout"
             android:textSize="30dp"
             android:textStyle="bold"
@@ -85,6 +84,22 @@
             android:textColor="@color/darkerYellow"/>
 
     </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonDeleteCustomer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE CUSTOMER"
+        style="@style/CustomButtonStyle6"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:textSize="10dp"
+        android:padding="12dp"
+        android:letterSpacing="0.2"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/customerContent"
+        android:layout_marginLeft="25dp"
+        />
 
 
 
