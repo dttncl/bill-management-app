@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fnameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Name"
+        android:textSize="16dp"
+        android:drawableRight="@drawable/baseline_edit_24"
+        android:drawablePadding="5dp"/>
+
+    <TextView
+        android:id="@+id/customerFName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Anakin"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/fnameTitle"/>
+
+    <!-- CLIENT ID -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/cidTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Client ID"
+            android:textSize="16dp"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:id="@+id/customerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BBC0001"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/cidTitle"
+            android:textColor="@color/darkerYellow"/>
+
+    </RelativeLayout>
+
+
+    <!-- CLIENT ID -->
+
+    <TextView
+        android:id="@+id/lnameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Name"
+        android:textSize="16dp"
+        android:drawableRight="@drawable/baseline_edit_24"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/customerFName"/>
+
+    <TextView
+        android:id="@+id/customerLName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skywalker"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/lnameTitle"/>
+
+    <TextView
+        android:id="@+id/phoneTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="16dp"
+        android:drawableRight="@drawable/baseline_edit_24"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/customerLName"/>
+
+    <TextView
+        android:id="@+id/customerPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+1 514-1234567"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/phoneTitle"/>
+
+    <TextView
+        android:id="@+id/emailTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="16dp"
+        android:drawableRight="@drawable/baseline_edit_24"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/customerPhone"/>
+
+    <TextView
+        android:id="@+id/customerEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="anakin.skywalker@mail.com"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/emailTitle"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/customerEmail"
+        android:layout_marginVertical="20dp"
+        android:layout_marginTop="19dp"
+        android:background="@color/black" />
+
+</RelativeLayout>

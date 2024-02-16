@@ -27,7 +27,13 @@ public class CustomTransactionsAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return transactionId.length;
+        // limit display to 5 items
+        if (transactionId != null) {
+            return Math.min(transactionId.length, 5);
+        } else {
+            return 0;
+        }
+
     }
 
     @Override

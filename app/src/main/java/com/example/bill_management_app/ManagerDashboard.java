@@ -20,10 +20,10 @@ public class ManagerDashboard extends AppCompatActivity {
         listViewCustomers = findViewById(R.id.listCustomers);
         listViewTransactions = findViewById(R.id.listTransactions);
 
-        String[] customers = {"BBC0001","BBC0002","BBC0003","BBC0004","BBC0005"};
-        String[] transactions = {"BBT0000101","BBT0000102","BBT0000103","BBT0000104","BBT0000105"};
-        String[] billers = {"BBB500","BBB501","BBB502","BBB501","BBB503"};
-        String[] tDates = {"02/12/2024","02/07/2024","01/28/2024","12/30/2023","12/28/2023"};
+        String[] customers = {"BBC0001","BBC0002","BBC0003","BBC0004","BBC0005","extra"};
+        String[] transactions = {"BBT0000101","BBT0000102","BBT0000103","BBT0000104","BBT0000105","extra"};
+        String[] billers = {"BBB500","BBB501","BBB502","BBB501","BBB503","extra"};
+        String[] tDates = {"02/12/2024","02/07/2024","01/28/2024","12/30/2023","12/28/2023","extra"};
 
         // set header for customers list
         LayoutInflater inflaterCustomer = getLayoutInflater();
@@ -35,8 +35,9 @@ public class ManagerDashboard extends AppCompatActivity {
         ViewGroup headerTransaction = (ViewGroup)inflaterTransaction.inflate(R.layout.list_mngr_transactions_header,listViewCustomers,false);
         listViewTransactions.addHeaderView(headerTransaction,null,false);
 
-        ArrayAdapter<String> adapterCustomers = new ArrayAdapter<>(this,R.layout.list_mngr_customer,R.id.customerItem,customers);
+        //ArrayAdapter<String> adapterCustomers = new ArrayAdapter<>(this,R.layout.list_mngr_customer,R.id.customerItem,customers);
         CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(),transactions,billers,tDates);
+        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),customers);
 
         listViewCustomers.setAdapter(adapterCustomers);
         listViewTransactions.setAdapter(adapterTransactions);

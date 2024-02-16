@@ -15,7 +15,8 @@
         android:drawableRight="@drawable/baseline_sort_24"
         android:drawablePadding="5dp"
         android:paddingTop="10dp"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/billerItem"
@@ -28,7 +29,8 @@
         android:drawableRight="@drawable/baseline_sort_24"
         android:drawablePadding="5dp"
         android:paddingTop="10dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/dateItem"
@@ -41,6 +43,7 @@
         android:drawableRight="@drawable/baseline_sort_24"
         android:drawablePadding="5dp"
         android:paddingTop="10dp"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:textStyle="bold"/>
 
 </RelativeLayout>

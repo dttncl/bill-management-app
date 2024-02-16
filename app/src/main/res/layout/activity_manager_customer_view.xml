@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <ImageView
         android:id="@+id/bg"
         android:layout_width="match_parent"
@@ -41,50 +43,23 @@
         android:layout_below="@id/managerTitle"
         android:layout_marginTop="50dp">
 
-        <TextView
-            android:id="@+id/customerTitle"
+        <include
+            layout="@layout/mngr_customer_detail"
+            android:id="@+id/customerLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Customers"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"/>
+            android:layout_marginHorizontal="25dp"/>
 
-        <ListView
-            android:id="@+id/listCustomers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/customerTitle"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"/>
-
-        <TextView
-            android:id="@+id/linkAllCustomers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View All Customers >>"
-            android:layout_below="@id/listCustomers"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:gravity="right"
-            android:textAlignment="gravity"
-            android:textColor="@color/darkerYellow"
-            android:layout_marginTop="10dp" />
-
+        <!--TRANSACTIONS-->
         <TextView
             android:id="@+id/transactionsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="Transactions"
-            android:layout_below="@id/linkAllCustomers"
+            android:layout_below="@id/customerLayout"
             android:textSize="30dp"
             android:textStyle="bold"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"/>
+            android:layout_marginHorizontal="25dp"/>
 
         <ListView
             android:id="@+id/listTransactions"

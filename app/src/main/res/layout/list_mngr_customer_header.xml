@@ -9,16 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="17dp"
-        android:text="Client ID"
-        android:drawableLeft="@drawable/baseline_sort_24"
+        android:textSize="15dp"
+        android:text="Customer"
+        android:drawableRight="@drawable/baseline_sort_24"
         android:drawablePadding="5dp"
         android:paddingTop="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="17dp"
+        android:textSize="15dp"
         android:text="View Details"
         android:textStyle="bold"
         android:gravity="right"
