@@ -13,13 +13,18 @@
         android:theme="@style/Theme.Billmanagementapp"
         tools:targetApi="31">
         <activity
-            android:name=".ManagerCustomerView"
-            android:exported="true">
+            android:name=".ManagerCustomerTransactionView"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ManagerCustomerView"
+            android:exported="false">
+
         </activity>
         <activity
             android:name=".add_bill_page"
@@ -29,12 +34,10 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".ManagerDashboard"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

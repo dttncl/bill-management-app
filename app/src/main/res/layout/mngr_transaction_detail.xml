@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/transactionIdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction ID"
+        android:textSize="16dp"
+        android:drawablePadding="5dp"/>
+
+    <TextView
+        android:id="@+id/transactionId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BBT0000101"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/transactionIdTitle"/>
+
+    <!-- Right -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/dateUpdatedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date Updated"
+            android:textSize="16dp"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:id="@+id/dateUpdated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02/12/2024"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:layout_below="@id/dateUpdatedTitle"/>
+
+        <TextView
+            android:id="@+id/amountTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amount"
+            android:textSize="16dp"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/dateUpdated"/>
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$200.50"
+            android:textStyle="bold"
+            android:textSize="26dp"
+            android:layout_below="@id/amountTitle"/>
+
+        <TextView
+            android:id="@+id/statusTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="16dp"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/amount"/>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Success"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:layout_below="@id/statusTitle"/>
+
+    </RelativeLayout>
+
+
+    <!-- /Right -->
+
+    <TextView
+        android:id="@+id/billerIdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Biller ID"
+        android:textSize="16dp"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_below="@id/transactionId"/>
+
+    <TextView
+        android:id="@+id/billerId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BBB500"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/billerIdTitle"/>
+
+    <TextView
+        android:id="@+id/billIdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bill ID"
+        android:textSize="16dp"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_below="@id/billerId"/>
+
+    <TextView
+        android:id="@+id/billId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100001"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@id/billIdTitle"/>
+
+</RelativeLayout>
