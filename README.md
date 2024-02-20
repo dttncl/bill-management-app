@@ -14,8 +14,7 @@ Don't let bills sting – let BillBee keep your finances buzzing!
 4. Organize bills effectively and filter them based on specific criteria
 
 ### 🛠️ Implementation
-BillBee, my final project for Android development utilizing Java and XML layouts, is being developed concurrently with Flutter and a web API for simulated payment processing.<br>
-This project remains a work in progress.
+BillBee, my final project for Android development utilizing Java and XML layouts, is being developed concurrently with Flutter and a web API for simulated payment processing. This project remains a work in progress.
 
 ### 📸 Snapshots
 ![image](https://github.com/dttncl/bill-management-app/assets/82695034/a48a9caf-ad35-4fc4-854a-8d4545695964)
