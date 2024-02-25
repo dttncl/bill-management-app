@@ -7,90 +7,25 @@
     tools:context=".bill_details">
 
     <include
+        android:id="@+id/include"
         layout="@layout/background_bills"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutProfilePage"
+    <include
+        android:id="@+id/includeTopIcons"
+        layout="@layout/layout_top_icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="@+id/imageViewProfilePage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+         />
 
-        <ImageView
-            android:id="@+id/imageViewThreeBarsIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_menu_24"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            android:gravity="start"
-            />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center" />
-
-        <ImageView
-            android:id="@+id/imageViewLogoutIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_logout_24"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            android:gravity="end"
-            />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewAvailableCredit"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/includeCustomerHeader"
+        layout="@layout/layout_customer_header"
         android:layout_height="wrap_content"
-        android:text="Hello, Anakin"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:paddingStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutProfilePage"/>
-
-    <TextView
-        android:id="@+id/textViewAvailableCreditNumeric"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="$750.00"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:paddingStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAvailableCredit"/>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutAvailableCredit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAvailableCreditNumeric"
-        android:orientation="horizontal"
-        android:paddingStart="20dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_credit_card_24"/>
-
-        <TextView
-            android:id="@+id/textViewAvailableCreditWithIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Available Credit"/>
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/includeTopIcons"
+        />
 
 
     <TextView
@@ -101,7 +36,7 @@
         android:textSize="15dp"
         android:paddingStart="50dp"
         android:paddingTop="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutAvailableCredit"/>
+        app:layout_constraintTop_toBottomOf="@+id/includeCustomerHeader"/>
 
     <EditText
         android:id="@+id/editTextBillerName"
