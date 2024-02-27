@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewAvailableCredit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello, Anakin"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:paddingStart="20dp" />
+
+    <TextView
+        android:id="@+id/textViewAvailableCreditNumeric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="$750.00"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:paddingStart="20dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutAvailableCredit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_credit_card_24" />
+
+        <TextView
+            android:id="@+id/textViewAvailableCreditWithIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available Credit" />
+
+    </LinearLayout>
+
+</LinearLayout>
