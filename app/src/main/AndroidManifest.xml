@@ -14,16 +14,17 @@
         tools:targetApi="31">
         <activity
             android:name=".ManagerCustomerTransactionView"
-            android:exported="true" >
+            android:exported="false" >
+
+        </activity>
+        <activity
+            android:name=".ActivityMain"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ManagerCustomerView"
-            android:exported="false">
 
         </activity>
         <activity
@@ -33,7 +34,13 @@
             android:name=".bill_details"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityLoginPage"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityRegisterPage"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityProfilePage"
             android:exported="false" />
         <activity
             android:name=".ManagerDashboard"

@@ -259,7 +259,7 @@
                 android:text="Already have an account?" />
 
             <Button
-                android:id="@+id/buttonBottomOfLoginPage"
+                android:id="@+id/buttonBottomOfRegisterPage"
                 style="@style/CustomButtonStyle4"
                 android:layout_width="41dp"
                 android:layout_height="23dp"
