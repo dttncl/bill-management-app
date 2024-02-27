@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class add_bill_page extends AppCompatActivity {
+public class AddBillPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,6 +17,7 @@ public class CustomTransactionsAdapter extends BaseAdapter {
 
     LayoutInflater inflater;
 
+
     public CustomTransactionsAdapter(Context appContext, String[] transactionId, String[] billerId, String[] transactionDate) {
         context = appContext;
         this.transactionId = transactionId;
