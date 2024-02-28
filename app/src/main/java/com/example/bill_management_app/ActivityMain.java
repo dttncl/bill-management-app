@@ -22,6 +22,7 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityMain.this, ActivityRegisterPage.class);
+                System.out.println("Test");
                 startActivity(intent);
             }
         });
