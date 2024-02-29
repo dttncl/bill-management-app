@@ -15,10 +15,13 @@
         <activity
             android:name=".ManagerCustomerTransactionView"
             android:exported="false" >
-
         </activity>
         <activity
             android:name=".ManagerCustomerView"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".ActivityMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +30,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddBillPage"
+            android:name=".ActivityProfilePage"
             android:exported="false" />
         <activity
-            android:name=".BillDetails"
+            android:name=".ActivityRegisterPage"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityLoginPage"
             android:exported="false" />
         <activity
             android:name=".ManagerDashboard"

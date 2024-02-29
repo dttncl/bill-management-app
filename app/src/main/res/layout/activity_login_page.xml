@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/editTextLoginPage"
+        app:layout_constraintBottom_toTopOf="@id/editTextInputEmail"
         android:layout_marginBottom="20dp"
         android:textStyle="bold"
         android:layout_marginLeft="30dp"
@@ -36,14 +36,14 @@
         />
 
     <EditText
-        android:id="@+id/editTextLoginPage"
+        android:id="@+id/editTextInputEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/editTextPasswordPage"
+        app:layout_constraintBottom_toTopOf="@id/editTextInputPassword"
         style="@style/CustomTextEditStyle"
         android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="30dp"
@@ -52,10 +52,11 @@
         />
 
     <EditText
-        android:id="@+id/editTextPasswordPage"
+        android:id="@+id/editTextInputPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

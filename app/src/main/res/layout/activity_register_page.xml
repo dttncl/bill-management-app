@@ -121,6 +121,7 @@
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -151,6 +152,7 @@
             android:id="@+id/editTextPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="phone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -166,7 +168,7 @@
             android:id="@+id/textViewPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password*"
+            android:text="Password"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -181,6 +183,7 @@
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -196,7 +199,7 @@
             android:id="@+id/textViewConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ConfirmPassword*"
+            android:text="Confirm Password*"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -211,6 +214,7 @@
             android:id="@+id/editTextConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -218,7 +222,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginHorizontal="30dp"
             android:gravity="center_vertical"
-            android:paddingLeft="100dp"
+            android:paddingLeft="20dp"
             app:layout_constraintBottom_toTopOf="@id/buttonSignUpCreateYourAccountPage"
             />
 
@@ -259,7 +263,7 @@
                 android:text="Already have an account?" />
 
             <Button
-                android:id="@+id/buttonBottomOfLoginPage"
+                android:id="@+id/buttonBottomOfRegisterPage"
                 style="@style/CustomButtonStyle4"
                 android:layout_width="41dp"
                 android:layout_height="23dp"
