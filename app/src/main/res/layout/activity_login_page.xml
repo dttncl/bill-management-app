@@ -60,7 +60,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/buttonLogInPage"
+        app:layout_constraintBottom_toTopOf="@id/buttonLogIn"
         style="@style/CustomTextEditStyle"
         android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="30dp"
@@ -70,7 +70,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonLogInPage"
+        android:id="@+id/buttonLogIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
@@ -105,7 +105,7 @@
             android:text="Don't have an account?" />
 
         <Button
-            android:id="@+id/buttonBottomOfLoginPage"
+            android:id="@+id/buttonSignUp"
             style="@style/CustomButtonStyle4"
             android:layout_width="50dp"
             android:layout_height="23dp"
