@@ -1,46 +1,40 @@
 package com.example.bill_management_app;
 
-import java.util.regex.Matcher;
+import android.util.Patterns;
+
 import java.util.regex.Pattern;
 
 public class Validator {
-    private static final String firstNameRegex =
-            "^[A-Za-z]+(?:-[A-Za-z]+)?(?: [A-Za-z]+(?:-[A-Za-z]+)?)?$";
-    private static final String lastNameRegex =
-            "^[A-Za-z]+(?:-[A-Za-z]+)?(?: [A-Za-z]+(?:-[A-Za-z]+)?)*$";
-    private static final String phoneRegex =
-            "^[0-9]{10}$";
-    private static final String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String passwordRegex =
-            "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=.*[a-zA-Z]).{8,12}$";
+    // one or two words, where each word can contain only letters (both uppercase and lowercase) and hyphens
+    private static final String NameRegex = "^[A-Za-z]+(?:-[A-Za-z]+)?(?: [A-Za-z]+(?:-[A-Za-z]+)?)*$";
+    // words or hyphenated words separated by spaces
+    //private static final String lastNameRegex = "^[A-Za-z]+(?:-[A-Za-z]+)?(?: [A-Za-z]+(?:-[A-Za-z]+)?)*$";
 
-    private static final Pattern firstNamePattern = Pattern.compile(firstNameRegex);
-    private static final Pattern lastNamePattern = Pattern.compile(lastNameRegex);
-    private static final Pattern phonePattern = Pattern.compile(phoneRegex);
-    private static final Pattern emailPattern = Pattern.compile(emailRegex);
-    private static final Pattern passwordPattern = Pattern.compile(passwordRegex);
+    /*
+    * Are between 8 and 12 characters in length.
+    * Contain at least one digit.
+    * Contain at least one special character from the provided set.
+    * Contain at least one alphabet character.
+    * */
+    private static final String passwordRegex ="^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=.*[a-zA-Z]).{8,12}$";
 
-    public boolean isValidFirstName(String firstName) {
-        Matcher matcher = firstNamePattern.matcher(firstName);
-        return matcher.matches();
+    public static boolean isValidName(String name) {
+        return Pattern.compile(NameRegex).matcher(name).matches();
     }
-    public boolean isValidLastName(String lastName) {
-        Matcher matcher = lastNamePattern.matcher(lastName);
-        return matcher.matches();
-    }
-    public boolean isValidPhone(String phone) {
-        Matcher matcher = phonePattern.matcher(phone);
-        return matcher.matches();
-    }
-    public boolean isValidEmail(String email) {
-        Matcher matcher = emailPattern.matcher(email);
-        return matcher.matches();
+    //public static boolean isValidLastName(String lastName) {
+    //    return Pattern.compile(lastNameRegex).matcher(lastName).matches();
+    //}
+
+    public static boolean isValidPassword(String password) {
+        return Pattern.compile(passwordRegex).matcher(password).matches();
     }
 
-    public boolean isValidPassword(String password) {
-        Matcher matcher = passwordPattern.matcher(password);
-        return matcher.matches();
+    public static boolean isValidPhone(String phone) {
+        return Patterns.PHONE.matcher(phone).matches();
+    }
+
+    public static boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 }

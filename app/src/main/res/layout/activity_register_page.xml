@@ -223,11 +223,11 @@
             android:layout_marginHorizontal="30dp"
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
-            app:layout_constraintBottom_toTopOf="@id/buttonSignUpCreateYourAccountPage"
+            app:layout_constraintBottom_toTopOf="@id/buttonSignUp"
             />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonSignUpCreateYourAccountPage"
+            android:id="@+id/buttonSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign Up"
@@ -263,7 +263,7 @@
                 android:text="Already have an account?" />
 
             <Button
-                android:id="@+id/buttonBottomOfRegisterPage"
+                android:id="@+id/buttonLogin"
                 style="@style/CustomButtonStyle4"
                 android:layout_width="41dp"
                 android:layout_height="23dp"

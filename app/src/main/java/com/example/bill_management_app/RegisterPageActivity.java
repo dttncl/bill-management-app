@@ -7,26 +7,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+
 public class RegisterPageActivity extends AppCompatActivity {
 
-    AppCompatButton btnSignUpCreateYourAccountPage;
-    Button btnBottomOfRegisterPage;
-    EditText editTextFirstName;
-    EditText editTextLastName;
-    EditText editTextEmail;
-    EditText editTextPhone;
-    EditText editTextPassword;
-    EditText editTextConfirmPassword;
+    private AppCompatButton btnSignUp;
+    private Button btnLogin;
+    private EditText editTextFirstName,editTextLastName, editTextEmail, editTextPhone, editTextPassword, editTextConfirmPassword;
+    private FirebaseAuth fbaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_page);
 
-        btnSignUpCreateYourAccountPage = findViewById(R.id.buttonSignUpCreateYourAccountPage);
-        btnBottomOfRegisterPage = findViewById(R.id.buttonBottomOfRegisterPage);
+        btnSignUp = findViewById(R.id.buttonSignUp);
+        btnLogin = findViewById(R.id.buttonLogin);
 
         editTextFirstName = findViewById(R.id.editTextFirstName);
         editTextLastName = findViewById(R.id.editTextLastName);
@@ -34,130 +38,133 @@ public class RegisterPageActivity extends AppCompatActivity {
         editTextPhone = findViewById(R.id.editTextPhone);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+        fbaseAuth = FirebaseAuth.getInstance();
 
-        UserModel userModel = UserModel.getInstance();
-
-        btnSignUpCreateYourAccountPage.setOnClickListener(new View.OnClickListener() {
-
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String firstName = editTextFirstName.getText().toString();
-                String lastName = editTextLastName.getText().toString();
-                String email = editTextEmail.getText().toString();
-                String phone = editTextPhone.getText().toString();
-                String password = editTextPassword.getText().toString();
-                String confirmPassword = editTextConfirmPassword.getText().toString();
-
-                Validator validator = new Validator();
-
-                boolean isValidFirstName = validator.isValidFirstName(firstName);
-                boolean isValidLastName = validator.isValidLastName(lastName);
-                boolean isValidEmail = validator.isValidEmail(email);
-                boolean isValidPhone = validator.isValidPhone(phone);
-                boolean isValidPassword = validator.isValidPassword(password);
-                boolean isValidSignUp = false;
-
-                // Validation block for empty Fields
-                if(firstName.isEmpty()) {
-                    Toast.makeText(RegisterPageActivity.this, "First Name field is empty.", Toast.LENGTH_SHORT).show();
-                    editTextFirstName.requestFocus();
-                    return;
-                }
-
-                if(email.isEmpty()) {
-                    Toast.makeText(RegisterPageActivity.this, "Email field is empty.", Toast.LENGTH_SHORT).show();
-                    editTextEmail.requestFocus();
-                    return;
-                }
-
-                if(password.isEmpty()) {
-                    Toast.makeText(RegisterPageActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
-                    editTextPassword.requestFocus();
-                    return;
-                }
-
-                if(confirmPassword.isEmpty()) {
-                    Toast.makeText(RegisterPageActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
-                    editTextConfirmPassword.requestFocus();
-                    return;
-                }
-
-                // Validation block for formats
-                if(!isValidFirstName) {
-                    Toast.makeText(RegisterPageActivity.this, "First Name is not in right format.", Toast.LENGTH_SHORT).show();
-                    editTextFirstName.setText("");
-                    editTextFirstName.requestFocus();
-                    return;
-                }
-
-                if(!isValidLastName) {
-                    Toast.makeText(RegisterPageActivity.this, "Last Name is not in right format.", Toast.LENGTH_SHORT).show();
-                    editTextLastName.setText("");
-                    editTextLastName.requestFocus();
-                    return;
-                }
-
-                if(!isValidEmail) {
-                    Toast.makeText(RegisterPageActivity.this, "Email is not in right format.", Toast.LENGTH_SHORT).show();
-                    editTextEmail.setText("");
-                    editTextEmail.requestFocus();
-                    return;
-                }
-
-                if(!isValidPhone) {
-                    Toast.makeText(RegisterPageActivity.this, "Phone number is not in right format.", Toast.LENGTH_SHORT).show();
-                    editTextPhone.setText("");
-                    editTextPhone.requestFocus();
-                    return;
-                }
-
-                if(!isValidPassword) {
-                    Toast.makeText(RegisterPageActivity.this, "Password is not valid.", Toast.LENGTH_SHORT).show();
-                    editTextPassword.setText("");
-                    editTextPassword.requestFocus();
-                    return;
-                }
-
-                // Validation block to verify password field
-                if(!password.equals(confirmPassword)) {
-                    Toast.makeText(RegisterPageActivity.this, "Password doesn't match.", Toast.LENGTH_SHORT).show();
-                    isValidPassword = false;
-                    editTextConfirmPassword.setText("");
-                    return;
-                }
-
-                if(isValidFirstName && isValidLastName && isValidEmail && isValidPhone && isValidPassword) {
-
-                    if(lastName.isEmpty()){
-                        lastName = "";
-                    }
-                    if(phone.isEmpty()){
-                        phone = "";
-                    }
-
-                    User user = new User("111",firstName,lastName,email,phone,password);
-                    userModel.addUser(user);
-
-                    isValidSignUp = true;
-                }
-
-                if(isValidSignUp) {
-                    Intent intent = new Intent(RegisterPageActivity.this, LoginPageActivity.class);
-                    startActivity(intent);
-                }
-
+                Register();
             }
         });
 
-        btnBottomOfRegisterPage.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterPageActivity.this, LoginPageActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
     }
+
+    private void Register() {
+        Client newClient = CreateClient();
+        if (newClient != null) {
+            RegisterUserAuth(newClient);
+        }
+    }
+
+    private void RegisterUserAuth(Client newClient) {
+
+        String email = newClient.getEmail();
+        String password = newClient.getPassword();
+        fbaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(RegisterPageActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterPageActivity.this, LoginPageActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(RegisterPageActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private Client CreateClient() {
+        Client newClient = null;
+
+        String firstName = editTextFirstName.getText().toString().trim();
+        String lastName = editTextLastName.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String phone = editTextPhone.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String confirmPassword = editTextConfirmPassword.getText().toString().trim();
+        Boolean isValidUser = true;
+
+        ArrayList<EditText> listRequiredFields = new ArrayList<>();
+        listRequiredFields.add(editTextFirstName);
+        listRequiredFields.add(editTextEmail);
+        listRequiredFields.add(editTextPassword);
+        listRequiredFields.add(editTextConfirmPassword);
+
+        // Validation block for Required Fields
+        for (EditText field: listRequiredFields) {
+            if (field.getText().toString().trim().isEmpty()) {
+                field.setError("This field is required.");
+                field.requestFocus();
+                return null;
+            }
+        }
+
+        // Validation block for Formats
+        if(!Validator.isValidName(firstName)) {
+            editTextFirstName.setError("Name can only contain letters and hyphens");
+            editTextFirstName.requestFocus();
+            //return;
+            isValidUser = false;
+        }
+
+        if(!Validator.isValidEmail(email)) {
+            editTextEmail.setError("Enter a valid email");
+            editTextEmail.requestFocus();
+            //return;
+            isValidUser = false;
+        }
+
+        if(!Validator.isValidPassword(password)) {
+            editTextPassword.setError("Password must contain the following: \n - Between 8 and 12 characters in length.\n" +
+                    "Contain at least one digit.\n" +
+                    "Contain at least one special character [!@#$%^&*()_+\\-=[]{};':\"|,.<>/?].\n" +
+                    "Contain at least one alphabet character.");
+            editTextPassword.setText("");
+            editTextPassword.requestFocus();
+            //return;
+            isValidUser = false;
+        }
+
+        if(!confirmPassword.equals(password)) {
+            editTextConfirmPassword.setError("Password and Confirm Password does not match");
+            editTextConfirmPassword.setText("");
+            //return;
+            isValidUser = false;
+        }
+
+        if(lastName.trim().length() > 0) {
+            if (!Validator.isValidName(lastName)) {
+                editTextLastName.setError("Name can only contain letters and hyphens");
+                editTextLastName.requestFocus();
+                //return;
+                isValidUser = false;
+            }
+        }
+
+        if(phone.trim().length() > 0) {
+            if (!Validator.isValidPhone(phone)) {
+                editTextPhone.setError("Enter a valid phone number");
+                editTextPhone.requestFocus();
+                //return;
+                isValidUser = false;
+            }
+        }
+
+        if (isValidUser) {
+            newClient = new Client("BBC0000",firstName,lastName,email,phone,password,0,null);
+        }
+
+        return newClient;
+    }
+
+
 }
