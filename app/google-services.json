@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "90539511194",
+    "project_id": "billbeedatabase",
+    "storage_bucket": "billbeedatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90539511194:android:79cad7f4b5c3e204a3fe23",
+        "android_client_info": {
+          "package_name": "com.example.bill_management_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB92Z7mXyUQoHJ9Eaw-DS9xlTyTP1QoaS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
