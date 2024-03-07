@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="top"
     android:layout_width="match_parent"
-    android:background="@drawable/bill_bee">
+    android:background="@drawable/bg_4">
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -16,7 +16,7 @@
             android:id="@+id/imageViewBackgroundProfilePage"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/bill_bee"
+            android:src="@drawable/bg_4"
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -163,7 +163,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bill_bee" />
+                android:src="@drawable/bg_4" />
 
         </LinearLayout>
 
