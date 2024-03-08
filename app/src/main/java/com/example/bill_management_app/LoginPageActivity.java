@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,12 +17,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 public class LoginPageActivity extends AppCompatActivity {
 
     private AppCompatButton buttonLogIn;
     private Button buttonSignUp;
-    private TextView editTextInputEmail;
-    private TextView editTextInputPassword;
+    private EditText editTextInputEmail, editTextInputPassword;
     private FirebaseAuth fbaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,41 +40,6 @@ public class LoginPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Login();
-                //UserModel userModel = UserModel.getInstance();
-                //Validator validator = new Validator();
-//
-                //boolean isValidEmail = validator.isValidEmail(inputEmail);
-                //boolean isValidCredentials = userModel.isValidCredentials(inputEmail,inputPassword);
-//
-                //if(inputEmail.isEmpty()) {
-                //    Toast.makeText(LoginPageActivity.this, "Email field is empty.", Toast.LENGTH_SHORT).show();
-                //} else {
-                //    if(!isValidEmail) {
-                //        Toast.makeText(LoginPageActivity.this, "Wrong email format.", Toast.LENGTH_SHORT).show();
-                //    }
-                //}
-//
-                //if(inputPassword.isEmpty()){
-                //    Toast.makeText(LoginPageActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
-                //}
-//
-                //if(isValidCredentials){
-                //    Intent intent = new Intent(LoginPageActivity.this, ProfilePageActivity.class);
-//
-                //    User user = userModel.getUserByEmail(inputEmail);
-//
-                //    intent.putExtra("firstName",user.getFirstName());
-                //    intent.putExtra("lastName",user.getLastName());
-                //    intent.putExtra("phone",user.getPhone());
-                //    intent.putExtra("email",user.getEmail());
-//
-                //    startActivity(intent);
-                //} else {
-                //    Toast.makeText(LoginPageActivity.this, "Wrong credentials. Please review email or password.", Toast.LENGTH_SHORT).show();
-//
-                //    editTextInputEmail.setText("");
-                //    editTextInputPassword.setText("");
-                //}
             }
         });
 
@@ -86,13 +53,17 @@ public class LoginPageActivity extends AppCompatActivity {
     }
 
     private void Login() {
-        String email = editTextInputEmail.getText().toString().toLowerCase().trim();
-        String password = editTextInputPassword.getText().toString();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "All fields should be filled!", Toast.LENGTH_SHORT).show();
-            return;
+        Client oneClient = SearchClient();
+        if (oneClient != null) {
+            SearchUserAuth(oneClient);
+        } else {
+            Toast.makeText(LoginPageActivity.this, "Invalid email/password", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void SearchUserAuth(Client oneClient) {
+        String email = oneClient.getEmail();
+        String password = oneClient.getPassword();
 
         fbaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -100,6 +71,10 @@ public class LoginPageActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginPageActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginPageActivity.this, ProfilePageActivity.class);
+                    intent.putExtra("firstName",oneClient.getFirstName());
+                    intent.putExtra("lastName",oneClient.getLastName());
+                    intent.putExtra("phone",oneClient.getPhone());
+                    intent.putExtra("email",oneClient.getEmail());
                     startActivity(intent);
                     finish();
                 } else {
@@ -107,5 +82,40 @@ public class LoginPageActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private Client SearchClient() {
+        Client oneClient = null;
+
+        String email = editTextInputEmail.getText().toString().trim();
+        String password = editTextInputPassword.getText().toString().trim();
+        Boolean isValidUser = true;
+
+        ArrayList<EditText> listRequiredFields = new ArrayList<>();
+        listRequiredFields.add(editTextInputEmail);
+        listRequiredFields.add(editTextInputPassword);
+
+        // Validation block for Required Fields
+        for (EditText field: listRequiredFields) {
+            if (field.getText().toString().trim().isEmpty()) {
+                field.setError("This field is required.");
+                field.requestFocus();
+                return null;
+            }
+        }
+
+        // Validation block for Formats
+        if(!Validator.isValidEmail(email)) {
+            editTextInputEmail.setError("Enter a valid email");
+            editTextInputEmail.requestFocus();
+            //return;
+            isValidUser = false;
+        }
+
+        if (isValidUser) {
+            // add DB SQL query
+            oneClient = new Client("BBC0000","firstName","lastName",email,"phone",password,0,null);
+        }
+
+        return oneClient;
     }
 }
