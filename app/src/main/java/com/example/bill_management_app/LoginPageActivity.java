@@ -56,8 +56,6 @@ public class LoginPageActivity extends AppCompatActivity {
         Client oneClient = SearchClient();
         if (oneClient != null) {
             SearchUserAuth(oneClient);
-        } else {
-            Toast.makeText(LoginPageActivity.this, "Invalid email/password", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,13 +105,15 @@ public class LoginPageActivity extends AppCompatActivity {
         if(!Validator.isValidEmail(email)) {
             editTextInputEmail.setError("Enter a valid email");
             editTextInputEmail.requestFocus();
-            //return;
             isValidUser = false;
         }
 
         if (isValidUser) {
             // add DB SQL query
+            // if found:
             oneClient = new Client("BBC0000","firstName","lastName",email,"phone",password,0,null);
+            // else
+            // Toast.makeText(LoginPageActivity.this, "Invalid email/password", Toast.LENGTH_SHORT).show();
         }
 
         return oneClient;

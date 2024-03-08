@@ -24,23 +24,19 @@
 
 
     <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
 
-    <ImageButton
-        android:id="@+id/btnPerson"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_person_24"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        android:backgroundTint="@color/transparent"
-        android:gravity="start"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        />
+        style="@style/CustomButtonStyle3"
+        android:paddingHorizontal="15dp"
+        android:drawableLeft="@drawable/baseline_logout_24"
+        android:text="Logout"/>
 
-    </LinearLayout>
+</LinearLayout>
 
