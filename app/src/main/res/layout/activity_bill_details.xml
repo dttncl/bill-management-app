@@ -59,20 +59,18 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonPayNow"
+            style="@style/CustomButtonStyle5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="110dp"
+            android:layout_marginVertical="10dp"
             android:text="PAY NOW"
-            style="@style/CustomButtonStyle5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:textAllCaps="false"
             android:textSize="20dp"
-            android:layout_marginHorizontal="110dp"
-            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bottomPageCreateAccountLinearLayout"
-            >
-        </androidx.appcompat.widget.AppCompatButton>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <LinearLayout
             android:id="@+id/linearLayoutBottomButtons"

@@ -11,7 +11,7 @@
         android:text="Hello, Anakin"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:paddingStart="20dp" />
+        android:layout_marginStart="20dp" />
 
     <TextView
         android:id="@+id/textViewAvailableCreditNumeric"
@@ -21,14 +21,14 @@
         android:textColor="@color/white"
         android:textSize="40dp"
         android:textStyle="bold"
-        android:paddingStart="20dp" />
+        android:layout_marginStart="20dp" />
 
     <LinearLayout
         android:id="@+id/linearLayoutAvailableCredit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="20dp">
+        android:layout_marginStart="20dp">
 
         <ImageView
             android:layout_width="wrap_content"

@@ -36,30 +36,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         String phone = intent.getStringExtra("phone");
         String email = intent.getStringExtra("email");
 
-        // header icons
-        headerIcons = findViewById(R.id.includeTopIcons);
-        btnLogout = headerIcons.findViewById(R.id.btnLogout);
-        btnHome = headerIcons.findViewById(R.id.btnHome);
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(ProfilePageActivity.this, LoginPageActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        // update
-        btnHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilePageActivity.this, ProfilePageActivity.class);
-                startActivity(intent);
-            }
-        });
-
         textViewFirstName = findViewById(R.id.textViewRealFirstNameProfilePage);
         textViewLastName = findViewById(R.id.textViewRealLastNameProfilePage);
         textViewPhone = findViewById(R.id.textViewRealPhoneProfilePage);
@@ -69,6 +45,33 @@ public class ProfilePageActivity extends AppCompatActivity {
         textViewLastName.setText(lastName);
         textViewPhone.setText(phone);
         textViewEmail.setText(email);
+
+
+        // header icons
+        headerIcons = findViewById(R.id.includeTopIcons);
+        btnLogout = headerIcons.findViewById(R.id.btnLogout);
+        btnHome = headerIcons.findViewById(R.id.btnHome);
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfilePageActivity.this, "Button Logout", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(ProfilePageActivity.this, LoginPageActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // update
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfilePageActivity.this, "Button Home", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ProfilePageActivity.this, ClientDashboard.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
