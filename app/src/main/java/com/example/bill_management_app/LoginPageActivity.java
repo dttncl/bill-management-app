@@ -40,6 +40,7 @@ public class LoginPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Login();
+
             }
         });
 

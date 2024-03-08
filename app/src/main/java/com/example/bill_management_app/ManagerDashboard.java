@@ -2,16 +2,21 @@ package com.example.bill_management_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class ManagerDashboard extends AppCompatActivity {
 
-    ListView listViewCustomers;
-    ListView listViewTransactions;
+    ListView listViewCustomers, listViewTransactions;
+    LinearLayout navIcons;
+    ImageButton btnHome, btnProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,32 @@ public class ManagerDashboard extends AppCompatActivity {
 
         listViewCustomers.setAdapter(adapterCustomers);
         listViewTransactions.setAdapter(adapterTransactions);
+
+        // HEADER ICONS FUNCTIONALITY
+        navIcons = findViewById(R.id.includeTopIcons);
+        btnProfile = navIcons.findViewById(R.id.btnProfile);
+        btnHome = navIcons.findViewById(R.id.btnHome);
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerDashboard.this, ProfilePageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+        /*
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerDashboard.this, ManagerDashboard.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        */
 
     }
 }

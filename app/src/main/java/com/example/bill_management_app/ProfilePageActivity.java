@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +19,7 @@ public class ProfilePageActivity extends AppCompatActivity {
     TextView textViewPhone;
     TextView textViewEmail;
 
-    LinearLayout headerIcons;
+    LinearLayout navIcons;
     ImageButton btnHome;
     Button btnLogout;
 
@@ -47,26 +46,26 @@ public class ProfilePageActivity extends AppCompatActivity {
         textViewEmail.setText(email);
 
 
-        // header icons
-        headerIcons = findViewById(R.id.includeTopIcons);
-        btnLogout = headerIcons.findViewById(R.id.btnLogout);
-        btnHome = headerIcons.findViewById(R.id.btnHome);
+        // HEADER ICONS FUNCTIONALITY
+        navIcons = findViewById(R.id.includeTopIcons);
+        btnLogout = navIcons.findViewById(R.id.btnLogout);
+        btnHome = navIcons.findViewById(R.id.btnHome);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProfilePageActivity.this, "Button Logout", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfilePageActivity.this, "Button Logout", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(ProfilePageActivity.this, LoginPageActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        // update
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProfilePageActivity.this, "Button Home", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfilePageActivity.this, "Button Home", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ProfilePageActivity.this, ClientDashboard.class);
                 startActivity(intent);
             }

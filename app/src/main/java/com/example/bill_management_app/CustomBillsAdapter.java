@@ -1,12 +1,14 @@
 package com.example.bill_management_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 
 public class CustomBillsAdapter extends BaseAdapter {
 
@@ -50,6 +52,17 @@ public class CustomBillsAdapter extends BaseAdapter {
         bId.setText(billerId[position]);
         dId.setText(dueDates[position]);
         status.setText(stat[position]);
+
+        //View finalConvertView = convertView;
+        status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, BillDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

@@ -8,13 +8,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/bee_nobg"
         android:label="BillBee"
-        android:roundIcon="@drawable/bb_logo_round"
+        android:roundIcon="@drawable/bee_nobg"
         android:supportsRtl="true"
         android:theme="@style/Theme.Billmanagementapp"
         tools:targetApi="31">
-        <activity
-            android:name=".ClientDashboard"
-            android:exported="false" />
+
         <activity
             android:name=".SplashScreen"
             android:exported="true">
@@ -26,10 +24,10 @@
         </activity>
         <activity
             android:name=".ManagerCustomerTransactionView"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".ManagerCustomerView"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -44,6 +42,12 @@
             android:exported="false" />
         <activity
             android:name=".ManagerDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".BillDetailsActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ClientDashboard"
             android:exported="false" />
     </application>
 

@@ -2,13 +2,22 @@ package com.example.bill_management_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ClientDashboard extends AppCompatActivity {
     ListView listBills;
+
+    LinearLayout navIcons;
+    ImageButton btnHome, btnProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,5 +36,32 @@ public class ClientDashboard extends AppCompatActivity {
 
         CustomBillsAdapter adapterBills = new CustomBillsAdapter(getApplicationContext(),billers,dueDates,status);
         listBills.setAdapter(adapterBills);
+
+        // HEADER ICONS FUNCTIONALITY
+        navIcons = findViewById(R.id.includeTopIcons);
+        btnProfile = navIcons.findViewById(R.id.btnProfile);
+        btnHome = navIcons.findViewById(R.id.btnHome);
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClientDashboard.this, ProfilePageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        /*
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClientDashboard.this, ClientDashboard.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        */
+
+
     }
 }
