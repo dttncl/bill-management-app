@@ -28,18 +28,19 @@ public class ProfilePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        textViewFirstName = findViewById(R.id.textViewRealFirstNameProfilePage);
+        textViewLastName = findViewById(R.id.textViewRealLastNameProfilePage);
+        textViewPhone = findViewById(R.id.textViewRealPhoneProfilePage);
+        textViewEmail = findViewById(R.id.textViewRealEmailProfilePage);
         Intent intent = getIntent();
 
+        // extract the intent extras
         String firstName = intent.getStringExtra("firstName");
         String lastName = intent.getStringExtra("lastName");
         String phone = intent.getStringExtra("phone");
         String email = intent.getStringExtra("email");
 
-        textViewFirstName = findViewById(R.id.textViewRealFirstNameProfilePage);
-        textViewLastName = findViewById(R.id.textViewRealLastNameProfilePage);
-        textViewPhone = findViewById(R.id.textViewRealPhoneProfilePage);
-        textViewEmail = findViewById(R.id.textViewRealEmailProfilePage);
-
+        // display
         textViewFirstName.setText(firstName);
         textViewLastName.setText(lastName);
         textViewPhone.setText(phone);

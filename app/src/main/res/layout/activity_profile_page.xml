@@ -36,10 +36,10 @@
 
         <include
             android:id="@+id/includeTopIcons"
-            layout="@layout/layout_header_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+        layout="@layout/layout_header_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
         <LinearLayout
             android:id="@+id/linearLayoutFirstNameProfilePage"

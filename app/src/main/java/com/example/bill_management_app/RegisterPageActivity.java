@@ -18,12 +18,24 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Random;
+
+
+
 public class RegisterPageActivity extends AppCompatActivity {
 
     private AppCompatButton btnSignUp;
     private Button btnLogin;
     private EditText editTextFirstName,editTextLastName, editTextEmail, editTextPhone, editTextPassword, editTextConfirmPassword;
     private FirebaseAuth fbaseAuth;
+
+    FirebaseDatabase fbaseDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +79,12 @@ public class RegisterPageActivity extends AppCompatActivity {
 
         String email = newClient.getEmail();
         String password = newClient.getPassword();
+
         fbaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    GenerateUniqueID(newClient);
                     Toast.makeText(RegisterPageActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterPageActivity.this, LoginPageActivity.class);
                     startActivity(intent);
@@ -166,5 +180,49 @@ public class RegisterPageActivity extends AppCompatActivity {
         return newClient;
     }
 
+    private String generateRandomID() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000;
+        return "BBC" + randomNumber;
+    }
+
+    private void handleGeneratedID(Client newClient, String generatedID) {
+        // update client ID of newClient object
+        newClient.setUserID(generatedID);
+
+        // add newClient to clients table
+        DatabaseReference clients = fbaseDB.getReference("clients");
+        clients.child(newClient.getUserID()).setValue(newClient);
+    }
+
+    private void GenerateUniqueID(Client newClient) {
+
+        fbaseDB = FirebaseDatabase.getInstance();
+        DatabaseReference users_clients = fbaseDB.getReference("users").child("clients");
+
+        users_clients.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                String generatedID = generateRandomID();
+
+                // check if generated ID exists
+                if (!snapshot.hasChild(generatedID)) {
+
+                    users_clients.child(generatedID).setValue(true);
+                    handleGeneratedID(newClient,generatedID);
+
+                } else {
+                    GenerateUniqueID(newClient);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 }

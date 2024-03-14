@@ -70,6 +70,7 @@ public class LoginPageActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginPageActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginPageActivity.this, ProfilePageActivity.class);
+                    // intent.putExtra("oneCient",oneClient);
                     intent.putExtra("firstName",oneClient.getFirstName());
                     intent.putExtra("lastName",oneClient.getLastName());
                     intent.putExtra("phone",oneClient.getPhone());
