@@ -10,9 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class ClientProfilePageActivity extends AppCompatActivity {
 
@@ -26,6 +33,8 @@ public class ClientProfilePageActivity extends AppCompatActivity {
     LinearLayout navIcons;
     ImageButton btnHome;
     Button btnLogout, btnChangePassword, btnSaveProfile;
+
+    FirebaseDatabase fbaseDB;
 
     boolean isClicked = true;
 
@@ -46,7 +55,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
-        Toast.makeText(this, oneClient.getPassword(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, oneClient.getPassword(), Toast.LENGTH_SHORT).show();
         DisplayProfile(oneClient);
 
         // HEADER ICONS FUNCTIONALITY
@@ -73,13 +82,6 @@ public class ClientProfilePageActivity extends AppCompatActivity {
             }
         });
 
-        btnChangePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         btnSaveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +90,20 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                 String nPhone = textViewPhone.getText().toString().trim();
                 String nEmail = textViewEmail.getText().toString().trim();
                 String nCredit = textViewCredit.getText().toString().trim();
+
+                oneClient.setFirstName(nfName);
+                oneClient.setLastName(nlName);
+                oneClient.setPhone(nPhone);
+                oneClient.setEmail(nEmail);
+                oneClient.setCredit(Double.valueOf(nCredit));
+
+                Toast.makeText(ClientProfilePageActivity.this, "Successfully Updated Profile", Toast.LENGTH_LONG).show();
+
+                fbaseDB = FirebaseDatabase.getInstance();
+                DatabaseReference clients = fbaseDB.getReference("clients");
+
+                // update DB
+                clients.child(oneClient.getUserID()).setValue(oneClient);
             }
         });
 
@@ -139,6 +155,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         if (viewId == R.id.buttonFirstNameProfilePage) {
             ToggleEdit(textViewFirstName);
             textViewFirstName.setText(textViewFirstName.getText().toString());
+
         } else if (viewId == R.id.buttonLastName) {
             ToggleEdit(textViewLastName);
             textViewLastName.setText(textViewLastName.getText().toString());

@@ -157,7 +157,7 @@ public class LoginPageActivity extends AppCompatActivity {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                         Client oneClient = childSnapshot.getValue(Client.class);
                         // Use the retrieved client object
-                        Toast.makeText(LoginPageActivity.this, oneClient.getUserID(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(LoginPageActivity.this, oneClient.getUserID(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginPageActivity.this, ClientProfilePageActivity.class);
                         intent.putExtra("oneClient", oneClient);
                         startActivity(intent);

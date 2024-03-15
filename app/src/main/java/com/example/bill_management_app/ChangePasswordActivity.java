@@ -7,12 +7,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -20,6 +26,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     ImageButton btnHome;
     Button btnLogout, buttonUpdatePassword, buttonUpdateCancel;
     EditText txtCurrentPassword, txtNewPassword, txtConfirmNewPassword;
+    FirebaseDatabase fbaseDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +80,30 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     }
 
                     oneClient.setPassword(newPassword);
-                    Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
-                    intent.putExtra("oneClient", oneClient);
-                    startActivity(intent);
-                    finish();
+
+                    // update auth password
+                    FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // update clients table
+                                fbaseDB = FirebaseDatabase.getInstance();
+                                DatabaseReference clients = fbaseDB.getReference("clients");
+                                clients.child(oneClient.getUserID()).setValue(oneClient);
+
+                                Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
+                                intent.putExtra("oneClient", oneClient);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(ChangePasswordActivity.this, "Password update failed.", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
+
 
                 } else {
                     txtCurrentPassword.setError("Incorrect Password");
