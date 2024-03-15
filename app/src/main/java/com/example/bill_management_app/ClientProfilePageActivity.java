@@ -77,6 +77,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ClientProfilePageActivity.this, ClientDashboard.class);
+                intent.putExtra("oneClient", oneClient);
                 startActivity(intent);
                 finish();
             }

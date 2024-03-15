@@ -7,19 +7,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ClientDashboard extends AppCompatActivity {
     ListView listBills;
-
+    Button buttonAddBill;
     LinearLayout navIcons;
+    LinearLayout clientDetails;
     ImageButton btnHome, btnProfile;
+    TextView textViewFirstName, textViewAvailableCreditNumeric;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_dashboard);
+
+        // extract the intent extras
+        Intent intent = getIntent();
+        Client oneClient = (Client) intent.getSerializableExtra("oneClient");
 
         listBills = findViewById(R.id.listBills);
 
@@ -44,21 +52,19 @@ public class ClientDashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ClientDashboard.this, ClientProfilePageActivity.class);
+                intent.putExtra("oneClient", oneClient);
                 startActivity(intent);
                 finish();
             }
         });
 
-        /*
-        btnHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ClientDashboard.this, ClientDashboard.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-        */
+        // PROFILE DETAILS
+        clientDetails = findViewById(R.id.includeCustomerHeader);
+        textViewFirstName = findViewById(R.id.textViewFirstName);
+        textViewAvailableCreditNumeric = findViewById(R.id.textViewAvailableCreditNumeric);
+
+        textViewFirstName.setText("Hello, " + oneClient.getFirstName());
+        textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
 
 
     }
