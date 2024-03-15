@@ -62,6 +62,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonFirstNameProfilePage"
                 style="@style/CustomButtonStyle4"
+                android:onClick="onEditMode"
                 android:layout_width="27dp"
                 android:layout_height="37dp"
                 android:drawableStart="@drawable/baseline_edit_24"
@@ -72,18 +73,23 @@
 
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:id="@+id/textViewRealFirstNameProfilePage"
+            style="@style/CustomEditText"
+            android:editable="false"
+            android:focusable="false"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginHorizontal="30dp"
             android:text="Anakin"
             android:textSize="32dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayoutFirstNameProfilePage" />
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutFirstNameProfilePage"
+            />
 
         <LinearLayout
             android:id="@+id/linearLayoutLastNameProfilePage"
@@ -106,28 +112,32 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonLastName"
                 style="@style/CustomButtonStyle4"
-                android:layout_width="27dp"
+                android:layout_width="26dp"
                 android:layout_height="37dp"
                 android:drawableStart="@drawable/baseline_edit_24"
-                android:textAllCaps="false"
-                android:paddingLeft="5dp">
+                android:onClick="onEditMode"
+                android:paddingLeft="5dp"
+                android:textAllCaps="false">
 
             </androidx.appcompat.widget.AppCompatButton>
 
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:id="@+id/textViewRealLastNameProfilePage"
+            style="@style/CustomEditText"
+            android:editable="false"
+            android:focusable="false"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
             android:text="Skywalker"
-            android:layout_marginLeft="30dp"
             android:textSize="32dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayoutLastNameProfilePage"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutLastNameProfilePage" />
 
         <LinearLayout
             android:id="@+id/linearLayoutPhoneProfilePage"
@@ -149,6 +159,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonPhone"
+                android:onClick="onEditMode"
                 style="@style/CustomButtonStyle4"
                 android:layout_width="27dp"
                 android:layout_height="37dp"
@@ -167,12 +178,16 @@
 
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:id="@+id/textViewRealPhoneProfilePage"
+            style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="+1 514 123 4567"
-            android:layout_marginLeft="30dp"
+            android:editable="false"
+            android:focusable="false"
+            android:inputType="text"
+            android:layout_marginHorizontal="30dp"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -200,6 +215,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonEmail"
+                android:onClick="onEditMode"
                 style="@style/CustomButtonStyle4"
                 android:layout_width="27dp"
                 android:layout_height="37dp"
@@ -211,12 +227,16 @@
 
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:id="@+id/textViewRealEmailProfilePage"
+            style="@style/CustomEditText"
+            android:editable="false"
+            android:focusable="false"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="anakin.skywalker@empire.com"
-            android:layout_marginLeft="30dp"
+            android:layout_marginHorizontal="30dp"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -226,19 +246,18 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonChangePassword"
+            style="@style/CustomButtonStyle3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="20dp"
             android:text="Change Password"
-            style="@style/CustomButtonStyle3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewRealEmailProfilePage"
             android:textAllCaps="false"
             android:textStyle="bold"
-            android:layout_marginHorizontal="30dp"
-            android:paddingHorizontal="20dp"
-            android:layout_marginTop="10dp"
-            >
-        </androidx.appcompat.widget.AppCompatButton>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewRealEmailProfilePage"></androidx.appcompat.widget.AppCompatButton>
 
         <View
             android:id="@+id/viewDivider"
@@ -314,21 +333,19 @@
         </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonCancel"
+            android:id="@+id/buttonSaveProfile"
+            style="@style/CustomButtonStyle6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            style="@style/CustomButtonStyle6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonAddCredit"
+            android:layout_marginHorizontal="70dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="20dp"
+            android:text="Save Profile"
             android:textAllCaps="false"
             android:textStyle="bold"
-            android:layout_marginHorizontal="70dp"
-            android:paddingHorizontal="20dp"
-            android:layout_marginTop="10dp"
-            >
-        </androidx.appcompat.widget.AppCompatButton>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonAddCredit"></androidx.appcompat.widget.AppCompatButton>
 
         <View
             android:id="@+id/viewEnd"

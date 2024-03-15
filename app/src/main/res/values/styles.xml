@@ -42,7 +42,9 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-
+    <style name="CustomEditText" parent="Widget.AppCompat.EditText" >
+        <item name="android:background">@drawable/custom_edit_text</item>
+    </style>
 
 
 </resources>
