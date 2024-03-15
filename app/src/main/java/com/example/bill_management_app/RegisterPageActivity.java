@@ -30,7 +30,7 @@ import java.util.Random;
 
 public class RegisterPageActivity extends AppCompatActivity {
 
-    private AppCompatButton btnSignUp;
+    private AppCompatButton btnSignUp, btnSignUpAdmin;
     private Button btnLogin;
     private EditText editTextFirstName,editTextLastName, editTextEmail, editTextPhone, editTextPassword, editTextConfirmPassword;
     private FirebaseAuth fbaseAuth;
@@ -42,6 +42,8 @@ public class RegisterPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_page);
 
         btnSignUp = findViewById(R.id.buttonSignUp);
+        btnSignUpAdmin = findViewById(R.id.buttonSignUpAdmin);
+
         btnLogin = findViewById(R.id.buttonLogin);
 
         editTextFirstName = findViewById(R.id.editTextFirstName);
@@ -55,7 +57,14 @@ public class RegisterPageActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Register();
+                Register(EnumUserType.Client);
+            }
+        });
+
+        btnSignUpAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Register(EnumUserType.Admin);
             }
         });
 
@@ -68,23 +77,24 @@ public class RegisterPageActivity extends AppCompatActivity {
         });
     }
 
-    private void Register() {
-        Client newClient = CreateClient();
-        if (newClient != null) {
-            RegisterUserAuth(newClient);
+    private void Register(EnumUserType type) {
+        //Client newClient = CreateUser(type);
+        User newUser = CreateUser(type);
+        if (newUser != null) {
+            RegisterUserAuth(newUser);
         }
     }
 
-    private void RegisterUserAuth(Client newClient) {
+    private void RegisterUserAuth(User newUser) {
 
-        String email = newClient.getEmail();
-        String password = newClient.getPassword();
+        String email = newUser.getEmail();
+        String password = newUser.getPassword();
 
         fbaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    GenerateUniqueID(newClient);
+                    GenerateUniqueID(newUser);
                     Toast.makeText(RegisterPageActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterPageActivity.this, LoginPageActivity.class);
                     startActivity(intent);
@@ -96,8 +106,9 @@ public class RegisterPageActivity extends AppCompatActivity {
         });
     }
 
-    private Client CreateClient() {
-        Client newClient = null;
+    private User CreateUser(EnumUserType type) {
+        //Client newClient = null;
+        User newUser = null;
 
         String firstName = editTextFirstName.getText().toString().trim();
         String lastName = editTextLastName.getText().toString().trim();
@@ -174,10 +185,16 @@ public class RegisterPageActivity extends AppCompatActivity {
         }
 
         if (isValidUser) {
-            newClient = new Client("BBC0000",firstName,lastName,email,phone,password,0,null);
+            if (type == EnumUserType.Client) {
+                newUser = new Client("BBC0000",firstName,lastName,email,phone,password, type,0,null);
+            } else {
+                //newClient = new Admin("BBC0000",firstName,lastName,email,phone,password, type, null, null);
+                newUser = new Admin("BBC0000",firstName,lastName,email,phone,password, type, null, null);
+            }
+
         }
 
-        return newClient;
+        return newUser;
     }
 
     private String generateRandomID() {
@@ -186,42 +203,75 @@ public class RegisterPageActivity extends AppCompatActivity {
         return "BBC" + randomNumber;
     }
 
-    private void handleGeneratedID(Client newClient, String generatedID) {
+    private void handleGeneratedID(User newUser, String generatedID) {
         // update client ID of newClient object
-        newClient.setUserID(generatedID);
+        newUser.setUserID(generatedID);
 
-        // add newClient to clients table
-        DatabaseReference clients = fbaseDB.getReference("clients");
-        clients.child(newClient.getUserID()).setValue(newClient);
+        if (newUser.getType().equals(EnumUserType.Client)) {
+            // add newClient to clients table
+            DatabaseReference clients = fbaseDB.getReference("clients");
+            clients.child(newUser.getUserID()).setValue(newUser);
+        } else {
+            // add newClient to admins table
+            DatabaseReference admins = fbaseDB.getReference("admins");
+            admins.child(newUser.getUserID()).setValue(newUser);
+        }
+
     }
 
-    private void GenerateUniqueID(Client newClient) {
+    private void GenerateUniqueID(User newUser) {
 
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference users_clients = fbaseDB.getReference("users").child("clients");
+        DatabaseReference users_admins = fbaseDB.getReference("users").child("admins");
 
-        users_clients.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        if (newUser.getType().equals(EnumUserType.Client)) {
+            users_clients.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                String generatedID = generateRandomID();
+                    String generatedID = generateRandomID();
 
-                // check if generated ID exists
-                if (!snapshot.hasChild(generatedID)) {
-
-                    users_clients.child(generatedID).setValue(true);
-                    handleGeneratedID(newClient,generatedID);
-
-                } else {
-                    GenerateUniqueID(newClient);
+                    // check if generated ID exists
+                    if (!snapshot.hasChild(generatedID)) {
+                        users_clients.child(generatedID).setValue(true);
+                        handleGeneratedID(newUser,generatedID);
+                    } else {
+                        GenerateUniqueID(newUser);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+
+        } else {
+            users_admins.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    String generatedID = generateRandomID();
+
+                    // check if generated ID exists
+                    if (!snapshot.hasChild(generatedID)) {
+                        users_admins.child(generatedID).setValue(true);
+                        handleGeneratedID(newUser,generatedID);
+                    } else {
+                        GenerateUniqueID(newUser);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
+
 
     }
 

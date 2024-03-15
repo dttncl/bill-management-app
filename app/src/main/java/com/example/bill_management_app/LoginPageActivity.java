@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class LoginPageActivity extends AppCompatActivity {
     private Button buttonSignUp;
     private EditText editTextInputEmail, editTextInputPassword;
     private FirebaseAuth fbaseAuth;
+    FirebaseDatabase fbaseDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,9 +115,13 @@ public class LoginPageActivity extends AppCompatActivity {
         }
 
         if (isValidUser) {
-            // add DB SQL query
+            fbaseDB = FirebaseDatabase.getInstance();
+            DatabaseReference users = fbaseDB.getReference("users");
+
+            // find username equal to user_username
+            //Query oneUser = UsersTable.orderByChild("username").equalTo(user_username);
             // if found:
-            oneClient = new Client("BBC0000","firstName","lastName",email,"phone",password,0,null);
+            oneClient = new Client("BBC0000","firstName","lastName",email,"phone",password,EnumUserType.Client,0,null);
             // else
             // Toast.makeText(LoginPageActivity.this, "Invalid email/password", Toast.LENGTH_SHORT).show();
         }

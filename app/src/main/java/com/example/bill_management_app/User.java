@@ -8,6 +8,7 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    private EnumUserType type;
 
     public User() {
         userID = "";
@@ -16,15 +17,17 @@ public class User {
         email = "";
         phone = "";
         password = "";
+        type = null;
     }
 
-    public User(String userID, String firstName, String lastName, String email, String phone, String password) {
+    public User(String userID, String firstName, String lastName, String email, String phone, String password, EnumUserType type) {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.type = type;
     }
 
     public String getUserID() {
@@ -75,4 +78,11 @@ public class User {
         this.password = password;
     }
 
+    public EnumUserType getType() {
+        return type;
+    }
+
+    public void setType(EnumUserType type) {
+        this.type = type;
+    }
 }

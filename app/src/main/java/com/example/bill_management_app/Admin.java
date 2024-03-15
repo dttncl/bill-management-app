@@ -12,8 +12,8 @@ public class Admin extends User {
         listOfBillers = null;
     }
 
-    public Admin(String userID, String firstName, String lastName, String email, String phone, String password, ArrayList<Client> listOfClients, ArrayList<Biller> listOfBillers) {
-        super(userID, firstName, lastName, email, phone, password);
+    public Admin(String userID, String firstName, String lastName, String email, String phone, String password, EnumUserType type, ArrayList<Client> listOfClients, ArrayList<Biller> listOfBillers) {
+        super(userID, firstName, lastName, email, phone, password, type);
         this.listOfClients = listOfClients;
         this.listOfBillers = listOfBillers;
     }

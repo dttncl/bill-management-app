@@ -13,8 +13,8 @@ public class Client extends User {
         listOfBills = null;
     }
 
-    public Client(String userID, String firstName, String lastName, String email, String phone, String password, double credit, ArrayList<Bill> listOfBills) {
-        super(userID, firstName, lastName, email, phone, password);
+    public Client(String userID, String firstName, String lastName, String email, String phone, String password, EnumUserType type, double credit, ArrayList<Bill> listOfBills) {
+        super(userID, firstName, lastName, email, phone, password, type);
         this.credit = credit;
         this.listOfBills = listOfBills;
     }

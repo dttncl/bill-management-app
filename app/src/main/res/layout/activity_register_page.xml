@@ -168,7 +168,7 @@
             android:id="@+id/textViewPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password"
+            android:text="Password*"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -238,11 +238,25 @@
             android:textAllCaps="false"
             android:textSize="20dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomPageCreateAccountLinearLayout"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSignUpAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register As Admin"
+            style="@style/CustomButtonStyle6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textAllCaps="false"
+            android:textSize="20dp"
+            android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toTopOf="@id/bottomPageCreateAccountLinearLayout"
-            >
-
-        </androidx.appcompat.widget.AppCompatButton>
+            />
 
         <LinearLayout
             android:id="@+id/bottomPageCreateAccountLinearLayout"
