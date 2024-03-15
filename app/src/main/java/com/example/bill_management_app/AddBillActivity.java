@@ -25,7 +25,7 @@ public class AddBillActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBillActivity.this, ProfilePageActivity.class);
+                Intent intent = new Intent(AddBillActivity.this, ClientProfilePageActivity.class);
                 startActivity(intent);
                 finish();
             }

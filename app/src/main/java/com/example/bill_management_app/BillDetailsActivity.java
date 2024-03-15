@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class BillDetailsActivity extends AppCompatActivity {
 
     LinearLayout navIcons;
@@ -27,7 +25,7 @@ public class BillDetailsActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BillDetailsActivity.this, ProfilePageActivity.class);
+                Intent intent = new Intent(BillDetailsActivity.this, ClientProfilePageActivity.class);
                 startActivity(intent);
                 finish();
             }

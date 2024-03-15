@@ -1,8 +1,9 @@
 package com.example.bill_management_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Admin extends User {
+public class Admin extends User implements Serializable {
     private ArrayList<Client> listOfClients;
     private ArrayList<Biller> listOfBillers;
 

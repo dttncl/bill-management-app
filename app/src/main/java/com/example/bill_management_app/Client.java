@@ -1,8 +1,9 @@
 package com.example.bill_management_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Client extends User {
+public class Client extends User implements Serializable {
 
     private double credit;
     private ArrayList<Bill> listOfBills;

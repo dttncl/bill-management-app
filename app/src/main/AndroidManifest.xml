@@ -32,7 +32,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfilePageActivity"
+            android:name=".ClientProfilePageActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterPageActivity"

@@ -11,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class ClientDashboard extends AppCompatActivity {
     ListView listBills;
 
@@ -45,7 +43,7 @@ public class ClientDashboard extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClientDashboard.this, ProfilePageActivity.class);
+                Intent intent = new Intent(ClientDashboard.this, ClientProfilePageActivity.class);
                 startActivity(intent);
                 finish();
             }

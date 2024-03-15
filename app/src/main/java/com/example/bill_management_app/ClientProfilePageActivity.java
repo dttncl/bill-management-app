@@ -7,17 +7,20 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfilePageActivity extends AppCompatActivity {
+public class ClientProfilePageActivity extends AppCompatActivity {
 
     TextView textViewFirstName;
     TextView textViewLastName;
     TextView textViewPhone;
     TextView textViewEmail;
+
+    TextView textViewCredit;
 
     LinearLayout navIcons;
     ImageButton btnHome;
@@ -26,25 +29,29 @@ public class ProfilePageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_page);
+        setContentView(R.layout.activity_client_profile_page);
 
         textViewFirstName = findViewById(R.id.textViewRealFirstNameProfilePage);
         textViewLastName = findViewById(R.id.textViewRealLastNameProfilePage);
         textViewPhone = findViewById(R.id.textViewRealPhoneProfilePage);
         textViewEmail = findViewById(R.id.textViewRealEmailProfilePage);
+        textViewCredit = findViewById(R.id.textViewBalanceProfilePage);
         Intent intent = getIntent();
 
         // extract the intent extras
-        String firstName = intent.getStringExtra("firstName");
-        String lastName = intent.getStringExtra("lastName");
-        String phone = intent.getStringExtra("phone");
-        String email = intent.getStringExtra("email");
+        Client oneClient = (Client) intent.getSerializableExtra("oneClient");
+        String firstName = oneClient.getFirstName();
+        String lastName = oneClient.getLastName();
+        String phone = oneClient.getPhone();
+        String email = oneClient.getEmail();
+        double credit = oneClient.getCredit();
 
         // display
         textViewFirstName.setText(firstName);
         textViewLastName.setText(lastName);
         textViewPhone.setText(phone);
         textViewEmail.setText(email);
+        textViewCredit.setText(String.valueOf(credit));
 
 
         // HEADER ICONS FUNCTIONALITY
@@ -55,9 +62,8 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(ProfilePageActivity.this, "Button Logout", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(ProfilePageActivity.this, LoginPageActivity.class);
+                Intent intent = new Intent(ClientProfilePageActivity.this, LoginPageActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -66,8 +72,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(ProfilePageActivity.this, "Button Home", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ProfilePageActivity.this, ClientDashboard.class);
+                Intent intent = new Intent(ClientProfilePageActivity.this, ClientDashboard.class);
                 startActivity(intent);
             }
         });

@@ -208,11 +208,11 @@ public class RegisterPageActivity extends AppCompatActivity {
         newUser.setUserID(generatedID);
 
         if (newUser.getType().equals(EnumUserType.Client)) {
-            // add newClient to clients table
+            // add newUser to clients table
             DatabaseReference clients = fbaseDB.getReference("clients");
             clients.child(newUser.getUserID()).setValue(newUser);
         } else {
-            // add newClient to admins table
+            // add newUser to admins table
             DatabaseReference admins = fbaseDB.getReference("admins");
             admins.child(newUser.getUserID()).setValue(newUser);
         }
@@ -222,56 +222,32 @@ public class RegisterPageActivity extends AppCompatActivity {
     private void GenerateUniqueID(User newUser) {
 
         fbaseDB = FirebaseDatabase.getInstance();
-        DatabaseReference users_clients = fbaseDB.getReference("users").child("clients");
-        DatabaseReference users_admins = fbaseDB.getReference("users").child("admins");
+        DatabaseReference users = fbaseDB.getReference("users");
 
-        if (newUser.getType().equals(EnumUserType.Client)) {
-            users_clients.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    String generatedID = generateRandomID();
+                String generatedID = generateRandomID();
+                String uid = fbaseAuth.getCurrentUser().getUid();
 
-                    // check if generated ID exists
-                    if (!snapshot.hasChild(generatedID)) {
-                        users_clients.child(generatedID).setValue(true);
-                        handleGeneratedID(newUser,generatedID);
-                    } else {
-                        GenerateUniqueID(newUser);
-                    }
+                // check if generated ID exists
+                if (!snapshot.hasChild(generatedID)) {
+                    users.child(generatedID).child("uId").setValue(uid);
+                    users.child(generatedID).child("userId").setValue(generatedID);
+                    users.child(generatedID).child("userType").setValue(newUser.getType());
+                    handleGeneratedID(newUser,generatedID);
+
+                } else {
+                    GenerateUniqueID(newUser);
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
-        } else {
-            users_admins.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    String generatedID = generateRandomID();
-
-                    // check if generated ID exists
-                    if (!snapshot.hasChild(generatedID)) {
-                        users_admins.child(generatedID).setValue(true);
-                        handleGeneratedID(newUser,generatedID);
-                    } else {
-                        GenerateUniqueID(newUser);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-
-
-
+            }
+        });
 
     }
 

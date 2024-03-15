@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -44,7 +46,6 @@ public class LoginPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Login();
-
             }
         });
 
@@ -58,37 +59,62 @@ public class LoginPageActivity extends AppCompatActivity {
     }
 
     private void Login() {
-        Client oneClient = SearchClient();
-        if (oneClient != null) {
-            SearchUserAuth(oneClient);
+        User oneUser = ValidateUser();
+        if (oneUser != null) {
+            SearchUserAuth(oneUser);
         }
     }
 
-    private void SearchUserAuth(Client oneClient) {
-        String email = oneClient.getEmail();
-        String password = oneClient.getPassword();
+    private void SearchUserAuth(User oneUser) {
+        String email = oneUser.getEmail();
+        String password = oneUser.getPassword();
 
         fbaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginPageActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginPageActivity.this, ProfilePageActivity.class);
-                    // intent.putExtra("oneCient",oneClient);
-                    intent.putExtra("firstName",oneClient.getFirstName());
-                    intent.putExtra("lastName",oneClient.getLastName());
-                    intent.putExtra("phone",oneClient.getPhone());
-                    intent.putExtra("email",oneClient.getEmail());
-                    startActivity(intent);
-                    finish();
+
+                    // query the user
+                    fbaseDB = FirebaseDatabase.getInstance();
+                    DatabaseReference users = fbaseDB.getReference("users");
+                    String currentUID = fbaseAuth.getCurrentUser().getUid();
+
+                    Query searchUID = users.orderByChild("uId").equalTo(currentUID);
+
+                    searchUID.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                String userId = userSnapshot.child("userId").getValue(String.class);
+                                String userType = userSnapshot.child("userType").getValue(String.class);
+
+                                if (userType.equals(EnumUserType.Client.toString())) {
+                                    // create client object and pass to intent
+                                    LoginAsClient(userId);
+
+                                } else {
+                                    Toast.makeText(LoginPageActivity.this, userType + "2", Toast.LENGTH_SHORT).show();
+                                    // create admin object and pass to intent
+
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                 } else {
                     Toast.makeText(LoginPageActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    private Client SearchClient() {
-        Client oneClient = null;
+    private User ValidateUser() {
+        User oneUser = null;
 
         String email = editTextInputEmail.getText().toString().trim();
         String password = editTextInputPassword.getText().toString().trim();
@@ -115,17 +141,39 @@ public class LoginPageActivity extends AppCompatActivity {
         }
 
         if (isValidUser) {
-            fbaseDB = FirebaseDatabase.getInstance();
-            DatabaseReference users = fbaseDB.getReference("users");
-
-            // find username equal to user_username
-            //Query oneUser = UsersTable.orderByChild("username").equalTo(user_username);
-            // if found:
-            oneClient = new Client("BBC0000","firstName","lastName",email,"phone",password,EnumUserType.Client,0,null);
-            // else
-            // Toast.makeText(LoginPageActivity.this, "Invalid email/password", Toast.LENGTH_SHORT).show();
+            oneUser = new User("BBC0000","firstName","lastName",email,"phone",password,null);
         }
 
-        return oneClient;
+        return oneUser;
+    }
+
+    private void LoginAsClient(String userID) {
+        DatabaseReference clients = fbaseDB.getReference("clients");
+        Query searchClient = clients.orderByChild("userID").equalTo(userID);
+        searchClient.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        Client oneClient = childSnapshot.getValue(Client.class);
+                        // Use the retrieved client object
+                        Toast.makeText(LoginPageActivity.this, oneClient.getUserID(), Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(LoginPageActivity.this, ClientProfilePageActivity.class);
+                        intent.putExtra("oneClient", oneClient);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                } else {
+                    Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

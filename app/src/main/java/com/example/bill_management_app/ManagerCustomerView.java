@@ -45,7 +45,7 @@ public class ManagerCustomerView extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ManagerCustomerView.this, ProfilePageActivity.class);
+                Intent intent = new Intent(ManagerCustomerView.this, ClientProfilePageActivity.class);
                 startActivity(intent);
                 finish();
             }
