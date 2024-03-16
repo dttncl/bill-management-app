@@ -44,10 +44,6 @@ public class ClientProfilePageActivity extends AppCompatActivity {
 
     FirebaseDatabase fbaseDB;
 
-    boolean isClicked = true;
-    boolean isButtonIconChecked = false;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +75,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         final String[] tempPhone = {oneClient.getPhone()};
         final String[] tempEmail = {oneClient.getEmail()};
         double doubleCredit = oneClient.getCredit();
-        final String[] tempCredit = {formatCreditText(doubleCredit)};
+        final double[] tempCredit = new double[]{doubleCredit};
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
@@ -129,7 +125,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                 String email = textViewEmail.getText().toString();
                 String credit = textViewCredit.getText().toString();
 
-                Pattern pattern = Pattern.compile("\\d+");
+                Pattern pattern = Pattern.compile("\\d+(\\.\\d+)?");
                 Matcher matcher = pattern.matcher(credit);
                 StringBuilder digitsBuilder = new StringBuilder();
 
@@ -162,7 +158,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                     isChangesMade = true;
                 }
 
-                if(!tempCredit[0].equals(credit)) {
+                if(!String.valueOf(tempCredit[0]).equals(doubleCredit)) {
                     messageBuilder.append("\n - Credit from " + tempCredit[0] + " to " + credit + ".");
                     isChangesMade = true;
                 }
@@ -219,7 +215,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                     textViewLastName.setText(tempLastName[0]);
                                     textViewPhone.setText(tempPhone[0]);
                                     textViewEmail.setText(tempEmail[0]);
-                                    textViewCredit.setText(tempCredit[0]);
+                                    textViewCredit.setText(String.valueOf(tempCredit[0]));
 
                                     buttonFirstNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
                                     buttonLastNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
@@ -261,7 +257,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 tempLastName[0] = nlName;
                                 tempPhone[0] = nPhone;
                                 tempEmail[0] = nEmail;
-                                tempCredit[0] = nCredit;
+                                tempCredit[0] = Double.parseDouble(nCredit);
 
                                 Toast.makeText(ClientProfilePageActivity.this, "Successfully Updated Profile", Toast.LENGTH_LONG).show();
 
@@ -280,6 +276,9 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 textViewPhone.setFocusable(false);
                                 textViewEmail.setFocusable(false);
                                 textViewCredit.setFocusable(false);
+
+                                DisplayProfile(oneClient);
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -309,6 +308,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
             }
         });
 
+
         onClickEditButton(textViewFirstName,buttonFirstNameProfilePage);
         onClickEditButton(textViewLastName,buttonLastNameProfilePage);
         onClickEditButton(textViewPhone,buttonPhoneProfilePage);
@@ -323,34 +323,15 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         String email = oneClient.getEmail();
         double credit = oneClient.getCredit();
 
-        String formatedCredit = formatCreditText(credit);
-
         textViewFirstName.setText(firstName);
         textViewLastName.setText(lastName);
         textViewPhone.setText(phone);
         textViewEmail.setText(email);
-        textViewCredit.setText(formatedCredit);
+        textViewCredit.setText(formatCreditText(credit));
     }
 
     private String formatCreditText (double credit) {
-        return "$ " + String.format("%.2f", credit);
-    }
-
-    private double convertCreditFromStringToDouble (String credit) {
-
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(credit);
-
-        StringBuilder digitsBuilder = new StringBuilder();
-        while (matcher.find()) {
-            digitsBuilder.append(matcher.group());
-        }
-
-        if (digitsBuilder.length() == 0) {
-            return 0;
-        } else {
-            return Double.parseDouble(String.valueOf(digitsBuilder));
-        }
+        return String.format("%.2f", credit);
     }
 
     public void toggleButtonIcon(AppCompatButton button, boolean isButtonIconChecked) {

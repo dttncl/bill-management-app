@@ -266,30 +266,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonChangePassword"
             app:layout_constraintWidth_percent="0.7"/>
-
-        <EditText
-            android:id="@+id/textViewBalanceProfilePage"
-            android:layout_width="match_parent"
+        
+        <LinearLayout
+            android:id="@+id/linearLayoutCredit"
             android:layout_height="wrap_content"
-            android:text="$750.00"
-            android:textSize="40dp"
-            android:textStyle="bold"
-            android:focusable="false"
-            android:textColor="@color/darkerYellow"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewDivider"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@id/viewDivider">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$"
+                android:layout_marginRight="5dp"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/darkerYellow"
+                style="@style/CustomEditText"/>
+
+            <EditText
+                android:id="@+id/textViewBalanceProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/CustomEditText"
+                android:text="750.00"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                android:focusable="false"
+                android:textColor="@color/darkerYellow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewDivider"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                />
+            
+        </LinearLayout>
+        
         <LinearLayout
             android:id="@+id/linearLayoutAvailableCredit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewBalanceProfilePage"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutCredit"
             android:gravity="center_horizontal"
             android:layout_marginTop="10dp"
             >
@@ -352,7 +375,7 @@
             android:layout_marginHorizontal="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonCancel"/>
+            app:layout_constraintTop_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,7 +18,7 @@ public class Validator {
     * */
     private static final String passwordRegex ="^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=.*[a-zA-Z]).{8,12}$";
 
-    private static final String amountRegex = "^\\d+$";
+    private static final String amountRegex = "^\\d+(\\.\\d{1,2})?$";
 
     public static boolean isValidName(String name) {
         return Pattern.compile(NameRegex).matcher(name).matches();
