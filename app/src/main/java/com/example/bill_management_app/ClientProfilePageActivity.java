@@ -1,8 +1,13 @@
 package com.example.bill_management_app;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -11,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,22 +28,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ClientProfilePageActivity extends AppCompatActivity {
 
-    EditText textViewFirstName;
-    EditText textViewLastName;
-    EditText textViewPhone;
-    EditText textViewEmail;
-
-    TextView textViewCredit;
-
+    EditText textViewFirstName, textViewLastName, textViewPhone,textViewEmail, textViewCredit;
     LinearLayout navIcons;
     ImageButton btnHome;
     Button btnLogout, btnChangePassword, btnSaveProfile;
 
+    AppCompatButton buttonFirstNameProfilePage, buttonLastNameProfilePage, buttonPhoneProfilePage, buttonEmailProfilePage, buttonAddCredit;
+
     FirebaseDatabase fbaseDB;
 
     boolean isClicked = true;
+    boolean isButtonIconChecked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +62,24 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         btnChangePassword = findViewById(R.id.buttonChangePassword);
         btnSaveProfile = findViewById(R.id.buttonSaveProfile);
 
+        buttonFirstNameProfilePage = findViewById(R.id.buttonFirstNameProfilePage);
+        buttonLastNameProfilePage = findViewById(R.id.buttonLastNameProfilePage);
+        buttonPhoneProfilePage = findViewById(R.id.buttonPhoneProfilePage);
+        buttonEmailProfilePage = findViewById(R.id.buttonEmailProfilePage);
+        buttonAddCredit = findViewById(R.id.buttonAddCredit);
+
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
         //Toast.makeText(this, oneClient.getPassword(), Toast.LENGTH_SHORT).show();
         DisplayProfile(oneClient);
+
+        final String[] tempFirstName = {oneClient.getFirstName()};
+        final String[] tempLastName = {oneClient.getLastName()};
+        final String[] tempPhone = {oneClient.getPhone()};
+        final String[] tempEmail = {oneClient.getEmail()};
+        double doubleCredit = oneClient.getCredit();
+        final String[] tempCredit = {formatCreditText(doubleCredit)};
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
@@ -83,31 +106,6 @@ public class ClientProfilePageActivity extends AppCompatActivity {
             }
         });
 
-        btnSaveProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String nfName = textViewFirstName.getText().toString().trim();
-                String nlName = textViewLastName.getText().toString().trim();
-                String nPhone = textViewPhone.getText().toString().trim();
-                String nEmail = textViewEmail.getText().toString().trim();
-                String nCredit = textViewCredit.getText().toString().trim();
-
-                oneClient.setFirstName(nfName);
-                oneClient.setLastName(nlName);
-                oneClient.setPhone(nPhone);
-                oneClient.setEmail(nEmail);
-                oneClient.setCredit(Double.valueOf(nCredit));
-
-                Toast.makeText(ClientProfilePageActivity.this, "Successfully Updated Profile", Toast.LENGTH_LONG).show();
-
-                fbaseDB = FirebaseDatabase.getInstance();
-                DatabaseReference clients = fbaseDB.getReference("clients");
-
-                // update DB
-                clients.child(oneClient.getUserID()).setValue(oneClient);
-            }
-        });
-
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +116,204 @@ public class ClientProfilePageActivity extends AppCompatActivity {
             }
         });
 
+        btnSaveProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                StringBuilder messageBuilder = new StringBuilder("Are you sure you want to make the following changes?\n");
+                StringBuilder messageNotValidated = new StringBuilder("Wrong format for:\n");
+
+                String firstName = textViewFirstName.getText().toString();
+                String lastName = textViewLastName.getText().toString();
+                String phone = textViewPhone.getText().toString();
+                String email = textViewEmail.getText().toString();
+                String credit = textViewCredit.getText().toString();
+
+                Pattern pattern = Pattern.compile("\\d+");
+                Matcher matcher = pattern.matcher(credit);
+                StringBuilder digitsBuilder = new StringBuilder();
+
+                while (matcher.find()) {
+                    digitsBuilder.append(matcher.group());
+                }
+
+                String doubleCredit = String.valueOf(digitsBuilder);
+
+                boolean isChangesMade = false;
+                boolean isValidated = true;
+
+                if(!tempFirstName[0].equals(firstName)) {
+                    messageBuilder.append("\n - First name from " + tempFirstName[0] + " to " + firstName + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempLastName[0].equals(lastName)) {
+                    messageBuilder.append("\n - Last name from " + tempLastName[0] + " to " + lastName + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempPhone[0].equals(phone)) {
+                    messageBuilder.append("\n - Phone from " + tempPhone[0] + " to " + phone + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempEmail[0].equals(email)) {
+                    messageBuilder.append("\n - Email from " + tempEmail[0] + " to " + email + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempCredit[0].equals(credit)) {
+                    messageBuilder.append("\n - Credit from " + tempCredit[0] + " to " + credit + ".");
+                    isChangesMade = true;
+                }
+
+                if(!Validator.isValidName(firstName)) {
+                    messageNotValidated.append("\n - First Name.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidName(lastName)) {
+                    messageNotValidated.append("\n - Last Name.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidPhone(phone)) {
+                    messageNotValidated.append("\n - Phone.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidEmail(email)) {
+                    messageNotValidated.append("\n - Email.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidAmount(doubleCredit)) {
+                    messageNotValidated.append("\n - Amount.");
+                    isValidated = false;
+                }
+
+                if (!isChangesMade) {
+                    AlertDialog.Builder noChangesDialog = new AlertDialog.Builder(ClientProfilePageActivity.this);
+                    noChangesDialog.setTitle("No Changes Made")
+                            .setMessage("No changes were made.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Dismiss the dialog
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
+                if (!isValidated) {
+                    AlertDialog.Builder noChangesDialog = new AlertDialog.Builder(ClientProfilePageActivity.this);
+                    noChangesDialog.setTitle("Error")
+                            .setMessage(messageNotValidated)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    textViewFirstName.setText(tempFirstName[0]);
+                                    textViewLastName.setText(tempLastName[0]);
+                                    textViewPhone.setText(tempPhone[0]);
+                                    textViewEmail.setText(tempEmail[0]);
+                                    textViewCredit.setText(tempCredit[0]);
+
+                                    buttonFirstNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonLastNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonPhoneProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonEmailProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                    textViewFirstName.setFocusable(false);
+                                    textViewLastName.setFocusable(false);
+                                    textViewPhone.setFocusable(false);
+                                    textViewEmail.setFocusable(false);
+                                    textViewCredit.setFocusable(false);
+
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ClientProfilePageActivity.this);
+                builder.setTitle("Review your changes")
+                        .setMessage(messageBuilder)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nfName = textViewFirstName.getText().toString().trim();
+                                String nlName = textViewLastName.getText().toString().trim();
+                                String nPhone = textViewPhone.getText().toString().trim();
+                                String nEmail = textViewEmail.getText().toString().trim();
+                                String nCredit = doubleCredit;
+
+                                oneClient.setFirstName(nfName);
+                                oneClient.setLastName(nlName);
+                                oneClient.setPhone(nPhone);
+                                oneClient.setEmail(nEmail);
+                                oneClient.setCredit(Double.valueOf(nCredit));
+
+                                tempFirstName[0] = nfName;
+                                tempLastName[0] = nlName;
+                                tempPhone[0] = nPhone;
+                                tempEmail[0] = nEmail;
+                                tempCredit[0] = nCredit;
+
+                                Toast.makeText(ClientProfilePageActivity.this, "Successfully Updated Profile", Toast.LENGTH_LONG).show();
+
+                                fbaseDB = FirebaseDatabase.getInstance();
+                                DatabaseReference clients = fbaseDB.getReference("clients");
+
+                                clients.child(oneClient.getUserID()).setValue(oneClient);
+
+                                buttonFirstNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonLastNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonPhoneProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonEmailProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                textViewFirstName.setFocusable(false);
+                                textViewLastName.setFocusable(false);
+                                textViewPhone.setFocusable(false);
+                                textViewEmail.setFocusable(false);
+                                textViewCredit.setFocusable(false);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                textViewFirstName.setText(tempFirstName[0]);
+                                textViewLastName.setText(tempLastName[0]);
+                                textViewPhone.setText(tempPhone[0]);
+                                textViewEmail.setText(tempEmail[0]);
+                                textViewCredit.setText(String.valueOf(tempCredit[0]));
+
+                                buttonFirstNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonLastNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonPhoneProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonEmailProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                textViewFirstName.setFocusable(false);
+                                textViewLastName.setFocusable(false);
+                                textViewPhone.setFocusable(false);
+                                textViewEmail.setFocusable(false);
+                                textViewCredit.setFocusable(false);
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        onClickEditButton(textViewFirstName,buttonFirstNameProfilePage);
+        onClickEditButton(textViewLastName,buttonLastNameProfilePage);
+        onClickEditButton(textViewPhone,buttonPhoneProfilePage);
+        onClickEditButton(textViewEmail,buttonEmailProfilePage);
+        onClickAddCreditButton(textViewCredit, buttonAddCredit);
     }
 
     private void DisplayProfile (Client oneClient){
@@ -127,46 +323,75 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         String email = oneClient.getEmail();
         double credit = oneClient.getCredit();
 
+        String formatedCredit = formatCreditText(credit);
+
         textViewFirstName.setText(firstName);
         textViewLastName.setText(lastName);
         textViewPhone.setText(phone);
         textViewEmail.setText(email);
-        textViewCredit.setText(String.valueOf(credit));
+        textViewCredit.setText(formatedCredit);
     }
 
-    private void ToggleEdit (View view){
+    private String formatCreditText (double credit) {
+        return "$ " + String.format("%.2f", credit);
+    }
 
-        if (isClicked) {
-            view.setFocusable(true);
-            view.setFocusableInTouchMode(true);
-            view.setClickable(true);
-            view.setLongClickable(true);
-            isClicked = false;
+    private double convertCreditFromStringToDouble (String credit) {
+
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(credit);
+
+        StringBuilder digitsBuilder = new StringBuilder();
+        while (matcher.find()) {
+            digitsBuilder.append(matcher.group());
+        }
+
+        if (digitsBuilder.length() == 0) {
+            return 0;
         } else {
-            view.setFocusable(false);
-            view.setFocusableInTouchMode(false);
-            view.setClickable(false);
-            view.setLongClickable(false);
-            isClicked = true;
+            return Double.parseDouble(String.valueOf(digitsBuilder));
         }
     }
 
-    public void onEditMode(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.buttonFirstNameProfilePage) {
-            ToggleEdit(textViewFirstName);
-            textViewFirstName.setText(textViewFirstName.getText().toString());
-
-        } else if (viewId == R.id.buttonLastName) {
-            ToggleEdit(textViewLastName);
-            textViewLastName.setText(textViewLastName.getText().toString());
-        } else if (viewId == R.id.buttonPhone) {
-            ToggleEdit(textViewPhone);
-            textViewPhone.setText(textViewPhone.getText().toString());
-        } else if (viewId == R.id.buttonEmail) {
-            ToggleEdit(textViewEmail);
-            textViewEmail.setText(textViewEmail.getText().toString());
+    public void toggleButtonIcon(AppCompatButton button, boolean isButtonIconChecked) {
+        if(isButtonIconChecked) {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_check_24,0,0,0);
+        } else {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
         }
     }
 
+    public void toggleFocusable(EditText editText, boolean isChecked) {
+        if (isChecked) {
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            editText.selectAll();
+            editText.requestFocus();
+        } else {
+            editText.setFocusable(false);
+        }
+    }
+
+    public void onClickEditButton(EditText editText, AppCompatButton button) {
+        final boolean[] isChecked = {false};
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked[0] = !isChecked[0];
+                toggleButtonIcon(button, isChecked[0]);
+                toggleFocusable(editText, isChecked[0]);
+            }
+        });
+    }
+
+    public void onClickAddCreditButton(EditText editText, AppCompatButton button) {
+        final boolean[] isChecked = {false};
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked[0] = !isChecked[0];
+                toggleFocusable(editText, isChecked[0]);
+            }
+        });
+    }
 }
