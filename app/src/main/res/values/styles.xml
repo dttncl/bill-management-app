@@ -36,6 +36,13 @@
         <item name="android:background">@drawable/custom_button_7</item>
     </style>
 
+    <style name="CustomButtonStyle8" parent="Widget.AppCompat.Button" >
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/custom_button_8</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
     <style name="CustomTextEditStyle" parent="Widget.AppCompat.Button" >
         <item name="android:textColor">@color/black</item>
         <item name="android:background">@drawable/custom_text_edit</item>
