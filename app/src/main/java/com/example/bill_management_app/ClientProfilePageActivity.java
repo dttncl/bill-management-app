@@ -196,6 +196,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // Dismiss the dialog
+                                    DisplayProfile(oneClient);
                                     dialog.dismiss();
                                 }
                             })
@@ -227,6 +228,8 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                     textViewPhone.setFocusable(false);
                                     textViewEmail.setFocusable(false);
                                     textViewCredit.setFocusable(false);
+
+                                    DisplayProfile(oneClient);
 
                                     dialog.dismiss();
                                 }
@@ -300,6 +303,8 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 textViewPhone.setFocusable(false);
                                 textViewEmail.setFocusable(false);
                                 textViewCredit.setFocusable(false);
+
+                                DisplayProfile(oneClient);
 
                                 dialog.dismiss();
                             }
