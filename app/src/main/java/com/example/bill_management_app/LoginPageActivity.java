@@ -93,9 +93,7 @@ public class LoginPageActivity extends AppCompatActivity {
                                     LoginAsClient(userId);
 
                                 } else {
-                                    Toast.makeText(LoginPageActivity.this, userType + "2", Toast.LENGTH_SHORT).show();
-                                    // create admin object and pass to intent
-
+                                    LoginAsAdmin(userId);
                                 }
 
                             }
@@ -160,6 +158,35 @@ public class LoginPageActivity extends AppCompatActivity {
                         //Toast.makeText(LoginPageActivity.this, oneClient.getUserID(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginPageActivity.this, ClientProfilePageActivity.class);
                         intent.putExtra("oneClient", oneClient);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                } else {
+                    Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void LoginAsAdmin(String userID) {
+        DatabaseReference admins = fbaseDB.getReference("admins");
+        Query searchAdmin = admins.orderByChild("userID").equalTo(userID);
+        searchAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        Admin oneAdmin = childSnapshot.getValue(Admin.class);
+                        AdminManager.getInstance().setAdmin(oneAdmin);
+
+                        Intent intent = new Intent(LoginPageActivity.this, ManagerDashboard.class);
                         startActivity(intent);
                         finish();
                         break;

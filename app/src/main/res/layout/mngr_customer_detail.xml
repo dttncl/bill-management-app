@@ -15,10 +15,13 @@
         android:drawableRight="@drawable/baseline_edit_24"
         android:drawablePadding="5dp"/>
 
-    <TextView
+    <EditText
         android:id="@+id/customerFName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:inputType="text"
+        style="@style/CustomEditText"
         android:text="Anakin"
         android:textStyle="bold"
         android:textSize="18dp"
@@ -64,10 +67,13 @@
         android:layout_marginTop="8dp"
         android:layout_below="@id/customerFName"/>
 
-    <TextView
+    <EditText
         android:id="@+id/customerLName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:inputType="text"
+        style="@style/CustomEditText"
         android:text="Skywalker"
         android:textStyle="bold"
         android:textSize="18dp"
@@ -84,10 +90,13 @@
         android:layout_marginTop="8dp"
         android:layout_below="@id/customerLName"/>
 
-    <TextView
+    <EditText
         android:id="@+id/customerPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:inputType="text"
+        style="@style/CustomEditText"
         android:text="+1 514-1234567"
         android:textStyle="bold"
         android:textSize="18dp"
@@ -104,10 +113,13 @@
         android:layout_marginTop="8dp"
         android:layout_below="@id/customerPhone"/>
 
-    <TextView
+    <EditText
         android:id="@+id/customerEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:inputType="text"
+        style="@style/CustomEditText"
         android:text="anakin.skywalker@mail.com"
         android:textStyle="bold"
         android:textSize="18dp"
