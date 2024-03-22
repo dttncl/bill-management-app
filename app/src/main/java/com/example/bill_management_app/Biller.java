@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 public class Biller {
     private String billerID;
-    private String companyName;
+    private String billerName;
     private ArrayList<Transaction> listOfTransactions;
 
     public Biller() {
         billerID = "";
-        companyName = "";
+        billerName = "";
         listOfTransactions = null;
     }
 
     public Biller(String billerID, String companyName, ArrayList<Transaction> listOfTransactions) {
         this.billerID = billerID;
-        this.companyName = companyName;
+        this.billerName = companyName;
         this.listOfTransactions = listOfTransactions;
     }
 
@@ -27,12 +27,12 @@ public class Biller {
         this.billerID = billerID;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getBillerName() {
+        return billerName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setBillerName(String billerName) {
+        this.billerName = billerName;
     }
 
     public ArrayList<Transaction> getListOfTransactions() {

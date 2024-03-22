@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,6 +26,7 @@ public class ClientDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_dashboard);
 
+        buttonAddBill = findViewById(R.id.buttonAddBill);
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
@@ -66,6 +68,15 @@ public class ClientDashboard extends AppCompatActivity {
         textViewFirstName.setText("Hello, " + oneClient.getFirstName());
         textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
 
+        buttonAddBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClientDashboard.this, AddBillActivity.class);
+                intent.putExtra("oneClient", oneClient);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 }

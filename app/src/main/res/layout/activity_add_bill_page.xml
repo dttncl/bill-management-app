@@ -37,8 +37,8 @@
         android:paddingTop="60dp"
         app:layout_constraintTop_toBottomOf="@+id/includeCustomerHeader"/>
 
-    <EditText
-        android:id="@+id/editTextBillerName"
+    <Spinner
+        android:id="@+id/spinnerBillerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/textViewBillerName"
@@ -57,7 +57,7 @@
         android:textSize="15dp"
         android:paddingStart="50dp"
         android:paddingTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextBillerName"/>
+        app:layout_constraintTop_toBottomOf="@+id/spinnerBillerName"/>
 
     <EditText
         android:id="@+id/editTextAccountNumber"
@@ -68,6 +68,7 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
+        android:inputType="number"
         android:paddingLeft="20dp"
         />
 
@@ -87,6 +88,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/textViewAmount"
         style="@style/CustomTextEditStyle"
+        android:inputType="numberDecimal"
         android:layout_marginHorizontal="50dp"
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
@@ -114,6 +116,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:paddingRight="2dp"
+        android:inputType="date"
         android:drawableEnd="@drawable/ic_calendar_background"
         />
 

@@ -51,6 +51,9 @@
         <activity
             android:name=".ClientDashboard"
             android:exported="false" />
+        <activity
+            android:name=".AddBillActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
