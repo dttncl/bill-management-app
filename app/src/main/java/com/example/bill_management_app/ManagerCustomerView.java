@@ -7,16 +7,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ManagerCustomerView extends AppCompatActivity {
 
     ListView listViewTransactions;
-
     LinearLayout navIcons;
     ImageButton btnHome, btnProfile;
+    TextView textViewManagerName, textViewClientId;
+    EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,26 @@ public class ManagerCustomerView extends AppCompatActivity {
         String[] transactions = {"BBT0000101","BBT0000102","BBT0000106","BBT0000107","BBT0000108","extra"};
         String[] tDates = {"02/12/2024","02/07/2024","01/12/2024","01/07/2024","12/12/2023","extra"};
         String[] status = {"Success","Success","Success","Refunded","Success","extra"};
+
+        // extract the intent extras
+        Intent intent = getIntent();
+        Client oneClient = (Client) intent.getSerializableExtra("client");
+
+        textViewManagerName = findViewById(R.id.managerName);
+
+        editTextFirstName = findViewById(R.id.customerFName);
+        editTextLastName = findViewById(R.id.customerLName);
+        editTextPhone = findViewById(R.id.customerPhone);
+        editTextEmail = findViewById(R.id.customerEmail);
+        textViewClientId = findViewById(R.id.customerId);
+
+        textViewManagerName.setText("Hello, " + oneClient.getFirstName());
+
+        editTextFirstName.setText(oneClient.getFirstName());
+        editTextLastName.setText(oneClient.getLastName());
+        editTextPhone.setText(oneClient.getPhone());
+        editTextEmail.setText(oneClient.getEmail());
+        textViewClientId.setText(oneClient.getUserID());
 
         // set header for transaction history list
         LayoutInflater inflaterTransacHistory = getLayoutInflater();

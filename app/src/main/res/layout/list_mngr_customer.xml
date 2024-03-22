@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/layoutListViewMngrCustomer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,11 +12,14 @@
         android:paddingVertical="5dp"
         android:textSize="15dp"/>
 
-    <TextView
+    <Button
+        android:id="@+id/btnSeeMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/CustomButtonStyle8"
         android:textSize="15dp"
         android:text="See More >>"
+        android:textAllCaps="false"
         android:paddingVertical="5dp"
         android:layout_alignRight="@id/customerItem"/>
 
