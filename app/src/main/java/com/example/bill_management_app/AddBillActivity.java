@@ -91,6 +91,7 @@ public class AddBillActivity extends AppCompatActivity {
         buttonCancel = findViewById(R.id.buttonCancel);
 
         spinnerBillerName = findViewById(R.id.spinnerBillerName);
+
         // generate spinner
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference billers = fbaseDB.getReference("billers");
@@ -102,17 +103,16 @@ public class AddBillActivity extends AppCompatActivity {
 
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
 
-                    //Biller oneBiller = childSnapshot.getValue(Biller.class);
-                    String billerName = childSnapshot.child("billerName").getValue(String.class);
-                    String billerId = childSnapshot.child("billerID").getValue(String.class);
+                    // add billerName to the list
+                    Biller selectedBiller = childSnapshot.getValue(Biller.class);
 
-                    // Add billerName to the list
-                    if (billerName != null && billerId != null) {
+                    if (selectedBiller != null) {
                         Biller oneBiller = new Biller();
-                        oneBiller.setBillerID(billerId);
-                        oneBiller.setBillerName(billerName);
+                        oneBiller.setBillerID(selectedBiller.getBillerID());
+                        oneBiller.setBillerName(selectedBiller.getBillerName());
                         listOfBillers.add(oneBiller);
                     }
+
                 }
 
                 CustomDropdownBillersAdapter adapterDropdown = new CustomDropdownBillersAdapter(getApplicationContext(),listOfBillers);
@@ -167,6 +167,11 @@ public class AddBillActivity extends AppCompatActivity {
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
 
                 generateUniqueID(newBill,oneClient,oneBiller);
+
+                Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
+                intent.putExtra("oneClient", oneClient);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -205,13 +210,6 @@ public class AddBillActivity extends AppCompatActivity {
 
                     // create the entry in bills table
                     bills.child(String.valueOf(generatedID)).setValue(newBill);
-                    //bills.child(String.valueOf(generatedID)).child("billID").setValue(String.valueOf(newBill.getBillID()));
-                    //bills.child(String.valueOf(generatedID)).child("billerID").setValue(newBill.getBillerID());
-                    //bills.child(String.valueOf(generatedID)).child("accountNumber").setValue(newBill.getAccountNumber());
-                    //bills.child(String.valueOf(generatedID)).child("dateDue").setValue(newBill.getDateDue());
-                    //bills.child(String.valueOf(generatedID)).child("amount").setValue(newBill.getAmount());
-                    //bills.child(String.valueOf(generatedID)).child("status").setValue(newBill.getStatus());
-
                     handleGeneratedID(oneClient, newBill);
 
                 } else {

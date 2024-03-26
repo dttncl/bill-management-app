@@ -164,16 +164,10 @@ public class LoginPageActivity extends AppCompatActivity {
                         oneClient.setType(childSnapshot.child("type").getValue(EnumUserType.class));
                         oneClient.setCredit(childSnapshot.child("credit").getValue(double.class));
 
-                        Toast.makeText(LoginPageActivity.this, "setting works", Toast.LENGTH_SHORT).show();
-
                         ArrayList<String> listOfBills = new ArrayList<>();
-                        ArrayList<Bill> listOfClientBills = new ArrayList<>();
-                        DatabaseReference bills = fbaseDB.getReference("bills");
 
                         for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
                             listOfBills.add(billSnapshot.getKey());
-
-
                         }
 
                         oneClient.setListOfBills(listOfBills);
