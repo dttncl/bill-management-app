@@ -101,7 +101,6 @@ public class AddBillActivity extends AppCompatActivity {
                 ArrayList<Biller> listOfBillers = new ArrayList<>();
 
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    // Retrieve billerName and billerId from each childSnapshot
                     String billerName = childSnapshot.child("billerName").getValue(String.class);
                     String billerId = childSnapshot.child("billerID").getValue(String.class);
 
@@ -110,7 +109,6 @@ public class AddBillActivity extends AppCompatActivity {
                         Biller oneBiller = new Biller();
                         oneBiller.setBillerID(billerId);
                         oneBiller.setBillerName(billerName);
-                        //listOfBillers.add(billerId + "-" + billerName);
                         listOfBillers.add(oneBiller);
                     }
                 }
@@ -152,13 +150,10 @@ public class AddBillActivity extends AppCompatActivity {
                 Biller oneBiller = (Biller)spinnerBillerName.getSelectedItem();
 
                 newBill.setBillerID(oneBiller.getBillerID());
-                //Toast.makeText(AddBillActivity.this, oneBiller.getBillerID(), Toast.LENGTH_SHORT).show();
                 newBill.setAccountNumber(Integer.valueOf(editTextAccountNumber.getText().toString().trim()));
                 newBill.setAmount(Double.valueOf(editTextAmount.getText().toString().trim()));
                 newBill.setDateDue(new Date(editTextDueDate.getText().toString()));
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
-
-                Toast.makeText(AddBillActivity.this, "created new bill", Toast.LENGTH_SHORT).show();
 
                 generateUniqueID(newBill,oneClient,oneBiller);
             }
@@ -178,7 +173,6 @@ public class AddBillActivity extends AppCompatActivity {
 
         // update DB
         listOfBills.child(String.valueOf(newBill.getBillID())).setValue(true);
-        Toast.makeText(this, "added to users", Toast.LENGTH_SHORT).show();
     }
 
     private void generateUniqueID(Bill newBill, Client oneClient, Biller oneBiller) {
@@ -206,7 +200,6 @@ public class AddBillActivity extends AppCompatActivity {
                     bills.child(String.valueOf(generatedID)).child("amount").setValue(newBill.getAmount());
                     bills.child(String.valueOf(generatedID)).child("status").setValue(newBill.getStatus());
 
-                    Toast.makeText(AddBillActivity.this, "generated entry", Toast.LENGTH_SHORT).show();
                     handleGeneratedID(oneClient, newBill,oneBiller);
 
                 } else {
