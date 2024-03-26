@@ -9,27 +9,28 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class CustomBillsAdapter extends BaseAdapter {
 
     Context context;
-    String billerId[];
-    String dueDates[];
-    String stat[];
+    ArrayList<CustomBillsAdapterObject> listOfBills;
+    //String billerId[];
+    //String dueDates[];
+    //String stat[];
     LayoutInflater inflater;
 
-    public CustomBillsAdapter(Context appContext, String[] billerId, String[] dueDates, String[] stat) {
+    public CustomBillsAdapter(Context appContext, ArrayList<CustomBillsAdapterObject> listOfBills) {
         context = appContext;
-        this.billerId = billerId;
-        this.dueDates = dueDates;
-        this.stat = stat;
+        this.listOfBills = listOfBills;
 
         inflater = LayoutInflater.from(appContext);
     }
 
     @Override
     public int getCount() {
-        return billerId.length;
+        return listOfBills.size();
     }
 
     @Override
@@ -45,13 +46,13 @@ public class CustomBillsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.list_bills,null);
-        TextView bId = convertView.findViewById(R.id.billerItem);
-        TextView dId = convertView.findViewById(R.id.duedateItem);
+        TextView bName = convertView.findViewById(R.id.billerItem);
+        TextView dDate = convertView.findViewById(R.id.duedateItem);
         Button status = convertView.findViewById(R.id.statusItem);
 
-        bId.setText(billerId[position]);
-        dId.setText(dueDates[position]);
-        status.setText(stat[position]);
+        bName.setText(listOfBills.get(position).getBillerName());
+        dDate.setText(listOfBills.get(position).getDueDate().toString());
+        status.setText(listOfBills.get(position).getStatus().toString());
 
         //View finalConvertView = convertView;
         status.setOnClickListener(new View.OnClickListener() {
