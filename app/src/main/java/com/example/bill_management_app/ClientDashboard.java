@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,6 +38,7 @@ public class ClientDashboard extends AppCompatActivity {
         setContentView(R.layout.activity_client_dashboard);
 
         buttonAddBill = findViewById(R.id.buttonAddBill);
+
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
@@ -49,37 +49,44 @@ public class ClientDashboard extends AppCompatActivity {
         DatabaseReference bills = fbaseDB.getReference("bills");
 
         ArrayList<String> listOfBillsFromClient = oneClient.getListOfBills();
-        ArrayList<CustomBillsAdapterObject> listOfBills = new ArrayList<>();
-        CustomBillsAdapter adapterBills = new CustomBillsAdapter(getApplicationContext(),listOfBills);
+        ArrayList<CustomBillsAdapterObject> listOfCustomBills = new ArrayList<>();
+
+        CustomBillsAdapter adapterBills = new CustomBillsAdapter(getApplicationContext(),listOfCustomBills, oneClient);
 
         for (String bill_id : listOfBillsFromClient) {
             CustomBillsAdapterObject bill = new CustomBillsAdapterObject();
-
             bills.child(bill_id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
 
+                        int billID = Integer.valueOf(snapshot.getKey());
                         String billerID = snapshot.child("billerID").getValue(String.class);
-                        //Toast.makeText(ClientDashboard.this, "exists", Toast.LENGTH_SHORT).show();
-
+                        int accountNumber = snapshot.child("accountNumber").getValue(Integer.class);
                         DateModel dateDue = snapshot.child("dateDue").getValue(DateModel.class);
-                        EnumPaymentStatus status = EnumPaymentStatus.valueOf(snapshot.child("status").getValue(String.class));
+                        double amount = snapshot.child("amount").getValue(Double.class);
+                        EnumPaymentStatus status = snapshot.child("status").getValue(EnumPaymentStatus.class);
+
+                        Bill selectedBill = new Bill();
+                        selectedBill.setBillID(billID);
+                        selectedBill.setBillerID(billerID);
+                        selectedBill.setAccountNumber(accountNumber);
+                        selectedBill.setDateDue(dateDue);
+                        selectedBill.setAmount(amount);
+                        selectedBill.setStatus(status);
+
+                        bill.setOneBill(selectedBill);
 
                         billers.child(billerID).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot billerSnapshot) {
                                 if (billerSnapshot.exists()) {
                                     String billerName = billerSnapshot.child("billerName").getValue(String.class);
-
                                     bill.setBillerName(billerName);
-                                    bill.setDueDate(dateDue);
-                                    bill.setStatus(status);
 
-                                    listOfBills.add(bill);
+                                    listOfCustomBills.add(bill);
+
                                     adapterBills.notifyDataSetChanged();
-
-                                    //Toast.makeText(ClientDashboard.this, bill.getBillerName(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -91,15 +98,14 @@ public class ClientDashboard extends AppCompatActivity {
                     }
                 }
 
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
-
-
-
         }
+
 
         // set header for bills list
         LayoutInflater inflaterBill = getLayoutInflater();

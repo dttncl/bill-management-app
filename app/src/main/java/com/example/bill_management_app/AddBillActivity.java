@@ -1,7 +1,6 @@
 package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
 public class AddBillActivity extends AppCompatActivity {
@@ -114,7 +112,6 @@ public class AddBillActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
                 System.err.println("Error fetching data: " + databaseError);
             }
         });
@@ -132,7 +129,7 @@ public class AddBillActivity extends AppCompatActivity {
                 listRequiredFields.add(editTextAmount);
                 listRequiredFields.add(editTextDueDate);
 
-                // Validation block for Required Fields
+                // validation block for required fields
                 for (EditText field: listRequiredFields) {
                     if (field.getText().toString().trim().isEmpty()) {
                         field.setError("This field is required.");
@@ -161,10 +158,6 @@ public class AddBillActivity extends AppCompatActivity {
 
                 generateUniqueID(newBill,oneClient,oneBiller);
 
-                Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
-                intent.putExtra("oneClient", oneClient);
-                startActivity(intent);
-                finish();
             }
         });
     }
@@ -174,7 +167,7 @@ public class AddBillActivity extends AppCompatActivity {
         return random.nextInt(900000) + 100000;
     }
 
-    private void handleGeneratedID(Client oneClient, Bill newBill) {
+    private void addBillToClient(Client oneClient, Bill newBill) {
 
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference clients = fbaseDB.getReference("clients").child(oneClient.getUserID());
@@ -182,6 +175,16 @@ public class AddBillActivity extends AppCompatActivity {
 
         // update DB
         listOfBills.child(String.valueOf(newBill.getBillID())).setValue(true);
+
+        // update client listOfBills
+        ArrayList<String> listOfBillsFromClient = oneClient.getListOfBills();
+        listOfBillsFromClient.add(String.valueOf(newBill.getBillID()));
+        oneClient.setListOfBills(listOfBillsFromClient);
+
+        Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
+        intent.putExtra("oneClient", oneClient);
+        startActivity(intent);
+        finish();
     }
 
     private void generateUniqueID(Bill newBill, Client oneClient, Biller oneBiller) {
@@ -195,15 +198,17 @@ public class AddBillActivity extends AppCompatActivity {
 
                 int generatedID = generateRandomID();
 
-                // check if generated ID exists
+                // check if generated ID does not exist
                 if (!snapshot.hasChild(String.valueOf(generatedID))) {
 
+                    // set the bill id
                     newBill.setBillID(generatedID);
-                    newBill.setBillerID(oneBiller.getBillerID());
 
                     // create the entry in bills table
                     bills.child(String.valueOf(generatedID)).setValue(newBill);
-                    handleGeneratedID(oneClient, newBill);
+
+                    // add bill to client
+                    addBillToClient(oneClient, newBill);
 
                 } else {
                     generateUniqueID(newBill,oneClient,oneBiller);

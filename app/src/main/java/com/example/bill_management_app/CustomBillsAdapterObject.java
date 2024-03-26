@@ -1,11 +1,19 @@
 package com.example.bill_management_app;
 
 public class CustomBillsAdapterObject {
+
+    private Bill oneBill;
     private String billerName;
-    private DateModel dueDate;
-    private EnumPaymentStatus status;
 
     public CustomBillsAdapterObject() {
+    }
+
+    public Bill getOneBill() {
+        return oneBill;
+    }
+
+    public void setOneBill(Bill oneBill) {
+        this.oneBill = oneBill;
     }
 
     public String getBillerName() {
@@ -16,19 +24,4 @@ public class CustomBillsAdapterObject {
         this.billerName = billerName;
     }
 
-    public DateModel getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(DateModel dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public EnumPaymentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(EnumPaymentStatus status) {
-        this.status = status;
-    }
 }

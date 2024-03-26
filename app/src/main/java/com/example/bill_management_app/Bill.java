@@ -1,8 +1,9 @@
 package com.example.bill_management_app;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Bill {
+public class Bill implements Serializable {
     private int billID;
     private String billerID;
     private int accountNumber;
