@@ -6,7 +6,7 @@ public class Bill {
     private int billID;
     private String billerID;
     private int accountNumber;
-    private Date dateDue;
+    private DateModel dateDue;
     private double amount;
     private EnumPaymentStatus status;
 
@@ -19,7 +19,7 @@ public class Bill {
         status = EnumPaymentStatus.Unpaid;
     }
 
-    public Bill(int billID, String billerID, int accountNumber, Date dateDue, double amount, EnumPaymentStatus status) {
+    public Bill(int billID, String billerID, int accountNumber, DateModel dateDue, double amount, EnumPaymentStatus status) {
         this.billID = billID;
         this.billerID = billerID;
         this.accountNumber = accountNumber;
@@ -52,11 +52,11 @@ public class Bill {
         this.accountNumber = accountNumber;
     }
 
-    public Date getDateDue() {
+    public DateModel getDateDue() {
         return dateDue;
     }
 
-    public void setDateDue(Date dateDue) {
+    public void setDateDue(DateModel dateDue) {
         this.dateDue = dateDue;
     }
 

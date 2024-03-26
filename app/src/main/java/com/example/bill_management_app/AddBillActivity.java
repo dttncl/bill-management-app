@@ -101,6 +101,8 @@ public class AddBillActivity extends AppCompatActivity {
                 ArrayList<Biller> listOfBillers = new ArrayList<>();
 
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+
+                    //Biller oneBiller = childSnapshot.getValue(Biller.class);
                     String billerName = childSnapshot.child("billerName").getValue(String.class);
                     String billerId = childSnapshot.child("billerID").getValue(String.class);
 
@@ -152,7 +154,16 @@ public class AddBillActivity extends AppCompatActivity {
                 newBill.setBillerID(oneBiller.getBillerID());
                 newBill.setAccountNumber(Integer.valueOf(editTextAccountNumber.getText().toString().trim()));
                 newBill.setAmount(Double.valueOf(editTextAmount.getText().toString().trim()));
-                newBill.setDateDue(new Date(editTextDueDate.getText().toString()));
+
+                String dueDateText = editTextDueDate.getText().toString();
+                String[] dates = dueDateText.split("/");
+
+                newBill.setDateDue(new DateModel(
+                        Integer.valueOf(dates[0]),
+                        Integer.valueOf(dates[1]),
+                        Integer.valueOf(dates[2])
+                ));
+
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
 
                 generateUniqueID(newBill,oneClient,oneBiller);
@@ -165,7 +176,7 @@ public class AddBillActivity extends AppCompatActivity {
         return random.nextInt(900000) + 100000;
     }
 
-    private void handleGeneratedID(Client oneClient, Bill newBill, Biller oneBiller) {
+    private void handleGeneratedID(Client oneClient, Bill newBill) {
 
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference clients = fbaseDB.getReference("clients").child(oneClient.getUserID());
@@ -193,14 +204,15 @@ public class AddBillActivity extends AppCompatActivity {
                     newBill.setBillerID(oneBiller.getBillerID());
 
                     // create the entry in bills table
-                    bills.child(String.valueOf(generatedID)).child("billID").setValue(String.valueOf(newBill.getBillID()));
-                    bills.child(String.valueOf(generatedID)).child("billerID").setValue(newBill.getBillerID());
-                    bills.child(String.valueOf(generatedID)).child("accountNumber").setValue(newBill.getAccountNumber());
-                    bills.child(String.valueOf(generatedID)).child("dateDue").setValue(newBill.getDateDue());
-                    bills.child(String.valueOf(generatedID)).child("amount").setValue(newBill.getAmount());
-                    bills.child(String.valueOf(generatedID)).child("status").setValue(newBill.getStatus());
+                    bills.child(String.valueOf(generatedID)).setValue(newBill);
+                    //bills.child(String.valueOf(generatedID)).child("billID").setValue(String.valueOf(newBill.getBillID()));
+                    //bills.child(String.valueOf(generatedID)).child("billerID").setValue(newBill.getBillerID());
+                    //bills.child(String.valueOf(generatedID)).child("accountNumber").setValue(newBill.getAccountNumber());
+                    //bills.child(String.valueOf(generatedID)).child("dateDue").setValue(newBill.getDateDue());
+                    //bills.child(String.valueOf(generatedID)).child("amount").setValue(newBill.getAmount());
+                    //bills.child(String.valueOf(generatedID)).child("status").setValue(newBill.getStatus());
 
-                    handleGeneratedID(oneClient, newBill,oneBiller);
+                    handleGeneratedID(oneClient, newBill);
 
                 } else {
                     generateUniqueID(newBill,oneClient,oneBiller);
