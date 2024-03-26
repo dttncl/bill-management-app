@@ -1,6 +1,8 @@
 package com.example.bill_management_app;
 
-public class CustomBillsAdapterObject {
+import java.io.Serializable;
+
+public class CustomBillsAdapterObject implements Serializable {
 
     private Bill oneBill;
     private String billerName;

@@ -17,6 +17,14 @@ public class BillDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_details);
 
+        // extract the intent extras
+        Intent intent = getIntent();
+        Client oneClient = (Client) intent.getSerializableExtra("oneClient");
+        Bill oneBill = (Bill) intent.getSerializableExtra("oneBill");
+
+
+
+
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
         btnProfile = navIcons.findViewById(R.id.btnProfile);

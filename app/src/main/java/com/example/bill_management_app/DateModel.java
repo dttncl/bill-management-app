@@ -1,6 +1,8 @@
 package com.example.bill_management_app;
 
-public class DateModel {
+import java.io.Serializable;
+
+public class DateModel implements Serializable {
 
     private int day;
     private int month;
