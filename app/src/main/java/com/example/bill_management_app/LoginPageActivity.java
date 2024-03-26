@@ -167,9 +167,13 @@ public class LoginPageActivity extends AppCompatActivity {
                         Toast.makeText(LoginPageActivity.this, "setting works", Toast.LENGTH_SHORT).show();
 
                         ArrayList<String> listOfBills = new ArrayList<>();
+                        ArrayList<Bill> listOfClientBills = new ArrayList<>();
+                        DatabaseReference bills = fbaseDB.getReference("bills");
 
                         for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
                             listOfBills.add(billSnapshot.getKey());
+
+
                         }
 
                         oneClient.setListOfBills(listOfBills);
