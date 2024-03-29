@@ -8,7 +8,7 @@
         android:id="@+id/billerItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="5dp"
+        android:paddingVertical="10dp"
         android:textSize="15dp"
         android:layout_alignParentLeft="true" />
 
@@ -16,23 +16,18 @@
         android:id="@+id/duedateItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="5dp"
+        android:paddingVertical="10dp"
         android:textSize="15dp"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <TextView
         android:id="@+id/statusItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15dp"
         android:layout_alignParentRight="true"
         android:drawableRight="@drawable/baseline_see_more"
-        android:paddingVertical="5dp"
-        android:padding="0dp"
-        android:minHeight="0dp"
-        android:backgroundTint="@color/transparent"
-        android:textColor="@color/black"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        android:paddingVertical="10dp"
         />
 
 </RelativeLayout>

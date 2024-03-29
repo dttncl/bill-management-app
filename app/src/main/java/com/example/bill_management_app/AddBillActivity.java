@@ -1,23 +1,18 @@
 package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
 public class AddBillActivity extends AppCompatActivity {
@@ -38,9 +32,6 @@ public class AddBillActivity extends AppCompatActivity {
     EditText editTextAccountNumber, editTextAmount, editTextDueDate;
 
     Spinner spinnerBillerName;
-
-    FirebaseAuth fbaseAuth;
-
     FirebaseDatabase fbaseDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +82,7 @@ public class AddBillActivity extends AppCompatActivity {
         buttonCancel = findViewById(R.id.buttonCancel);
 
         spinnerBillerName = findViewById(R.id.spinnerBillerName);
+
         // generate spinner
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference billers = fbaseDB.getReference("billers");
@@ -101,18 +93,17 @@ public class AddBillActivity extends AppCompatActivity {
                 ArrayList<Biller> listOfBillers = new ArrayList<>();
 
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    // Retrieve billerName and billerId from each childSnapshot
-                    String billerName = childSnapshot.child("billerName").getValue(String.class);
-                    String billerId = childSnapshot.child("billerID").getValue(String.class);
 
-                    // Add billerName to the list
-                    if (billerName != null && billerId != null) {
+                    // add billerName to the list
+                    Biller selectedBiller = childSnapshot.getValue(Biller.class);
+
+                    if (selectedBiller != null) {
                         Biller oneBiller = new Biller();
-                        oneBiller.setBillerID(billerId);
-                        oneBiller.setBillerName(billerName);
-                        //listOfBillers.add(billerId + "-" + billerName);
+                        oneBiller.setBillerID(selectedBiller.getBillerID());
+                        oneBiller.setBillerName(selectedBiller.getBillerName());
                         listOfBillers.add(oneBiller);
                     }
+
                 }
 
                 CustomDropdownBillersAdapter adapterDropdown = new CustomDropdownBillersAdapter(getApplicationContext(),listOfBillers);
@@ -121,7 +112,6 @@ public class AddBillActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
                 System.err.println("Error fetching data: " + databaseError);
             }
         });
@@ -139,7 +129,7 @@ public class AddBillActivity extends AppCompatActivity {
                 listRequiredFields.add(editTextAmount);
                 listRequiredFields.add(editTextDueDate);
 
-                // Validation block for Required Fields
+                // validation block for required fields
                 for (EditText field: listRequiredFields) {
                     if (field.getText().toString().trim().isEmpty()) {
                         field.setError("This field is required.");
@@ -152,15 +142,22 @@ public class AddBillActivity extends AppCompatActivity {
                 Biller oneBiller = (Biller)spinnerBillerName.getSelectedItem();
 
                 newBill.setBillerID(oneBiller.getBillerID());
-                //Toast.makeText(AddBillActivity.this, oneBiller.getBillerID(), Toast.LENGTH_SHORT).show();
                 newBill.setAccountNumber(Integer.valueOf(editTextAccountNumber.getText().toString().trim()));
                 newBill.setAmount(Double.valueOf(editTextAmount.getText().toString().trim()));
-                newBill.setDateDue(new Date(editTextDueDate.getText().toString()));
+
+                String dueDateText = editTextDueDate.getText().toString();
+                String[] dates = dueDateText.split("/");
+
+                newBill.setDateDue(new DateModel(
+                        Integer.valueOf(dates[0]),
+                        Integer.valueOf(dates[1]),
+                        Integer.valueOf(dates[2])
+                ));
+
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
 
-                Toast.makeText(AddBillActivity.this, "created new bill", Toast.LENGTH_SHORT).show();
-
                 generateUniqueID(newBill,oneClient,oneBiller);
+
             }
         });
     }
@@ -170,7 +167,7 @@ public class AddBillActivity extends AppCompatActivity {
         return random.nextInt(900000) + 100000;
     }
 
-    private void handleGeneratedID(Client oneClient, Bill newBill, Biller oneBiller) {
+    private void addBillToClient(Client oneClient, Bill newBill) {
 
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference clients = fbaseDB.getReference("clients").child(oneClient.getUserID());
@@ -178,7 +175,16 @@ public class AddBillActivity extends AppCompatActivity {
 
         // update DB
         listOfBills.child(String.valueOf(newBill.getBillID())).setValue(true);
-        Toast.makeText(this, "added to users", Toast.LENGTH_SHORT).show();
+
+        // update client listOfBills
+        ArrayList<String> listOfBillsFromClient = oneClient.getListOfBills();
+        listOfBillsFromClient.add(String.valueOf(newBill.getBillID()));
+        oneClient.setListOfBills(listOfBillsFromClient);
+
+        Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
+        intent.putExtra("oneClient", oneClient);
+        startActivity(intent);
+        finish();
     }
 
     private void generateUniqueID(Bill newBill, Client oneClient, Biller oneBiller) {
@@ -192,22 +198,17 @@ public class AddBillActivity extends AppCompatActivity {
 
                 int generatedID = generateRandomID();
 
-                // check if generated ID exists
+                // check if generated ID does not exist
                 if (!snapshot.hasChild(String.valueOf(generatedID))) {
 
+                    // set the bill id
                     newBill.setBillID(generatedID);
-                    newBill.setBillerID(oneBiller.getBillerID());
 
                     // create the entry in bills table
-                    bills.child(String.valueOf(generatedID)).child("billID").setValue(String.valueOf(newBill.getBillID()));
-                    bills.child(String.valueOf(generatedID)).child("billerID").setValue(newBill.getBillerID());
-                    bills.child(String.valueOf(generatedID)).child("accountNumber").setValue(newBill.getAccountNumber());
-                    bills.child(String.valueOf(generatedID)).child("dateDue").setValue(newBill.getDateDue());
-                    bills.child(String.valueOf(generatedID)).child("amount").setValue(newBill.getAmount());
-                    bills.child(String.valueOf(generatedID)).child("status").setValue(newBill.getStatus());
+                    bills.child(String.valueOf(generatedID)).setValue(newBill);
 
-                    Toast.makeText(AddBillActivity.this, "generated entry", Toast.LENGTH_SHORT).show();
-                    handleGeneratedID(oneClient, newBill,oneBiller);
+                    // add bill to client
+                    addBillToClient(oneClient, newBill);
 
                 } else {
                     generateUniqueID(newBill,oneClient,oneBiller);
