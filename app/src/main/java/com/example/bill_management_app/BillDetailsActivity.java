@@ -2,9 +2,12 @@ package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,19 +47,17 @@ import java.util.Map;
 
 public class BillDetailsActivity extends AppCompatActivity {
 
-    LinearLayout navIcons;
-    LinearLayout clientDetails, layoutDate;
+    LinearLayout navIcons, clientDetails, layoutDate;
     ConstraintLayout billerDetails,paymentAmount;
     ImageButton btnHome, btnProfile;
-    TextView textViewFirstName, textViewAvailableCreditNumeric;
-    EditText textViewDueDateFormat;
-    Button buttonEditDate;
-    TextView textViewBillerNameBold,textViewAccountNumberFormat,textViewStatusChangeable,textViewPaymentAmountBold;
+    TextView textViewFirstName, textViewAvailableCreditNumeric,textViewStatusChangeable,textViewPaymentAmountBold;
+    EditText textViewDueDateFormat, textViewBillerNameBold, textViewAccountNumberFormat;
+    AppCompatButton btnEditBillerName, btnEditAccountNumber, btnEditDueDate, btnModify;
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    String publishableKey = "PUBLISHABLE_KEY";
-    String secretKey = "SECRET_KEY";
+    String publishableKey = "pk_live_51OykuDJJZhzbFhSMPGvxjTvt8TH4NoWNEj8GWvPN4P8srubRQqBVAiNEjHEX6MMGc4tTBeqzWIOQfSCI4XMWukJW00EVysezEs";
+    String secretKey = "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";
     String customerId, emphericalKey, clientSecret;
     PaymentSheet paymentSheet;
 
@@ -70,8 +73,18 @@ public class BillDetailsActivity extends AppCompatActivity {
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
+
         btnProfile = navIcons.findViewById(R.id.btnProfile);
         btnHome = navIcons.findViewById(R.id.btnHome);
+
+        btnEditDueDate = findViewById(R.id.buttonEditDate);
+        btnEditBillerName = findViewById(R.id.buttonBillerName);
+        btnEditAccountNumber = findViewById(R.id.buttonAccountNumber);
+        btnModify = findViewById(R.id.buttonModify);
+
+        textViewDueDateFormat = findViewById(R.id.textViewDueDateFormat);
+        textViewBillerNameBold = findViewById(R.id.textViewBillerNameBold);
+        textViewAccountNumberFormat = findViewById(R.id.textViewAccountNumberFormat);
 
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +185,15 @@ public class BillDetailsActivity extends AppCompatActivity {
         buttonPayNow = findViewById(R.id.buttonPayNow);
         PaymentConfiguration.init(this,publishableKey);
 
+        if (textViewStatusChangeable.getText().equals("Paid")) {
+
+            btnEditAccountNumber.setVisibility(View.GONE);
+            btnEditDueDate.setVisibility(View.GONE);
+            btnEditBillerName.setVisibility(View.GONE);
+
+            buttonPayNow.setText("Request Refund");
+        }
+
         paymentSheet = new PaymentSheet(this,paymentSheetResult -> {
            onPaymentResult(paymentSheetResult, oneBill, oneClient);
         });
@@ -179,6 +201,12 @@ public class BillDetailsActivity extends AppCompatActivity {
         buttonPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (textViewStatusChangeable.getText().equals("Paid")) {
+                    //Request refund
+                    return;
+                }
+
                 paymentFlow();
             }
         });
@@ -209,6 +237,149 @@ public class BillDetailsActivity extends AppCompatActivity {
                 return header;
             }
         };
+
+        final String[] dueDate = {textViewDueDateFormat.getText().toString()};
+        final String[] billerName = {textViewBillerNameBold.getText().toString()};
+        final String[] accountNumber = {textViewAccountNumberFormat.getText().toString()};
+
+        String tempDueDate = dueDate[0];
+        String tempBillerName = billerName[0];
+        String tempAccountNumber = accountNumber[0];
+
+        btnModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dueDate[0] = textViewDueDateFormat.getText().toString();
+                billerName[0] = textViewBillerNameBold.getText().toString();
+                accountNumber[0] = textViewAccountNumberFormat.getText().toString();
+
+                StringBuilder validateMessage = new StringBuilder("Are you sure you want to make the following changes?\n\n");
+                StringBuilder notValidateMessage = new StringBuilder("Please double check the following fields:\n\n");
+                StringBuilder message = new StringBuilder();
+
+                Boolean isValidated = true;
+
+
+                if (dueDate[0].isEmpty()) {
+                    notValidateMessage.append("\t- The date must not be empty.\n");
+                    isValidated = false;
+                }
+
+                if (billerName[0].isEmpty()) {
+                    notValidateMessage.append("\t- The biller name must not be empty.\n");
+                    isValidated = false;
+                }
+
+                if (accountNumber[0].isEmpty()) {
+                    notValidateMessage.append("\t- The account number must not be empty.\n");
+                    isValidated = false;
+                }
+
+                if (!Validator.isValidDate(dueDate[0])) {
+                    notValidateMessage.append("\t- The date must be in format dd/mm/yyyy. Example: 30/12/2024.\n");
+                    isValidated = false;
+                }
+
+                if (!Validator.isValidAccountNumber(accountNumber[0])) {
+                    notValidateMessage.append("\t- The account number must contain only digits.\n");
+                    isValidated = false;
+                }
+
+                // For the Dialog button
+                AlertDialog.Builder builder = new AlertDialog.Builder(BillDetailsActivity.this);
+
+                if (!isValidated) {
+                    message.append(notValidateMessage);
+                } else {
+                    message.append(tempAccountNumber + " - " + accountNumber[0]);
+                }
+
+                builder.setTitle("Modify Bill").setMessage(message);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(!dueDate[0].equals(tempDueDate)) {
+                            String dueDateText = dueDate[0];
+                            String[] dates = dueDateText.split("/");
+
+                            oneBill.setDateDue(new DateModel(
+                                    Integer.valueOf(dates[0]),
+                                    Integer.valueOf(dates[1]),
+                                    Integer.valueOf(dates[2])
+                            ));
+
+                            String stringBillId = String.valueOf(oneBill.getBillID());
+
+                            fbaseDB = FirebaseDatabase.getInstance();
+                            DatabaseReference bills = fbaseDB.getReference("bills");
+
+                            bills.child(stringBillId).setValue(oneBill);
+                        }
+
+                        if (!accountNumber[0].equals(tempAccountNumber)) {
+                            oneBill.setAccountNumber(Integer.parseInt(accountNumber[0]));
+
+                            fbaseDB = FirebaseDatabase.getInstance();
+                            DatabaseReference bills = fbaseDB.getReference("bills");
+
+                            String stringBillId = String.valueOf(oneBill.getBillID());
+
+                            bills.child(stringBillId).setValue(oneBill);
+                        }
+
+                        if (!billerName[0].equals(tempBillerName)) {
+
+                            fbaseDB = FirebaseDatabase.getInstance();
+                            DatabaseReference billersRef = fbaseDB.getReference("billers");
+
+                            Query billerQuery = billersRef.orderByChild("billerID").equalTo(billerID);
+                            billerQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot billerSnapshot : snapshot.getChildren()) {
+                                        billerSnapshot.getRef().child("billerName").setValue(billerName[0]).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(getApplicationContext(), "Biller name updated successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }). addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(), "Failed to update biller name", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getApplicationContext(), "Failed to query biller: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            }
+        });
+
+        onClickEditButton(textViewDueDateFormat,btnEditDueDate);
+        onClickEditButton(textViewBillerNameBold,btnEditBillerName);
+        onClickEditButton(textViewAccountNumberFormat,btnEditAccountNumber);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
@@ -335,5 +506,36 @@ public class BillDetailsActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
 
+    }
+
+    public void toggleButtonIcon(AppCompatButton button, boolean isButtonIconChecked) {
+        if(isButtonIconChecked) {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_check_24,0,0,0);
+        } else {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+        }
+    }
+
+    public void onClickEditButton(EditText editText, AppCompatButton button) {
+        final boolean[] isChecked = {false};
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked[0] = !isChecked[0];
+                toggleButtonIcon(button, isChecked[0]);
+                toggleFocusable(editText, isChecked[0]);
+            }
+        });
+    }
+
+    public void toggleFocusable(EditText editText, boolean isChecked) {
+        if (isChecked) {
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            editText.selectAll();
+            editText.requestFocus();
+        } else {
+            editText.setFocusable(false);
+        }
     }
 }

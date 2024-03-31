@@ -43,6 +43,7 @@ public class ClientDashboard extends AppCompatActivity {
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
 
+
         listBills = findViewById(R.id.listBills);
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference billers = fbaseDB.getReference("billers");
@@ -58,6 +59,7 @@ public class ClientDashboard extends AppCompatActivity {
             bills.child(bill_id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+
                     if (snapshot.exists()) {
 
                         int billID = Integer.valueOf(snapshot.getKey());
