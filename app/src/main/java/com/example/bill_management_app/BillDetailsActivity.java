@@ -56,8 +56,8 @@ public class BillDetailsActivity extends AppCompatActivity {
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    String publishableKey = "";
-    String secretKey = "";
+    String publishableKey = "k_live_51OykuDJJZhzbFhSMPGvxjTvt8TH4NoWNEj8GWvPN4P8srubRQqBVAiNEjHEX6MMGc4tTBeqzWIOQfSCI4XMWukJW00EVysezEs";
+    String secretKey = "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";
     String customerId, emphericalKey, clientSecret;
     PaymentSheet paymentSheet;
 
@@ -378,7 +378,6 @@ public class BillDetailsActivity extends AppCompatActivity {
         });
 
         onClickEditButton(textViewDueDateFormat,btnEditDueDate);
-        onClickEditButton(textViewBillerNameBold,btnEditBillerName);
         onClickEditButton(textViewAccountNumberFormat,btnEditAccountNumber);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);

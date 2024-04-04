@@ -2,7 +2,9 @@ package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,7 +23,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ClientDashboard extends AppCompatActivity {
     ListView listBills;
@@ -29,6 +35,7 @@ public class ClientDashboard extends AppCompatActivity {
     LinearLayout navIcons;
     LinearLayout clientDetails;
     ImageButton btnHome, btnProfile;
+    AppCompatButton btnSortBiller, btnSortDueDate, btnSortStatus;
     TextView textViewFirstName, textViewAvailableCreditNumeric;
     FirebaseDatabase fbaseDB;
 
@@ -114,6 +121,56 @@ public class ClientDashboard extends AppCompatActivity {
         ViewGroup headerBills = (ViewGroup)inflaterBill.inflate(R.layout.list_bills_header,listBills,false);
         listBills.addHeaderView(headerBills,null,false);
 
+        btnSortBiller = findViewById(R.id.btnSortBiller);
+        btnSortDueDate = findViewById(R.id.btnSortDueDate);
+        btnSortStatus = findViewById(R.id.btnSortStatus);
+
+        final boolean[] isBillerAscending = {true};
+        final boolean[] isDueDateAscending = {true};
+        final boolean[] isStatusAscending = {true};
+
+        btnSortBiller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isBillerAscending[0]) {
+                    sortByBillerAscending(listOfCustomBills);
+                    isBillerAscending[0] = false; // Toggle the flag
+                } else {
+                    sortByBillerDescending(listOfCustomBills);
+                    isBillerAscending[0] = true; // Toggle the flag
+                }
+                adapterBills.notifyDataSetChanged(); // Update the ListView after sorting
+            }
+        });
+
+        btnSortDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDueDateAscending[0]) {
+                    sortByDueDateAscending(listOfCustomBills);
+                    isDueDateAscending[0] = false; // Toggle the flag
+                } else {
+                    sortByDueDateDescending(listOfCustomBills);
+                    isDueDateAscending[0] = true; // Toggle the flag
+                }
+                adapterBills.notifyDataSetChanged(); // Update the ListView after sorting
+            }
+        });
+
+        btnSortStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isStatusAscending[0]) {
+                    sortByStatusAscending(listOfCustomBills);
+                    isStatusAscending[0] = false; // Toggle the flag
+                } else {
+                    sortByStatusDescending(listOfCustomBills);
+                    isStatusAscending[0] = true; // Toggle the flag
+                }
+                adapterBills.notifyDataSetChanged(); // Update the ListView after sorting
+            }
+        });
+
         // set list of bills
         listBills.setAdapter(adapterBills);
 
@@ -138,7 +195,10 @@ public class ClientDashboard extends AppCompatActivity {
         textViewAvailableCreditNumeric = findViewById(R.id.textViewAvailableCreditNumeric);
 
         textViewFirstName.setText("Hello, " + oneClient.getFirstName());
-        textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
+        textViewAvailableCreditNumeric.setText(String.valueOf(currencyFormatter.format(oneClient.getCredit())));
 
         buttonAddBill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,4 +211,75 @@ public class ClientDashboard extends AppCompatActivity {
         });
 
     }
+
+    public void sortByBillerAscending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list by biller name
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by biller name
+                return o1.getBillerName().compareToIgnoreCase(o2.getBillerName());
+            }
+        });
+    }
+
+    public void sortByBillerDescending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list by biller name
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by biller name
+                return o2.getBillerName().compareToIgnoreCase(o1.getBillerName());
+            }
+        });
+    }
+
+    public void sortByDueDateAscending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list using DateModelComparator
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by due date
+                return new DateModelComparator().compare(o1.getOneBill().getDateDue(), o2.getOneBill().getDateDue());
+            }
+        });
+    }
+
+    public void sortByDueDateDescending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list using DateModelComparator
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by due date
+                return new DateModelComparator().compare(o2.getOneBill().getDateDue(), o1.getOneBill().getDateDue());
+            }
+        });
+    }
+
+    public void sortByStatusAscending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list by status
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by status
+                return o1.getOneBill().getStatus().compareTo(o2.getOneBill().getStatus());
+            }
+        });
+    }
+
+    public void sortByStatusDescending(List<CustomBillsAdapterObject> listOfCustomBills) {
+        // Sort the list by status in descending order
+        Collections.sort(listOfCustomBills, new Comparator<CustomBillsAdapterObject>() {
+            @Override
+            public int compare(CustomBillsAdapterObject o1, CustomBillsAdapterObject o2) {
+                // Compare by status in descending order
+                return o2.getOneBill().getStatus().compareTo(o1.getOneBill().getStatus());
+            }
+        });
+    }
+
+
+
 }
+
+

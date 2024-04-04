@@ -1,5 +1,7 @@
 package com.example.bill_management_app;
 
+import static com.example.bill_management_app.Validator.isValidDate;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -138,21 +140,47 @@ public class AddBillActivity extends AppCompatActivity {
                     }
                 }
 
+                String dueDateText = editTextDueDate.getText().toString();
+                String[] dates = dueDateText.split("/");
+                if (dates.length != 3) {
+                    editTextDueDate.setError("Invalid date format. Please enter in DD/MM/YYYY format.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
+                int day, month, year;
+                try {
+                    day = Integer.parseInt(dates[0]);
+                    month = Integer.parseInt(dates[1]);
+                    year = Integer.parseInt(dates[2]);
+                } catch (NumberFormatException e) {
+                    editTextDueDate.setError("Invalid date format. Please enter in DD/MM/YYYY format.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
+                if (!DateModel.isValidDate(day, month, year)) {
+                    editTextDueDate.setError("Invalid date. Please enter a valid date.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
                 Bill newBill = new Bill();
                 Biller oneBiller = (Biller)spinnerBillerName.getSelectedItem();
 
                 newBill.setBillerID(oneBiller.getBillerID());
                 newBill.setAccountNumber(Integer.valueOf(editTextAccountNumber.getText().toString().trim()));
                 newBill.setAmount(Double.valueOf(editTextAmount.getText().toString().trim()));
+                newBill.setDateDue(new DateModel(day, month, year));
 
-                String dueDateText = editTextDueDate.getText().toString();
-                String[] dates = dueDateText.split("/");
+//                String dueDateText = editTextDueDate.getText().toString();
+//                String[] dates = dueDateText.split("/");
 
-                newBill.setDateDue(new DateModel(
-                        Integer.valueOf(dates[0]),
-                        Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[2])
-                ));
+//                newBill.setDateDue(new DateModel(
+//                        Integer.valueOf(dates[0]),
+//                        Integer.valueOf(dates[1]),
+//                        Integer.valueOf(dates[2])
+//                ));
 
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
 

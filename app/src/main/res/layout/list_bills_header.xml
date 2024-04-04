@@ -1,34 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/linearLayoutBiller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:textSize="15dp"
-        android:text="Biller"
-        android:drawableRight="@drawable/baseline_sort_24"
-        android:drawablePadding="5dp"
-        android:paddingTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_alignParentLeft="true"
-        android:textStyle="bold"/>
+        >
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:textSize="15dp"
+            android:text="Biller"
+            android:drawablePadding="5dp"
+            android:paddingTop="10dp"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSortBiller"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/baseline_sort_24">
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:textSize="15dp"
-        android:gravity="center"
-        android:text="Due Date"
-        android:drawableRight="@drawable/baseline_sort_24"
-        android:drawablePadding="5dp"
-        android:paddingTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"/>
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:text="Due Date"
+            android:drawablePadding="5dp"
+            android:paddingTop="10dp"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSortDueDate"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/baseline_sort_24">
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,10 +76,23 @@
         android:textSize="15dp"
         android:gravity="right"
         android:text="Status"
-        android:drawableRight="@drawable/baseline_sort_24"
         android:drawablePadding="5dp"
         android:paddingTop="10dp"
-        android:layout_alignParentRight="true"
         android:textStyle="bold"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSortStatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/baseline_sort_24">
+
+        </androidx.appcompat.widget.AppCompatButton>
+    </LinearLayout>
+
+
 </RelativeLayout>
+
+
+
+
