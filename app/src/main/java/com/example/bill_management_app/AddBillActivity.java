@@ -5,10 +5,12 @@ import static com.example.bill_management_app.Validator.isValidDate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -21,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 public class AddBillActivity extends AppCompatActivity {
@@ -78,7 +82,10 @@ public class AddBillActivity extends AppCompatActivity {
         textViewAvailableCreditNumeric = findViewById(R.id.textViewAvailableCreditNumeric);
 
         textViewFirstName.setText("Hello, " + oneClient.getFirstName());
-        textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
+        textViewAvailableCreditNumeric.setText(currencyFormatter.format(oneClient.getCredit()));
 
         buttonSave = findViewById(R.id.buttonSave);
         buttonCancel = findViewById(R.id.buttonCancel);
@@ -115,6 +122,13 @@ public class AddBillActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.err.println("Error fetching data: " + databaseError);
+            }
+        });
+
+        editTextDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
             }
         });
 
@@ -189,6 +203,33 @@ public class AddBillActivity extends AppCompatActivity {
             }
         });
 
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
+                intent.putExtra("oneClient", oneClient);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+    }
+
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        editTextDueDate.setText(selectedDate);
+                    }
+                }, year, month, dayOfMonth);
+        datePickerDialog.show();
     }
 
     private int generateRandomID() {

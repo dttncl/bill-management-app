@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.ReferenceQueue;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class BillDetailsActivity extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewFirstName, textViewAvailableCreditNumeric,textViewStatusChangeable,textViewPaymentAmountBold;
     EditText textViewDueDateFormat, textViewBillerNameBold, textViewAccountNumberFormat;
-    AppCompatButton btnEditBillerName, btnEditAccountNumber, btnEditDueDate, btnModify;
+    AppCompatButton btnEditAccountNumber, btnEditDueDate, btnModify;
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
@@ -78,7 +79,6 @@ public class BillDetailsActivity extends AppCompatActivity {
         btnHome = navIcons.findViewById(R.id.btnHome);
 
         btnEditDueDate = findViewById(R.id.buttonEditDate);
-        btnEditBillerName = findViewById(R.id.buttonBillerName);
         btnEditAccountNumber = findViewById(R.id.buttonAccountNumber);
         btnModify = findViewById(R.id.buttonModify);
 
@@ -113,12 +113,17 @@ public class BillDetailsActivity extends AppCompatActivity {
         textViewAvailableCreditNumeric = findViewById(R.id.textViewAvailableCreditNumeric);
 
         textViewFirstName.setText("Hello, " + oneClient.getFirstName());
-        textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+        textViewAvailableCreditNumeric.setText(String.valueOf(currencyFormatter.format(oneClient.getCredit())));
 
         // BILL DETAILS
         layoutDate = findViewById(R.id.includeDate);
         textViewDueDateFormat = findViewById(R.id.textViewDueDateFormat);
-        textViewDueDateFormat.setText(oneBill.getDateDue().toString());
+
+        String formattedDate = String.format("%02d/%02d/%d", oneBill.getDateDue().getDay(), oneBill.getDateDue().getMonth(), oneBill.getDateDue().getYear());
+
+        textViewDueDateFormat.setText(formattedDate);
 
         billerDetails = findViewById(R.id.billerDetails);
         textViewBillerNameBold = findViewById(R.id.textViewBillerNameBold);
@@ -148,7 +153,7 @@ public class BillDetailsActivity extends AppCompatActivity {
 
         paymentAmount = findViewById(R.id.paymentAmount);
         textViewPaymentAmountBold = findViewById(R.id.textViewPaymentAmountBold);
-        textViewPaymentAmountBold.setText("$"+oneBill.getAmount());
+        textViewPaymentAmountBold.setText(currencyFormatter.format(oneBill.getAmount()));
 
         // DELETE BILL
         buttonDelete = findViewById(R.id.buttonDelete);
@@ -189,7 +194,6 @@ public class BillDetailsActivity extends AppCompatActivity {
 
             btnEditAccountNumber.setVisibility(View.GONE);
             btnEditDueDate.setVisibility(View.GONE);
-            btnEditBillerName.setVisibility(View.GONE);
 
             buttonPayNow.setText("Request Refund");
         }
@@ -251,7 +255,6 @@ public class BillDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 dueDate[0] = textViewDueDateFormat.getText().toString();
-                billerName[0] = textViewBillerNameBold.getText().toString();
                 accountNumber[0] = textViewAccountNumberFormat.getText().toString();
 
                 StringBuilder validateMessage = new StringBuilder("Are you sure you want to make the following changes?\n\n");
@@ -263,11 +266,6 @@ public class BillDetailsActivity extends AppCompatActivity {
 
                 if (dueDate[0].isEmpty()) {
                     notValidateMessage.append("\t- The date must not be empty.\n");
-                    isValidated = false;
-                }
-
-                if (billerName[0].isEmpty()) {
-                    notValidateMessage.append("\t- The biller name must not be empty.\n");
                     isValidated = false;
                 }
 
@@ -286,13 +284,26 @@ public class BillDetailsActivity extends AppCompatActivity {
                     isValidated = false;
                 }
 
+                if(dueDate[0].equals(tempDueDate) && accountNumber[0].equals(tempAccountNumber)) {
+                    notValidateMessage = new StringBuilder("No changes were made.");
+                    isValidated = false;
+                }
+
+                if(!dueDate[0].equals(tempDueDate)) {
+                    validateMessage = new StringBuilder("\t- Are you sure you want to modify the due date?");
+                }
+
+                if(!accountNumber[0].equals(tempAccountNumber)) {
+                    validateMessage = new StringBuilder("\t- Are you sure you want to modify the account number?");
+                }
+
                 // For the Dialog button
                 AlertDialog.Builder builder = new AlertDialog.Builder(BillDetailsActivity.this);
 
                 if (!isValidated) {
                     message.append(notValidateMessage);
                 } else {
-                    message.append(tempAccountNumber + " - " + accountNumber[0]);
+                    message.append(validateMessage);
                 }
 
                 builder.setTitle("Modify Bill").setMessage(message);
@@ -300,6 +311,13 @@ public class BillDetailsActivity extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        textViewDueDateFormat.setFocusable(false);
+                        textViewAccountNumberFormat.setFocusable(false);
+
+                        btnEditAccountNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                        btnEditDueDate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
                         if(!dueDate[0].equals(tempDueDate)) {
                             String dueDateText = dueDate[0];
                             String[] dates = dueDateText.split("/");
@@ -367,6 +385,16 @@ public class BillDetailsActivity extends AppCompatActivity {
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        textViewDueDateFormat.setText(tempDueDate);
+                        textViewAccountNumberFormat.setText(tempAccountNumber);
+
+                        textViewDueDateFormat.setFocusable(false);
+                        textViewAccountNumberFormat.setFocusable(false);
+
+                        btnEditAccountNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                        btnEditDueDate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
                         dialog.dismiss();
                     }
                 });

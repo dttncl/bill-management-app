@@ -24,18 +24,6 @@
             android:paddingTop="10dp"
             />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonBillerName"
-            style="@style/CustomButtonStyle4"
-            android:onClick="onEditMode"
-            android:layout_width="27dp"
-            android:layout_height="37dp"
-            android:drawableStart="@drawable/baseline_edit_24"
-            android:textAllCaps="false"
-            android:paddingLeft="5dp">
-
-        </androidx.appcompat.widget.AppCompatButton>
-
     </LinearLayout>
 
     <EditText
