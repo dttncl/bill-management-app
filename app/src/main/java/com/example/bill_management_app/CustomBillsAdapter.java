@@ -52,8 +52,10 @@ public class CustomBillsAdapter extends BaseAdapter {
 
         bName.setText(listOfCustomBills.get(position).getBillerName());
 
+        DateModel dueDate = listOfCustomBills.get(position).getOneBill().getDateDue();
+        String formattedDate = String.format("%02d/%02d/%d", dueDate.getDay(), dueDate.getMonth(), dueDate.getYear());
 
-        dDate.setText(listOfCustomBills.get(position).getOneBill().getDateDue().toString());
+        dDate.setText(formattedDate);
         status.setText(listOfCustomBills.get(position).getOneBill().getStatus().toString());
 
         convertView.setOnClickListener(new View.OnClickListener() {
