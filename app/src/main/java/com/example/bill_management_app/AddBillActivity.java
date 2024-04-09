@@ -1,12 +1,16 @@
 package com.example.bill_management_app;
 
+import static com.example.bill_management_app.Validator.isValidDate;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -19,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 public class AddBillActivity extends AppCompatActivity {
@@ -76,7 +82,10 @@ public class AddBillActivity extends AppCompatActivity {
         textViewAvailableCreditNumeric = findViewById(R.id.textViewAvailableCreditNumeric);
 
         textViewFirstName.setText("Hello, " + oneClient.getFirstName());
-        textViewAvailableCreditNumeric.setText(String.valueOf(oneClient.getCredit()));
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
+        textViewAvailableCreditNumeric.setText(currencyFormatter.format(oneClient.getCredit()));
 
         buttonSave = findViewById(R.id.buttonSave);
         buttonCancel = findViewById(R.id.buttonCancel);
@@ -116,6 +125,13 @@ public class AddBillActivity extends AppCompatActivity {
             }
         });
 
+        editTextDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,21 +154,47 @@ public class AddBillActivity extends AppCompatActivity {
                     }
                 }
 
+                String dueDateText = editTextDueDate.getText().toString();
+                String[] dates = dueDateText.split("/");
+                if (dates.length != 3) {
+                    editTextDueDate.setError("Invalid date format. Please enter in DD/MM/YYYY format.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
+                int day, month, year;
+                try {
+                    day = Integer.parseInt(dates[0]);
+                    month = Integer.parseInt(dates[1]);
+                    year = Integer.parseInt(dates[2]);
+                } catch (NumberFormatException e) {
+                    editTextDueDate.setError("Invalid date format. Please enter in DD/MM/YYYY format.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
+                if (!DateModel.isValidDate(day, month, year)) {
+                    editTextDueDate.setError("Invalid date. Please enter a valid date.");
+                    editTextDueDate.requestFocus();
+                    return;
+                }
+
                 Bill newBill = new Bill();
                 Biller oneBiller = (Biller)spinnerBillerName.getSelectedItem();
 
                 newBill.setBillerID(oneBiller.getBillerID());
                 newBill.setAccountNumber(Integer.valueOf(editTextAccountNumber.getText().toString().trim()));
                 newBill.setAmount(Double.valueOf(editTextAmount.getText().toString().trim()));
+                newBill.setDateDue(new DateModel(day, month, year));
 
-                String dueDateText = editTextDueDate.getText().toString();
-                String[] dates = dueDateText.split("/");
+//                String dueDateText = editTextDueDate.getText().toString();
+//                String[] dates = dueDateText.split("/");
 
-                newBill.setDateDue(new DateModel(
-                        Integer.valueOf(dates[0]),
-                        Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[2])
-                ));
+//                newBill.setDateDue(new DateModel(
+//                        Integer.valueOf(dates[0]),
+//                        Integer.valueOf(dates[1]),
+//                        Integer.valueOf(dates[2])
+//                ));
 
                 newBill.setStatus(EnumPaymentStatus.Unpaid);
 
@@ -160,6 +202,34 @@ public class AddBillActivity extends AppCompatActivity {
 
             }
         });
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddBillActivity.this, ClientDashboard.class);
+                intent.putExtra("oneClient", oneClient);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+    }
+
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        editTextDueDate.setText(selectedDate);
+                    }
+                }, year, month, dayOfMonth);
+        datePickerDialog.show();
     }
 
     private int generateRandomID() {

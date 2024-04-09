@@ -39,7 +39,7 @@
         android:id="@+id/textViewDueDateFormat"
         style="@style/CustomEditText"
         android:focusable="false"
-        android:inputType="text"
+        android:inputType="date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="1/1/2024"

@@ -119,7 +119,8 @@
         android:inputType="date"
         android:hint="DD/MM/YYYY"
         android:drawableEnd="@drawable/ic_calendar_background"
-        />
+        android:clickable="true"
+        android:focusable="true" />
 
 
     <androidx.appcompat.widget.AppCompatButton

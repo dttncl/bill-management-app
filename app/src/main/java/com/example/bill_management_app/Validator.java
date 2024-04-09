@@ -20,6 +20,10 @@ public class Validator {
 
     private static final String amountRegex = "^\\d+(\\.\\d{1,2})?$";
 
+    private static final String dateRegex = "^\\d{2}/\\d{2}/\\d{4}$";
+
+    private static final String accountNumberRegex = "^\\d+$";
+
     public static boolean isValidName(String name) {
         return Pattern.compile(NameRegex).matcher(name).matches();
     }
@@ -41,6 +45,14 @@ public class Validator {
 
     public static boolean isValidAmount(String amount) {
         return Pattern.compile(amountRegex).matcher(amount).matches();
+    }
+
+    public static boolean isValidDate(String date) {
+        return Pattern.compile(dateRegex).matcher(date).matches();
+    }
+
+    public static boolean isValidAccountNumber(String accountNumber) {
+        return Pattern.compile(accountNumberRegex).matcher(accountNumber).matches();
     }
 
 }
