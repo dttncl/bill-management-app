@@ -1,8 +1,9 @@
 package com.example.bill_management_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Biller {
+public class Biller implements Serializable {
     private String billerID;
     private String billerName;
     private ArrayList<Transaction> listOfTransactions;

@@ -40,14 +40,19 @@ public class ManagerDashboard extends AppCompatActivity {
         listViewTransactions = findViewById(R.id.listTransactions);
         textViewManagerName = findViewById(R.id.managerName);
 
-        Admin admin = AdminManager.getInstance().getAdmin();
+        //Admin admin = AdminManager.getInstance().getAdmin();
 
-        if (admin != null) {
-            textViewManagerName.setText("Hello, " + admin.getFirstName());
+        // extract the intent extras
+        Intent intent = getIntent();
+        Admin oneAdmin = (Admin) intent.getSerializableExtra("oneAdmin");
+
+        if (oneAdmin != null) {
+            textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
         } else {
             textViewManagerName.setText("Welcome");
         }
 
+        /*
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("clients");
 
         adapterCustomers = new CustomCustomersAdapter(getApplicationContext(), new ArrayList<>());
@@ -71,7 +76,7 @@ public class ManagerDashboard extends AppCompatActivity {
 
             }
         });
-
+        */
 //        String[] customers = {"BBC0001","BBC0002","BBC0003","BBC0004","BBC0005","extra"};
         String[] transactions = {"BBT0000101","BBT0000102","BBT0000103","BBT0000104","BBT0000105","extra"};
         String[] billers = {"BBB500","BBB501","BBB502","BBB501","BBB503","extra"};

@@ -198,10 +198,57 @@ public class LoginPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        Admin oneAdmin = childSnapshot.getValue(Admin.class);
-                        AdminManager.getInstance().setAdmin(oneAdmin);
+                        //Admin oneAdmin = childSnapshot.getValue(Admin.class);
+                        //AdminManager.getInstance().setAdmin(oneAdmin);
+
+                        Admin oneAdmin = new Admin();
+                        oneAdmin.setUserID(childSnapshot.child("userID").getValue(String.class));
+                        oneAdmin.setFirstName(childSnapshot.child("firstName").getValue(String.class));
+                        oneAdmin.setLastName(childSnapshot.child("lastName").getValue(String.class));
+                        oneAdmin.setEmail(childSnapshot.child("email").getValue(String.class));
+                        oneAdmin.setPhone(childSnapshot.child("phone").getValue(String.class));
+                        oneAdmin.setPassword(childSnapshot.child("password").getValue(String.class));
+                        oneAdmin.setType(childSnapshot.child("type").getValue(EnumUserType.class));
+
+                        // populate list of clients
+                        ArrayList<String> listOfClients = new ArrayList<>();
+                        DatabaseReference clients = fbaseDB.getReference("clients");
+                        clients.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot clientSnapshot : dataSnapshot.getChildren()) {
+                                    String clientId = clientSnapshot.getKey();
+                                    listOfClients.add(clientId);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        // populate list of billers
+                        ArrayList<String> listOfBillers = new ArrayList<>();
+                        DatabaseReference billers = fbaseDB.getReference("billers");
+                        billers.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot billerSnapshot : dataSnapshot.getChildren()) {
+                                    String billerId = billerSnapshot.getKey();
+                                    listOfBillers.add(billerId);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        oneAdmin.setListOfClients(listOfClients);
+                        oneAdmin.setListOfBillers(listOfBillers);
 
                         Intent intent = new Intent(LoginPageActivity.this, ManagerDashboard.class);
+                        intent.putExtra("oneAdmin", oneAdmin);
                         startActivity(intent);
                         finish();
                         break;

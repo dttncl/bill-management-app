@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Admin extends User implements Serializable {
-    private ArrayList<Client> listOfClients;
-    private ArrayList<Biller> listOfBillers;
+    private ArrayList<String> listOfClients;
+    private ArrayList<String> listOfBillers;
 
     public Admin() {
         super();
@@ -13,25 +13,25 @@ public class Admin extends User implements Serializable {
         listOfBillers = null;
     }
 
-    public Admin(String userID, String firstName, String lastName, String email, String phone, String password, EnumUserType type, ArrayList<Client> listOfClients, ArrayList<Biller> listOfBillers) {
+    public Admin(String userID, String firstName, String lastName, String email, String phone, String password, EnumUserType type, ArrayList<String> listOfClients, ArrayList<String> listOfBillers) {
         super(userID, firstName, lastName, email, phone, password, type);
         this.listOfClients = listOfClients;
         this.listOfBillers = listOfBillers;
     }
 
-    public ArrayList<Client> getListOfClients() {
+    public ArrayList<String> getListOfClients() {
         return listOfClients;
     }
 
-    public void setListOfClients(ArrayList<Client> listOfClients) {
+    public void setListOfClients(ArrayList<String> listOfClients) {
         this.listOfClients = listOfClients;
     }
 
-    public ArrayList<Biller> getListOfBillers() {
+    public ArrayList<String> getListOfBillers() {
         return listOfBillers;
     }
 
-    public void setListOfBillers(ArrayList<Biller> listOfBillers) {
+    public void setListOfBillers(ArrayList<String> listOfBillers) {
         this.listOfBillers = listOfBillers;
     }
 }
