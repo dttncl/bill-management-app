@@ -198,7 +198,7 @@ public class BillDetailsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(BillDetailsActivity.this, volleyError.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BillDetailsActivity.this, volleyError.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
 
             }
         }){
