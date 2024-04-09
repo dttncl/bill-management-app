@@ -50,7 +50,6 @@ public class ClientDashboard extends AppCompatActivity {
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
 
-
         listBills = findViewById(R.id.listBills);
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference billers = fbaseDB.getReference("billers");

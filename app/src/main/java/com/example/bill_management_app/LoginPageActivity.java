@@ -2,6 +2,7 @@ package com.example.bill_management_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,7 +90,6 @@ public class LoginPageActivity extends AppCompatActivity {
                                 String userType = userSnapshot.child("userType").getValue(String.class);
 
                                 if (userType.equals(EnumUserType.Client.toString())) {
-                                    // create client object and pass to intent
                                     LoginAsClient(userId);
 
                                 } else {
@@ -198,8 +198,6 @@ public class LoginPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        //Admin oneAdmin = childSnapshot.getValue(Admin.class);
-                        //AdminManager.getInstance().setAdmin(oneAdmin);
 
                         Admin oneAdmin = new Admin();
                         oneAdmin.setUserID(childSnapshot.child("userID").getValue(String.class));
@@ -211,58 +209,61 @@ public class LoginPageActivity extends AppCompatActivity {
                         oneAdmin.setType(childSnapshot.child("type").getValue(EnumUserType.class));
 
                         // populate list of clients
-                        ArrayList<String> listOfClients = new ArrayList<>();
-                        DatabaseReference clients = fbaseDB.getReference("clients");
-                        clients.addListenerForSingleValueEvent(new ValueEventListener() {
+                        DatabaseReference clientsRef = fbaseDB.getReference("clients");
+                        clientsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                ArrayList<String> listOfClients = new ArrayList<>();
                                 for (DataSnapshot clientSnapshot : dataSnapshot.getChildren()) {
                                     String clientId = clientSnapshot.getKey();
                                     listOfClients.add(clientId);
                                 }
+
+                                oneAdmin.setListOfClients(listOfClients);
+
+                                DatabaseReference billersRef = fbaseDB.getReference("billers");
+                                billersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        ArrayList<String> listOfBillers = new ArrayList<>();
+                                        for (DataSnapshot billerSnapshot : dataSnapshot.getChildren()) {
+                                            String billerId = billerSnapshot.getKey();
+                                            listOfBillers.add(billerId);
+                                        }
+
+                                        oneAdmin.setListOfBillers(listOfBillers);
+
+                                        Intent intent = new Intent(LoginPageActivity.this, ManagerDashboard.class);
+                                        intent.putExtra("oneAdmin", oneAdmin);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(LoginPageActivity.this, "Failed to fetch billers", Toast.LENGTH_LONG).show();
+                                    }
+                                });
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginPageActivity.this, "Failed to fetch clients", Toast.LENGTH_LONG).show();
                             }
                         });
 
-                        // populate list of billers
-                        ArrayList<String> listOfBillers = new ArrayList<>();
-                        DatabaseReference billers = fbaseDB.getReference("billers");
-                        billers.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot billerSnapshot : dataSnapshot.getChildren()) {
-                                    String billerId = billerSnapshot.getKey();
-                                    listOfBillers.add(billerId);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                        oneAdmin.setListOfClients(listOfClients);
-                        oneAdmin.setListOfBillers(listOfBillers);
-
-                        Intent intent = new Intent(LoginPageActivity.this, ManagerDashboard.class);
-                        intent.putExtra("oneAdmin", oneAdmin);
-                        startActivity(intent);
-                        finish();
                         break;
                     }
                 } else {
-                    Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginPageActivity.this, "Admin not found", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(LoginPageActivity.this, "Failed to search admin", Toast.LENGTH_LONG).show();
             }
         });
-
     }
+
 }
