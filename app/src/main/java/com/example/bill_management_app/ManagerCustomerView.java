@@ -33,7 +33,8 @@ public class ManagerCustomerView extends AppCompatActivity {
 
         // extract the intent extras
         Intent intent = getIntent();
-        Client oneClient = (Client) intent.getSerializableExtra("client");
+        Admin oneAdmin = (Admin) intent.getSerializableExtra("oneAdmin");
+        Client oneClient = (Client) intent.getSerializableExtra("oneClient");
 
         textViewManagerName = findViewById(R.id.managerName);
 
@@ -43,7 +44,7 @@ public class ManagerCustomerView extends AppCompatActivity {
         editTextEmail = findViewById(R.id.customerEmail);
         textViewClientId = findViewById(R.id.customerId);
 
-        textViewManagerName.setText("Hello, " + oneClient.getFirstName());
+        textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
 
         editTextFirstName.setText(oneClient.getFirstName());
         editTextLastName.setText(oneClient.getLastName());
@@ -69,6 +70,7 @@ public class ManagerCustomerView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerCustomerView.this, ClientProfilePageActivity.class);
+                intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();
             }
@@ -78,6 +80,7 @@ public class ManagerCustomerView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerCustomerView.this, ManagerDashboard.class);
+                intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();
             }

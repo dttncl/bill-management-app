@@ -32,8 +32,8 @@ public class ManagerDashboard extends AppCompatActivity {
     ListView listViewCustomers, listViewTransactions;
     LinearLayout navIcons;
     ImageButton btnHome, btnProfile;
-    CustomCustomersAdapter adapterCustomers;
     TextView textViewManagerName;
+    Button linkAllCustomers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,7 @@ public class ManagerDashboard extends AppCompatActivity {
         listViewCustomers = findViewById(R.id.listCustomers);
         listViewTransactions = findViewById(R.id.listTransactions);
         textViewManagerName = findViewById(R.id.managerName);
+        linkAllCustomers = findViewById(R.id.linkAllCustomers);
 
         // extract the intent extras
         Intent intent = getIntent();
@@ -72,9 +73,18 @@ public class ManagerDashboard extends AppCompatActivity {
 
         // display list of clients
         ArrayList<String> listOfClientsFromAdmin = oneAdmin.getListOfClients();
-
-        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),listOfClientsFromAdmin);
+        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),listOfClientsFromAdmin,oneAdmin,"manager_dashboard");
         listViewCustomers.setAdapter(adapterCustomers);
+
+        linkAllCustomers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerDashboard.this, ViewAllCustomersLink.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
@@ -85,6 +95,7 @@ public class ManagerDashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerDashboard.this, ClientProfilePageActivity.class);
+                intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();
             }
