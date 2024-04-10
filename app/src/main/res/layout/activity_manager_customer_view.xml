@@ -75,7 +75,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"/>
 
-        <TextView
+        <Button
             android:id="@+id/linkAllTransactions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

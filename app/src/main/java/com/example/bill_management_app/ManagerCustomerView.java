@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -29,7 +30,10 @@ public class ManagerCustomerView extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
+
+    Button linkAllTransactions;
     FirebaseDatabase fbaseDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +98,7 @@ public class ManagerCustomerView extends AppCompatActivity {
                     }
                 }
 
-                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions);
+                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,"manager_customer_dashboard");
                 listViewTransactions.setAdapter(adapterTransacHistory);
             }
 
