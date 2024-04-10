@@ -1,23 +1,21 @@
 package com.example.bill_management_app;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,28 +25,24 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ManagerDashboard extends AppCompatActivity {
+public class ViewAllTransactionsLink extends AppCompatActivity {
 
-    ListView listViewCustomers, listViewTransactions;
+    ListView listViewTransactions;
     LinearLayout navIcons;
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName;
-    Button linkAllCustomers, linkAllTransactions;
-
     FirebaseDatabase fbaseDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manager_dashboard);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_view_all_transactions_link);
 
         fbaseDB = FirebaseDatabase.getInstance();
 
-        listViewCustomers = findViewById(R.id.listCustomers);
         listViewTransactions = findViewById(R.id.listTransactions);
         textViewManagerName = findViewById(R.id.managerName);
-        linkAllCustomers = findViewById(R.id.linkAllCustomers);
-        linkAllTransactions = findViewById(R.id.linkAllTransactions);
 
         // extract the intent extras
         Intent intent = getIntent();
@@ -59,11 +53,6 @@ public class ManagerDashboard extends AppCompatActivity {
         } else {
             textViewManagerName.setText("Welcome");
         }
-
-        // set header for customers list
-        LayoutInflater inflaterCustomer = getLayoutInflater();
-        ViewGroup headerCustomer = (ViewGroup)inflaterCustomer.inflate(R.layout.list_mngr_customer_header,listViewCustomers,false);
-        listViewCustomers.addHeaderView(headerCustomer,null,false);
 
         // set header for transactions list
         LayoutInflater inflaterTransaction = getLayoutInflater();
@@ -102,41 +91,12 @@ public class ManagerDashboard extends AppCompatActivity {
                     }
                 }
 
-                CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard");
+                CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard_expanded");
                 listViewTransactions.setAdapter(adapterTransactions);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-
-        //CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(),transactions,billers,tDates);
-        //listViewTransactions.setAdapter(adapterTransactions);
-
-        // display list of clients
-        ArrayList<String> listOfClientsFromAdmin = oneAdmin.getListOfClients();
-        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),listOfClientsFromAdmin,oneAdmin,"manager_dashboard");
-        listViewCustomers.setAdapter(adapterCustomers);
-
-        linkAllCustomers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ManagerDashboard.this, ViewAllCustomersLink.class);
-                intent.putExtra("oneAdmin", oneAdmin);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        linkAllTransactions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ManagerDashboard.this, ViewAllTransactionsLink.class);
-                intent.putExtra("oneAdmin", oneAdmin);
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -148,7 +108,17 @@ public class ManagerDashboard extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ManagerDashboard.this, ClientProfilePageActivity.class);
+                Intent intent = new Intent(ViewAllTransactionsLink.this, ManagerDashboard.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewAllTransactionsLink.this, ManagerDashboard.class);
                 intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();

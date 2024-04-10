@@ -46,6 +46,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class BillDetailsActivity extends AppCompatActivity {
 
@@ -58,8 +59,9 @@ public class BillDetailsActivity extends AppCompatActivity {
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    String publishableKey = "PUB_KEY";
+    String publishableKey = "PK_KEY";
     String secretKey = "SECRET_KEY";
+
     String customerId, emphericalKey, clientSecret;
     PaymentSheet paymentSheet;
 
@@ -440,21 +442,7 @@ public class BillDetailsActivity extends AppCompatActivity {
             client.child("credit").setValue(newCredit);
 
             // update transactions table
-            String transactionID = "transaction_" + System.currentTimeMillis();
-            String billerID = oneBill.getBillerID();
-            int billID = oneBill.getBillID();
-
-            DateModel dateUpdated = new DateModel();
-            dateUpdated.setDay(DateFormatter.getCurrentDay());
-            dateUpdated.setMonth(DateFormatter.getCurrentMonth());
-            dateUpdated.setYear(DateFormatter.getCurrentYear());
-
-            double amount = oneBill.getAmount();
-            EnumTransactionStatus status = EnumTransactionStatus.Success;
-
-            Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
-            DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
-            transactions.setValue(newTransaction);
+            generateUniqueID(oneBill);
 
             // refresh table
             Intent intent = getIntent();
@@ -605,5 +593,54 @@ public class BillDetailsActivity extends AppCompatActivity {
         } else {
             editText.setFocusable(false);
         }
+    }
+
+    private String generateRandomID() {
+        Random random = new Random();
+        return "BBT" + (100000 + random.nextInt(900000));
+    }
+
+    private void generateUniqueID(Bill oneBill) {
+
+        fbaseDB = FirebaseDatabase.getInstance();
+        DatabaseReference transactions = fbaseDB.getReference("transactions");
+
+        transactions.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                String generatedID = generateRandomID();
+
+                // check if generated ID does not exist
+                if (!snapshot.hasChild(String.valueOf(generatedID))) {
+
+                    // update transactions table
+                    String transactionID = generateRandomID();
+                    String billerID = oneBill.getBillerID();
+                    int billID = oneBill.getBillID();
+
+                    DateModel dateUpdated = new DateModel();
+                    dateUpdated.setDay(DateFormatter.getCurrentDay());
+                    dateUpdated.setMonth(DateFormatter.getCurrentMonth());
+                    dateUpdated.setYear(DateFormatter.getCurrentYear());
+
+                    double amount = oneBill.getAmount();
+                    EnumTransactionStatus status = EnumTransactionStatus.Success;
+
+                    Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+                    DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
+                    transactions.setValue(newTransaction);
+
+                } else {
+                    generateUniqueID(oneBill);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

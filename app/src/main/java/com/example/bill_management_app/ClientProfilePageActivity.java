@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,7 +68,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
-        //Toast.makeText(this, oneClient.getPassword(), Toast.LENGTH_SHORT).show();
+
         DisplayProfile(oneClient);
 
         final String[] tempFirstName = {oneClient.getFirstName()};
@@ -267,7 +268,13 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 fbaseDB = FirebaseDatabase.getInstance();
                                 DatabaseReference clients = fbaseDB.getReference("clients");
 
-                                clients.child(oneClient.getUserID()).setValue(oneClient);
+                                //clients.child(oneClient.getUserID()).setValue(oneClient);
+                                DatabaseReference clientRef = clients.child(oneClient.getUserID());
+                                clientRef.child("firstName").setValue(oneClient.getFirstName());
+                                clientRef.child("lastName").setValue(oneClient.getLastName());
+                                clientRef.child("email").setValue(oneClient.getEmail());
+                                clientRef.child("password").setValue(oneClient.getPassword());
+                                clientRef.child("credit").setValue(oneClient.getCredit());
 
                                 buttonFirstNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
                                 buttonLastNameProfilePage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);

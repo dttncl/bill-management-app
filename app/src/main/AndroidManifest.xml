@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Billmanagementapp"
         tools:targetApi="31">
         <activity
+            android:name=".ViewAllTransactionsLink"
+            android:exported="false" />
+        <activity
             android:name=".ViewAllCustomersLink"
             android:exported="false" />
         <activity
