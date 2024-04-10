@@ -167,7 +167,9 @@ public class LoginPageActivity extends AppCompatActivity {
                         ArrayList<String> listOfBills = new ArrayList<>();
 
                         for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
-                            listOfBills.add(billSnapshot.getKey());
+                            if (billSnapshot.getValue(boolean.class)) {
+                                listOfBills.add(billSnapshot.getKey());
+                            }
                         }
 
                         oneClient.setListOfBills(listOfBills);

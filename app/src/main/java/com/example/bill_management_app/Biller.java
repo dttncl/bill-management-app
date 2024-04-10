@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Biller implements Serializable {
     private String billerID;
     private String billerName;
-    private ArrayList<Transaction> listOfTransactions;
+    private ArrayList<String> listOfTransactions;
 
     public Biller() {
         billerID = "";
@@ -14,7 +14,7 @@ public class Biller implements Serializable {
         listOfTransactions = null;
     }
 
-    public Biller(String billerID, String companyName, ArrayList<Transaction> listOfTransactions) {
+    public Biller(String billerID, String companyName, ArrayList<String> listOfTransactions) {
         this.billerID = billerID;
         this.billerName = companyName;
         this.listOfTransactions = listOfTransactions;
@@ -36,11 +36,11 @@ public class Biller implements Serializable {
         this.billerName = billerName;
     }
 
-    public ArrayList<Transaction> getListOfTransactions() {
+    public ArrayList<String> getListOfTransactions() {
         return listOfTransactions;
     }
 
-    public void setListOfTransactions(ArrayList<Transaction> listOfTransactions) {
+    public void setListOfTransactions(ArrayList<String> listOfTransactions) {
         this.listOfTransactions = listOfTransactions;
     }
 }

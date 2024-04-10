@@ -7,7 +7,7 @@ public class Transaction {
     private String transactionID;
     private String billerID;
     private int billID;
-    private Date dateUpdated;
+    private DateModel dateUpdated;
     private double amount;
     private EnumTransactionStatus status;
 
@@ -19,7 +19,7 @@ public class Transaction {
         amount = 0;
         status = EnumTransactionStatus.Failed;
     }
-    public Transaction(String transactionID, String billerID, int billID, Date dateUpdated, double amount, EnumTransactionStatus status) {
+    public Transaction(String transactionID, String billerID, int billID, DateModel dateUpdated, double amount, EnumTransactionStatus status) {
         this.transactionID = transactionID;
         this.billerID = billerID;
         this.billID = billID;
@@ -52,11 +52,11 @@ public class Transaction {
         this.billID = billID;
     }
 
-    public Date getDateUpdated() {
+    public DateModel getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(Date dateUpdated) {
+    public void setDateUpdated(DateModel dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 

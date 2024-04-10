@@ -34,10 +34,15 @@ public class ManagerDashboard extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName;
     Button linkAllCustomers;
+
+    FirebaseDatabase fbaseDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_dashboard);
+
+        fbaseDB = FirebaseDatabase.getInstance();
 
         listViewCustomers = findViewById(R.id.listCustomers);
         listViewTransactions = findViewById(R.id.listTransactions);
@@ -54,10 +59,6 @@ public class ManagerDashboard extends AppCompatActivity {
             textViewManagerName.setText("Welcome");
         }
 
-        String[] transactions = {"BBT0000101","BBT0000102","BBT0000103","BBT0000104","BBT0000105","extra"};
-        String[] billers = {"BBB500","BBB501","BBB502","BBB501","BBB503","extra"};
-        String[] tDates = {"02/12/2024","02/07/2024","01/28/2024","12/30/2023","12/28/2023","extra"};
-
         // set header for customers list
         LayoutInflater inflaterCustomer = getLayoutInflater();
         ViewGroup headerCustomer = (ViewGroup)inflaterCustomer.inflate(R.layout.list_mngr_customer_header,listViewCustomers,false);
@@ -68,8 +69,50 @@ public class ManagerDashboard extends AppCompatActivity {
         ViewGroup headerTransaction = (ViewGroup)inflaterTransaction.inflate(R.layout.list_mngr_transactions_header,listViewCustomers,false);
         listViewTransactions.addHeaderView(headerTransaction,null,false);
 
-        CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(),transactions,billers,tDates);
-        listViewTransactions.setAdapter(adapterTransactions);
+        // display list of transactions
+        ArrayList<Transaction> listOfTransactions = new ArrayList<>();
+        DatabaseReference transactions = fbaseDB.getReference("transactions");
+
+        transactions.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //Transaction transaction = snapshot.getValue(Transaction.class);
+
+                    Transaction oneTransaction;
+                    String transactionID = snapshot.child("transactionID").getValue(String.class);
+
+                    String billerID = snapshot.child("billerID").getValue(String.class);
+                    int billID = snapshot.child("billID").getValue(Integer.class);
+
+                    DataSnapshot dateSnapshot = snapshot.child("dateUpdated");
+                    int day = dateSnapshot.child("day").getValue(Integer.class);
+                    int month = dateSnapshot.child("month").getValue(Integer.class);
+                    int year = dateSnapshot.child("year").getValue(Integer.class);
+                    DateModel dateUpdated = new DateModel(day, month, year);
+
+                    double amount = snapshot.child("amount").getValue(Double.class);
+                    EnumTransactionStatus status = EnumTransactionStatus.valueOf(snapshot.child("status").getValue(String.class));
+
+                    oneTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+
+                    if (oneTransaction != null) {
+                        listOfTransactions.add(oneTransaction);
+                    }
+                }
+
+                CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard");
+                listViewTransactions.setAdapter(adapterTransactions);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+        //CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(),transactions,billers,tDates);
+        //listViewTransactions.setAdapter(adapterTransactions);
 
         // display list of clients
         ArrayList<String> listOfClientsFromAdmin = oneAdmin.getListOfClients();

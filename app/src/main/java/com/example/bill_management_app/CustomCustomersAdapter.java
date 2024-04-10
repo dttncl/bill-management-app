@@ -43,8 +43,8 @@ public class CustomCustomersAdapter extends BaseAdapter {
             return Math.min(clientList.size(), 5); // Display up to 5 items
         } else {
             return clientList.size(); // Display all items in the list
+        }
     }
-}
 
     @Override
     public Object getItem(int position) {

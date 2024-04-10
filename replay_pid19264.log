@@ -1148,8 +1148,8 @@ instanceKlass org/gradle/internal/operations/OperationProgressDetails
 instanceKlass org/apache/commons/io/IOUtils
 instanceKlass java/text/CalendarBuilder
 instanceKlass java/text/ParsePosition
-instanceKlass org/apache/http/client/utils/DateUtils$DateFormatHolder
-instanceKlass org/apache/http/client/utils/DateUtils
+instanceKlass org/apache/http/client/utils/DateFormatter$DateFormatHolder
+instanceKlass org/apache/http/client/utils/DateFormatter
 instanceKlass org/gradle/internal/resource/metadata/DefaultExternalResourceMetaData
 instanceKlass org/gradle/internal/resource/transport/http/HttpResponseResource
 instanceKlass org/apache/http/entity/AbstractHttpEntity

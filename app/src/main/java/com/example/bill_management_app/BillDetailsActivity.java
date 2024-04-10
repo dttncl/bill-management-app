@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,8 +58,8 @@ public class BillDetailsActivity extends AppCompatActivity {
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    String publishableKey = "PUB_KEY";
-    String secretKey = "SECRET_KEY";
+    String publishableKey = "pk_test_51OykuDJJZhzbFhSM6mBfPSkDdDijstc6322RrgAKusLOS6dVPS2O1EtkzXNrjD1FWxTvUOBVgtZjHRaEwotiRawm00YIuixeUV";
+    String secretKey = "sk_test_51OykuDJJZhzbFhSMFO9fWjqZ7nkpNhUZQq2phyLQv8QFvwrA2Rttwu0no9LorNDxrciYpmykL5nLQKy7idbTfkaw001ovvJXCr";
     String customerId, emphericalKey, clientSecret;
     PaymentSheet paymentSheet;
 
@@ -191,6 +192,7 @@ public class BillDetailsActivity extends AppCompatActivity {
         PaymentConfiguration.init(this,publishableKey);
 
         if (textViewStatusChangeable.getText().equals("Paid")) {
+
 
             btnEditAccountNumber.setVisibility(View.GONE);
             btnEditDueDate.setVisibility(View.GONE);
@@ -421,6 +423,7 @@ public class BillDetailsActivity extends AppCompatActivity {
 
     private void onPaymentResult(PaymentSheetResult paymentSheetResult, Bill oneBill, Client oneClient) {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+
             Toast.makeText(this, "Payment Successful!", Toast.LENGTH_SHORT).show();
             oneBill.setStatus(EnumPaymentStatus.Paid);
 
@@ -436,12 +439,50 @@ public class BillDetailsActivity extends AppCompatActivity {
             DatabaseReference client = fbaseDB.getReference("clients").child(oneClient.getUserID());
             client.child("credit").setValue(newCredit);
 
+            // update transactions table
+            String transactionID = "transaction_" + System.currentTimeMillis();
+            String billerID = oneBill.getBillerID();
+            int billID = oneBill.getBillID();
 
+            DateModel dateUpdated = new DateModel();
+            dateUpdated.setDay(DateFormatter.getCurrentDay());
+            dateUpdated.setMonth(DateFormatter.getCurrentMonth());
+            dateUpdated.setYear(DateFormatter.getCurrentYear());
 
+            double amount = oneBill.getAmount();
+            EnumTransactionStatus status = EnumTransactionStatus.Success;
+
+            Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+            DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
+            transactions.setValue(newTransaction);
+
+            // refresh table
             Intent intent = getIntent();
             finish();
             startActivity(intent);
 
+        } else {
+            // update transactions table
+            String transactionID = "transaction_" + System.currentTimeMillis();
+            String billerID = oneBill.getBillerID();
+            int billID = oneBill.getBillID();
+
+            DateModel dateUpdated = new DateModel();
+            dateUpdated.setDay(DateFormatter.getCurrentDay());
+            dateUpdated.setMonth(DateFormatter.getCurrentMonth());
+            dateUpdated.setYear(DateFormatter.getCurrentYear());
+
+            double amount = oneBill.getAmount();
+            EnumTransactionStatus status = EnumTransactionStatus.Failed;
+
+            Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+            DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
+            transactions.setValue(newTransaction);
+
+            // refresh table
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 
