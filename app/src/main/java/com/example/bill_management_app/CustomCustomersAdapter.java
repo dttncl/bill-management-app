@@ -80,7 +80,27 @@ public class CustomCustomersAdapter extends BaseAdapter {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                                Client oneClient = childSnapshot.getValue(Client.class);
+                                //Client oneClient = childSnapshot.getValue(Client.class);
+
+                                Client oneClient = new Client();
+                                oneClient.setUserID(childSnapshot.child("userID").getValue(String.class));
+                                oneClient.setFirstName(childSnapshot.child("firstName").getValue(String.class));
+                                oneClient.setLastName(childSnapshot.child("lastName").getValue(String.class));
+                                oneClient.setEmail(childSnapshot.child("email").getValue(String.class));
+                                oneClient.setPhone(childSnapshot.child("phone").getValue(String.class));
+                                oneClient.setPassword(childSnapshot.child("password").getValue(String.class));
+                                oneClient.setType(childSnapshot.child("type").getValue(EnumUserType.class));
+                                oneClient.setCredit(childSnapshot.child("credit").getValue(double.class));
+
+                                ArrayList<String> listOfBills = new ArrayList<>();
+
+                                for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
+                                    if (billSnapshot.getValue(boolean.class)) {
+                                        listOfBills.add(billSnapshot.getKey());
+                                    }
+                                }
+
+                                oneClient.setListOfBills(listOfBills);
 
                                 if (oneClient != null) {
                                     // Start ManagerCustomerView activity and pass oneClient object

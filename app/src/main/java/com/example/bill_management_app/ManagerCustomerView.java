@@ -1,5 +1,6 @@
 package com.example.bill_management_app;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,6 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class ManagerCustomerView extends AppCompatActivity {
 
     ListView listViewTransactions;
@@ -20,16 +29,15 @@ public class ManagerCustomerView extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
+    FirebaseDatabase fbaseDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_customer_view);
 
         listViewTransactions = findViewById(R.id.listTransactions);
-
-        String[] transactions = {"BBT0000101","BBT0000102","BBT0000106","BBT0000107","BBT0000108","extra"};
-        String[] tDates = {"02/12/2024","02/07/2024","01/12/2024","01/07/2024","12/12/2023","extra"};
-        String[] status = {"Success","Success","Success","Refunded","Success","extra"};
+        fbaseDB = FirebaseDatabase.getInstance();
 
         // extract the intent extras
         Intent intent = getIntent();
@@ -57,9 +65,44 @@ public class ManagerCustomerView extends AppCompatActivity {
         ViewGroup headerTransacHistory = (ViewGroup)inflaterTransacHistory.inflate(R.layout.list_cust_transactions_header,listViewTransactions,false);
         listViewTransactions.addHeaderView(headerTransacHistory,null,false);
 
-        CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),transactions,tDates,status);
+        // display list of transactions
+        ArrayList<Transaction> listOfTransactions = new ArrayList<>();
+        DatabaseReference transactions = fbaseDB.getReference("transactions");
 
-        listViewTransactions.setAdapter(adapterTransacHistory);
+        transactions.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    Transaction oneTransaction;
+                    String transactionID = snapshot.child("transactionID").getValue(String.class);
+
+                    String billerID = snapshot.child("billerID").getValue(String.class);
+                    int billID = snapshot.child("billID").getValue(Integer.class);
+                    if (oneClient.getListOfBills().contains(String.valueOf(billID))) {
+                        DataSnapshot dateSnapshot = snapshot.child("dateUpdated");
+                        int day = dateSnapshot.child("day").getValue(Integer.class);
+                        int month = dateSnapshot.child("month").getValue(Integer.class);
+                        int year = dateSnapshot.child("year").getValue(Integer.class);
+                        DateModel dateUpdated = new DateModel(day, month, year);
+
+                        double amount = snapshot.child("amount").getValue(Double.class);
+                        EnumTransactionStatus status = EnumTransactionStatus.valueOf(snapshot.child("status").getValue(String.class));
+
+                        oneTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+                        listOfTransactions.add(oneTransaction);
+                    }
+                }
+
+                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions);
+                listViewTransactions.setAdapter(adapterTransacHistory);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);
