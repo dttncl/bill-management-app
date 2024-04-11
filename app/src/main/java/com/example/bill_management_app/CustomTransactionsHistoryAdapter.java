@@ -59,7 +59,13 @@ public class CustomTransactionsHistoryAdapter extends BaseAdapter {
 
         tId.setText(transactionList.get(position).getTransactionID());
         tDate.setText(transactionList.get(position).getDateUpdated().toString());
-        st.setText(transactionList.get(position).getStatus().toString());
+
+        if (transactionList.get(position).getStatus().toString().equals("RequestRefund")) {
+            st.setText("Refund Pending");
+        }
+        else {
+            st.setText(transactionList.get(position).getStatus().toString());
+        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +77,6 @@ public class CustomTransactionsHistoryAdapter extends BaseAdapter {
                 intent.putExtra("oneClient", oneClient);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-                //Toast.makeText(context, st.getText(), Toast.LENGTH_SHORT).show();
             }
         });
 

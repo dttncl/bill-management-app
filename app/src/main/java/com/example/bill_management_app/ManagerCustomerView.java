@@ -40,7 +40,6 @@ public class ManagerCustomerView extends AppCompatActivity {
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
 
-    AppCompatButton buttonDeleteCustomer;
     FirebaseDatabase fbaseDB;
 
 

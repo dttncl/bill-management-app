@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +26,7 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
     RelativeLayout mngr_transaction_detail;
     ImageButton btnHome, btnProfile;
 
-    AppCompatButton buttonTransacCancel;
+    AppCompatButton buttonTransacCancel, buttonTransacRefund;
     TextView textViewManagerName, textViewClientId, txtTransactionId, txtBillerId, txtBillId, txtDateUpdated, txtAmount, txtStatus;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
     FirebaseDatabase fbaseDB;
@@ -50,6 +51,7 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
         editTextEmail = findViewById(R.id.customerEmail);
         textViewClientId = findViewById(R.id.customerId);
         buttonTransacCancel = findViewById(R.id.buttonTransacCancel);
+        buttonTransacRefund = findViewById(R.id.buttonTransacRefund);
 
         textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
 
@@ -62,12 +64,12 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
 
 
         DatabaseReference transactions = fbaseDB.getReference().child("transactions").child(transactionID);
-
+        final Transaction[] oneTransaction = new Transaction[1];
         transactions.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Transaction oneTransaction;
+
                     String billerID = snapshot.child("billerID").getValue(String.class);
                     int billID = snapshot.child("billID").getValue(Integer.class);
 
@@ -80,7 +82,7 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
                     double amount = snapshot.child("amount").getValue(Double.class);
                     EnumTransactionStatus status = EnumTransactionStatus.valueOf(snapshot.child("status").getValue(String.class));
 
-                    //oneTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+                    oneTransaction[0] = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
 
                     mngr_transaction_detail = findViewById(R.id.transactionLayout);
                     txtTransactionId = mngr_transaction_detail.findViewById(R.id.transactionId);
@@ -95,7 +97,12 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
                     txtBillId.setText(String.valueOf(billID));
                     txtDateUpdated.setText(dateUpdated.toString());
                     txtAmount.setText("$ "+amount);
-                    txtStatus.setText(String.valueOf(status));
+
+                    if (String.valueOf(status).equals("RequestRefund")) {
+                        txtStatus.setText("Refund Pending");
+                    } else {
+                        txtStatus.setText(String.valueOf(status));
+                    }
                 }
             }
 
@@ -138,6 +145,42 @@ public class ManagerCustomerTransactionView extends AppCompatActivity {
                 intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        buttonTransacRefund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (txtStatus.getText().equals("Refund Pending")) {
+                    double currentCredit = oneClient.getCredit();
+                    double newCredit = currentCredit + oneTransaction[0].getAmount();
+
+                    oneClient.setCredit(newCredit);
+
+                    DatabaseReference client = fbaseDB.getReference("clients").child(oneClient.getUserID());
+                    client.child("credit").setValue(newCredit);
+
+                    // update bill
+                    int billID = oneTransaction[0].getBillID();
+                    DatabaseReference bill = fbaseDB.getReference("bills").child(String.valueOf(billID));
+                    bill.child("status").setValue(EnumPaymentStatus.Refunded);
+
+
+                    // update transaction
+                    oneTransaction[0].setStatus(EnumTransactionStatus.Refunded);
+                    DatabaseReference transaction = fbaseDB.getReference("transactions").child(String.valueOf(oneTransaction[0].getTransactionID()));
+                    transaction.child("status").setValue(EnumTransactionStatus.Refunded);
+
+                    Toast.makeText(ManagerCustomerTransactionView.this, "Refunded successfully!", Toast.LENGTH_SHORT).show();
+
+                    // refresh
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+
+                }
+
             }
         });
     }

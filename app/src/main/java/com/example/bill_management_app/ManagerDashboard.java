@@ -78,7 +78,6 @@ public class ManagerDashboard extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    //Transaction transaction = snapshot.getValue(Transaction.class);
 
                     Transaction oneTransaction;
                     String transactionID = snapshot.child("transactionID").getValue(String.class);
