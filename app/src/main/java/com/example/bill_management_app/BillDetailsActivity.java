@@ -35,8 +35,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.Stripe;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +61,7 @@ public class BillDetailsActivity extends AppCompatActivity {
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    String publishableKey = "PK_KEY";
+    String publishableKey = "PUB_KEY";
     String secretKey = "SECRET_KEY";
 
     String customerId, emphericalKey, clientSecret;
@@ -152,7 +154,11 @@ public class BillDetailsActivity extends AppCompatActivity {
         });
 
         textViewAccountNumberFormat.setText(String.valueOf(oneBill.getAccountNumber()));
-        textViewStatusChangeable.setText(String.valueOf(oneBill.getStatus()));
+        if (String.valueOf(oneBill.getStatus()).equals("RequestRefund")) {
+            textViewStatusChangeable.setText("Refund Pending");
+        } else {
+            textViewStatusChangeable.setText(String.valueOf(oneBill.getStatus()));
+        }
 
         paymentAmount = findViewById(R.id.paymentAmount);
         textViewPaymentAmountBold = findViewById(R.id.textViewPaymentAmountBold);
@@ -189,17 +195,22 @@ public class BillDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // PAY BILL
+        // PAY BILL / REFUND
+
         buttonPayNow = findViewById(R.id.buttonPayNow);
-        PaymentConfiguration.init(this,publishableKey);
 
-        if (textViewStatusChangeable.getText().equals("Paid")) {
+        if (textViewStatusChangeable.getText().equals("Unpaid")) {
 
+            PaymentConfiguration.init(this,publishableKey);
+        }
+        else if (textViewStatusChangeable.getText().equals("Paid")) {
 
             btnEditAccountNumber.setVisibility(View.GONE);
             btnEditDueDate.setVisibility(View.GONE);
-
             buttonPayNow.setText("Request Refund");
+
+        } else {
+            buttonPayNow.setVisibility(View.GONE);
         }
 
         paymentSheet = new PaymentSheet(this,paymentSheetResult -> {
@@ -211,7 +222,8 @@ public class BillDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (textViewStatusChangeable.getText().equals("Paid")) {
-                    //Request refund
+                    // request refund
+                    requestRefund(oneClient,oneBill);
                     return;
                 }
 
@@ -442,30 +454,7 @@ public class BillDetailsActivity extends AppCompatActivity {
             client.child("credit").setValue(newCredit);
 
             // update transactions table
-            generateUniqueID(oneBill);
-
-            // refresh table
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-
-        } else {
-            // update transactions table
-            String transactionID = "transaction_" + System.currentTimeMillis();
-            String billerID = oneBill.getBillerID();
-            int billID = oneBill.getBillID();
-
-            DateModel dateUpdated = new DateModel();
-            dateUpdated.setDay(DateFormatter.getCurrentDay());
-            dateUpdated.setMonth(DateFormatter.getCurrentMonth());
-            dateUpdated.setYear(DateFormatter.getCurrentYear());
-
-            double amount = oneBill.getAmount();
-            EnumTransactionStatus status = EnumTransactionStatus.Failed;
-
-            Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
-            DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
-            transactions.setValue(newTransaction);
+            generateUniqueID(oneBill,EnumTransactionStatus.Success);
 
             // refresh table
             Intent intent = getIntent();
@@ -595,12 +584,38 @@ public class BillDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void requestRefund(Client oneClient, Bill oneBill) {
+        Toast.makeText(BillDetailsActivity.this, "Requested successfully!", Toast.LENGTH_SHORT).show();
+        //double currentCredit = oneClient.getCredit();
+        //double newCredit = currentCredit + oneBill.getAmount();
+        //oneClient.setCredit(newCredit);
+
+        oneBill.setStatus(EnumPaymentStatus.RequestRefund);
+
+        // update in bills table
+        DatabaseReference bill = fbaseDB.getReference("bills").child(String.valueOf(oneBill.getBillID()));
+        bill.setValue(oneBill);
+
+        // update in clients table
+        //DatabaseReference client = fbaseDB.getReference("clients").child(oneClient.getUserID());
+        //client.child("credit").setValue(newCredit);
+
+        // update transactions table
+        generateUniqueID(oneBill,EnumTransactionStatus.RequestRefund);
+
+        // refresh table
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+
+    }
+
     private String generateRandomID() {
         Random random = new Random();
         return "BBT" + (100000 + random.nextInt(900000));
     }
 
-    private void generateUniqueID(Bill oneBill) {
+    private void generateUniqueID(Bill oneBill, EnumTransactionStatus payStat) {
 
         fbaseDB = FirebaseDatabase.getInstance();
         DatabaseReference transactions = fbaseDB.getReference("transactions");
@@ -625,14 +640,14 @@ public class BillDetailsActivity extends AppCompatActivity {
                     dateUpdated.setYear(DateFormatter.getCurrentYear());
 
                     double amount = oneBill.getAmount();
-                    EnumTransactionStatus status = EnumTransactionStatus.Success;
+                    EnumTransactionStatus status = payStat;
 
                     Transaction newTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
                     DatabaseReference transactions = fbaseDB.getReference("transactions").child(transactionID);
                     transactions.setValue(newTransaction);
 
                 } else {
-                    generateUniqueID(oneBill);
+                    generateUniqueID(oneBill,payStat);
                 }
             }
 

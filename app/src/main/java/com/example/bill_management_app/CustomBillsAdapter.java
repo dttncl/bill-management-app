@@ -56,13 +56,17 @@ public class CustomBillsAdapter extends BaseAdapter {
         String formattedDate = String.format("%02d/%02d/%d", dueDate.getDay(), dueDate.getMonth(), dueDate.getYear());
 
         dDate.setText(formattedDate);
-        status.setText(listOfCustomBills.get(position).getOneBill().getStatus().toString());
+        if (listOfCustomBills.get(position).getOneBill().getStatus().toString().equals("RequestRefund")) {
+            status.setText("Refund Pending");
+        } else {
+            status.setText(listOfCustomBills.get(position).getOneBill().getStatus().toString());
+        }
+
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context, oneClient.getUserID(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(context, .getUserID(), Toast.LENGTH_SHORT).show();
+
 
                 Intent intent = new Intent(context, BillDetailsActivity.class);
                 intent.putExtra("oneClient", oneClient);

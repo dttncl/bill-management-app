@@ -2,6 +2,7 @@ package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +15,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +40,7 @@ public class ManagerCustomerView extends AppCompatActivity {
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
 
-    Button linkAllTransactions;
+    AppCompatButton buttonDeleteCustomer;
     FirebaseDatabase fbaseDB;
 
 
@@ -98,7 +107,7 @@ public class ManagerCustomerView extends AppCompatActivity {
                     }
                 }
 
-                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,"manager_customer_dashboard");
+                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,oneClient,"manager_customer_dashboard");
                 listViewTransactions.setAdapter(adapterTransacHistory);
             }
 

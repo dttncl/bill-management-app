@@ -92,22 +92,4 @@
 
     </RelativeLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonDeleteCustomer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DELETE CUSTOMER"
-        style="@style/CustomButtonStyle6"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:textSize="10dp"
-        android:padding="12dp"
-        android:letterSpacing="0.2"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/customerContent"
-        android:layout_marginLeft="25dp"
-        />
-
-
-
 </RelativeLayout>

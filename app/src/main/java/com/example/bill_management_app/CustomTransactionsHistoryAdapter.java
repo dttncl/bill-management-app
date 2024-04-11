@@ -1,6 +1,7 @@
 package com.example.bill_management_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,16 @@ public class CustomTransactionsHistoryAdapter extends BaseAdapter {
     LayoutInflater inflater;
     private ArrayList<Transaction> transactionList;
     private Admin oneAdmin;
+    private Client oneClient;
     private String displayType;
 
 
 
-    public CustomTransactionsHistoryAdapter(Context appContext, ArrayList<Transaction> transactionList, Admin oneAdmin, String displayType) {
+    public CustomTransactionsHistoryAdapter(Context appContext, ArrayList<Transaction> transactionList, Admin oneAdmin, Client oneClient,String displayType) {
         context = appContext;
         this.transactionList = transactionList;
         this.oneAdmin = oneAdmin;
+        this.oneClient = oneClient;
         this.displayType = displayType;
         inflater = LayoutInflater.from(appContext);
     }
@@ -61,11 +64,13 @@ public class CustomTransactionsHistoryAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Here, you can create an intent to open a new activity or perform any desired action
-                // For example:
-                // Intent intent = new Intent(context, YourActivity.class);
-                // intent.putExtra("transaction_id", transactionList.get(position).getTransactionID());
-                // context.startActivity(intent);
+
+                Intent intent = new Intent(context, ManagerCustomerTransactionView.class);
+                intent.putExtra("transactionID", transactionList.get(position).getTransactionID());
+                intent.putExtra("oneAdmin", oneAdmin);
+                intent.putExtra("oneClient", oneClient);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
                 //Toast.makeText(context, st.getText(), Toast.LENGTH_SHORT).show();
             }
         });
