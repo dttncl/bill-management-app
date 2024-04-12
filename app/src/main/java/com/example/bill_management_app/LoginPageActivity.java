@@ -1,6 +1,14 @@
 package com.example.bill_management_app;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +19,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LoginPageActivity extends AppCompatActivity {
@@ -42,6 +54,15 @@ public class LoginPageActivity extends AppCompatActivity {
         editTextInputEmail = findViewById(R.id.editTextInputEmail);
         editTextInputPassword = findViewById(R.id.editTextInputPassword);
         fbaseAuth = FirebaseAuth.getInstance();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(LoginPageActivity.this,
+                    Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(LoginPageActivity.this,
+                        new String[] {Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
 
         buttonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +174,7 @@ public class LoginPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        //Client oneClient = childSnapshot.getValue(Client.class);
+
                         Client oneClient = new Client();
                         oneClient.setUserID(childSnapshot.child("userID").getValue(String.class));
                         oneClient.setFirstName(childSnapshot.child("firstName").getValue(String.class));
@@ -173,11 +194,24 @@ public class LoginPageActivity extends AppCompatActivity {
                         }
 
                         oneClient.setListOfBills(listOfBills);
-                        Intent intent = new Intent(LoginPageActivity.this, ClientProfilePageActivity.class);
-                        intent.putExtra("oneClient", oneClient);
-                        startActivity(intent);
-                        finish();
-                        break;
+
+                        if (oneClient != null) {
+                            //boolean isDue = checkBillsForClient(oneClient);
+                            checkBillsForClient(oneClient, new OnCheckCompleteListener() {
+                                @Override
+                                public void onCheckComplete(boolean isDue) {
+                                    if (isDue) {
+                                        makeNotification(oneClient);
+                                    }
+                                }
+                            });
+
+                            Intent intent = new Intent(LoginPageActivity.this, ClientDashboard.class);
+                            intent.putExtra("oneClient", oneClient);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        }
                     }
                 } else {
                     Toast.makeText(LoginPageActivity.this, "No snapshot", Toast.LENGTH_LONG).show();
@@ -211,8 +245,8 @@ public class LoginPageActivity extends AppCompatActivity {
                         oneAdmin.setType(childSnapshot.child("type").getValue(EnumUserType.class));
 
                         // populate list of clients
-                        DatabaseReference clientsRef = fbaseDB.getReference("clients");
-                        clientsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        DatabaseReference clients = fbaseDB.getReference("clients");
+                        clients.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 ArrayList<String> listOfClients = new ArrayList<>();
@@ -223,8 +257,8 @@ public class LoginPageActivity extends AppCompatActivity {
 
                                 oneAdmin.setListOfClients(listOfClients);
 
-                                DatabaseReference billersRef = fbaseDB.getReference("billers");
-                                billersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                DatabaseReference billers = fbaseDB.getReference("billers");
+                                billers.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         ArrayList<String> listOfBillers = new ArrayList<>();
@@ -247,13 +281,11 @@ public class LoginPageActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Toast.makeText(LoginPageActivity.this, "Failed to fetch clients", Toast.LENGTH_LONG).show();
                             }
                         });
-
                         break;
                     }
                 } else {
@@ -268,4 +300,71 @@ public class LoginPageActivity extends AppCompatActivity {
         });
     }
 
+    private void checkBillsForClient(Client oneClient, OnCheckCompleteListener callback) {
+        DateModel currentDate = new DateModel();
+        currentDate.setDay(DateFormatter.getCurrentDay());
+        currentDate.setMonth(DateFormatter.getCurrentMonth());
+        currentDate.setYear(DateFormatter.getCurrentYear());
+
+        ArrayList<String> listOfBillsFromClient = oneClient.getListOfBills();
+        DatabaseReference bills = fbaseDB.getReference("bills");
+        final boolean[] isDue = {false};
+
+        for (String billID : listOfBillsFromClient) {
+            DatabaseReference oneBill = bills.child(billID);
+            oneBill.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        DateModel dateFromBill = dataSnapshot.child("dateDue").getValue(DateModel.class);
+                        String stat = dataSnapshot.child("status").getValue(String.class);
+                        if (dateFromBill != null && dateFromBill.toString().equals(currentDate.toString()) && stat.equals("Unpaid")) {
+                            callback.onCheckComplete(true);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+
+            });
+        }
+
+    }
+
+    private void makeNotification(Client oneClient) {
+        String CHANNEL_ID = "CHANNEL_ID_NOTIFICATION";
+
+        Intent intent = new Intent(this, ClientDashboard.class);
+        intent.putExtra("oneClient", oneClient);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        String title = "Buzz! Buzz!";
+        String content = "Reminder: A bill is due today. Kindly check your dashboard for more details.";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.bee_nobg)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
+
+            if (channel == null) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                channel = new NotificationChannel(CHANNEL_ID, "channel", importance);
+                channel.setLightColor(R.color.lightYellow);
+                notificationManager.createNotificationChannel(channel);
+            }
+
+        }
+        notificationManager.notify(0,builder.build());
+    }
 }
