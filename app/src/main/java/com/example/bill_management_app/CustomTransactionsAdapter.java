@@ -57,9 +57,12 @@ public class CustomTransactionsAdapter extends BaseAdapter {
         TextView bId = convertView.findViewById(R.id.billerItem);
         TextView tDate = convertView.findViewById(R.id.dateItem);
 
+        DateModel updatedDate = transactionList.get(position).getDateUpdated();
+        String formattedDate = String.format("%02d/%02d/%d", updatedDate.getDay(), updatedDate.getMonth(), updatedDate.getYear());
+
         tId.setText(transactionList.get(position).getTransactionID());
         bId.setText(transactionList.get(position).getBillerID());
-        tDate.setText(transactionList.get(position).getDateUpdated().toString());
+        tDate.setText(formattedDate);
 
         return convertView;
     }

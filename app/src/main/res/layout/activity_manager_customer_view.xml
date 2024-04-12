@@ -22,13 +22,13 @@
 
     <TextView
         android:id="@+id/managerName"
-        android:layout_width="match_parent"
+        android:layout_width="361dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:text="Hello, Padme"
         android:textSize="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"/>
+        android:layout_below="@+id/includeTopIcons"/>
 
     <TextView
         android:id="@+id/managerTitle"
@@ -76,19 +76,17 @@
             android:layout_marginRight="25dp"/>
 
         <Button
-            android:id="@+id/linkAllTransactions"
+            android:id="@+id/linkAllTransactionsManager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View All Transactions >>"
             android:layout_below="@id/listTransactions"
             android:textSize="15dp"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:gravity="right"
+            android:gravity="left"
             android:layout_marginTop="10dp"
             android:textAlignment="gravity"
-            android:textColor="@color/darkerYellow"/>
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
 
     </RelativeLayout>
 

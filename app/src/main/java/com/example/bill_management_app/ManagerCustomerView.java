@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ManagerCustomerView extends AppCompatActivity {
 
@@ -39,6 +41,9 @@ public class ManagerCustomerView extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
+    AppCompatButton buttonFirstNameManagerPage, buttonLastNameManagerPage, buttonPhoneManagerPage, buttonEmailManagerPage;
+    AppCompatButton buttonSortTransactionManager, buttonSortDateManager, buttonSortStatusManager;
+    Button linkAllTransactionsManager;
 
     FirebaseDatabase fbaseDB;
 
@@ -64,6 +69,13 @@ public class ManagerCustomerView extends AppCompatActivity {
         editTextEmail = findViewById(R.id.customerEmail);
         textViewClientId = findViewById(R.id.customerId);
 
+        buttonFirstNameManagerPage = findViewById(R.id.buttonFirstNameManagerPage);
+        buttonLastNameManagerPage = findViewById(R.id.buttonLastNameManagerPage);
+        buttonPhoneManagerPage = findViewById(R.id.buttonPhoneManagerPage);
+        buttonEmailManagerPage = findViewById(R.id.buttonEmailManagerPage);
+
+        linkAllTransactionsManager = findViewById(R.id.linkAllTransactionsManager);
+
         textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
 
         editTextFirstName.setText(oneClient.getFirstName());
@@ -80,6 +92,8 @@ public class ManagerCustomerView extends AppCompatActivity {
         // display list of transactions
         ArrayList<Transaction> listOfTransactions = new ArrayList<>();
         DatabaseReference transactions = fbaseDB.getReference("transactions");
+        CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,oneClient,"manager_customer_dashboard");
+        listViewTransactions.setAdapter(adapterTransacHistory);
 
         transactions.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -106,12 +120,68 @@ public class ManagerCustomerView extends AppCompatActivity {
                     }
                 }
 
-                CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,oneClient,"manager_customer_dashboard");
-                listViewTransactions.setAdapter(adapterTransacHistory);
+                adapterTransacHistory.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        buttonSortTransactionManager = findViewById(R.id.btnSortTransactionsManager);
+        buttonSortDateManager = findViewById(R.id.btnSortDateManager);
+        buttonSortStatusManager = findViewById(R.id.btnSortStatusManager);
+
+        final boolean[] isAscendingTransaction = {true};
+        final boolean[] isAscendingDate = {true};
+        final boolean[] isAscendingStatus = {true};
+
+        buttonSortTransactionManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAscendingTransaction[0] = !isAscendingTransaction[0];
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getTransactionID().compareTo(t2.getTransactionID());
+                        return isAscendingTransaction[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
+            }
+        });
+
+        buttonSortDateManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sort transactions by date
+                isAscendingDate[0] = !isAscendingDate[0];
+
+                // Sort transactions by date
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = new DateModelComparator().compare(t1.getDateUpdated(), t2.getDateUpdated());
+                        // If sorting in descending order, reverse the result
+                        return isAscendingDate[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
+            }
+        });
+
+        buttonSortStatusManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAscendingTransaction[0] = !isAscendingTransaction[0];
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getStatus().compareTo(t2.getStatus());
+                        return isAscendingTransaction[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
             }
         });
 
@@ -141,5 +211,62 @@ public class ManagerCustomerView extends AppCompatActivity {
             }
         });
 
+        linkAllTransactionsManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerCustomerView.this, ViewAllTransactionsLink.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                intent.putExtra("clientId",oneClient.getUserID());
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerCustomerView.this, ActivityManagerProfile.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        onClickEditButton(editTextFirstName,buttonFirstNameManagerPage);
+        onClickEditButton(editTextLastName,buttonLastNameManagerPage);
+        onClickEditButton(editTextPhone,buttonPhoneManagerPage);
+        onClickEditButton(editTextEmail,buttonEmailManagerPage);
+
+    }
+
+    public void toggleButtonIcon(AppCompatButton button, boolean isButtonIconChecked) {
+        if(isButtonIconChecked) {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_check_24,0,0,0);
+        } else {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+        }
+    }
+
+    public void toggleFocusable(EditText editText, boolean isChecked) {
+        if (isChecked) {
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            editText.selectAll();
+            editText.requestFocus();
+        } else {
+            editText.setFocusable(false);
+        }
+    }
+
+    public void onClickEditButton(EditText editText, AppCompatButton button) {
+        final boolean[] isChecked = {false};
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked[0] = !isChecked[0];
+                toggleButtonIcon(button, isChecked[0]);
+                toggleFocusable(editText, isChecked[0]);
+            }
+        });
     }
 }

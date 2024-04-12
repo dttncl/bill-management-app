@@ -2,6 +2,7 @@ package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ManagerDashboard extends AppCompatActivity {
 
@@ -34,6 +38,8 @@ public class ManagerDashboard extends AppCompatActivity {
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName;
     Button linkAllCustomers, linkAllTransactions;
+
+    AppCompatButton btnSortClients, btnSortTransactions, btnSortDate, btnSortBillerId;
 
     FirebaseDatabase fbaseDB;
 
@@ -65,6 +71,11 @@ public class ManagerDashboard extends AppCompatActivity {
         ViewGroup headerCustomer = (ViewGroup)inflaterCustomer.inflate(R.layout.list_mngr_customer_header,listViewCustomers,false);
         listViewCustomers.addHeaderView(headerCustomer,null,false);
 
+        // display list of clients
+        ArrayList<String> listOfClientsFromAdmin = oneAdmin.getListOfClients();
+        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),listOfClientsFromAdmin,oneAdmin,"manager_dashboard");
+        listViewCustomers.setAdapter(adapterCustomers);
+
         // set header for transactions list
         LayoutInflater inflaterTransaction = getLayoutInflater();
         ViewGroup headerTransaction = (ViewGroup)inflaterTransaction.inflate(R.layout.list_mngr_transactions_header,listViewTransactions,false);
@@ -72,16 +83,16 @@ public class ManagerDashboard extends AppCompatActivity {
 
         // display list of transactions
         ArrayList<Transaction> listOfTransactions = new ArrayList<>();
-        DatabaseReference transactions = fbaseDB.getReference("transactions");
+        CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard");
+        listViewTransactions.setAdapter(adapterTransactions);
 
+        DatabaseReference transactions = fbaseDB.getReference("transactions");
         transactions.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                     Transaction oneTransaction;
                     String transactionID = snapshot.child("transactionID").getValue(String.class);
-
                     String billerID = snapshot.child("billerID").getValue(String.class);
                     int billID = snapshot.child("billID").getValue(Integer.class);
 
@@ -100,9 +111,7 @@ public class ManagerDashboard extends AppCompatActivity {
                         listOfTransactions.add(oneTransaction);
                     }
                 }
-
-                CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard");
-                listViewTransactions.setAdapter(adapterTransactions);
+                adapterTransactions.notifyDataSetChanged();
             }
 
             @Override
@@ -110,15 +119,86 @@ public class ManagerDashboard extends AppCompatActivity {
             }
         });
 
+        // Initialize buttons
+        btnSortClients = findViewById(R.id.btnSortClients);
+        btnSortTransactions = findViewById(R.id.btnSortTransactions);
+        btnSortDate = findViewById(R.id.btnSortDate);
+        btnSortBillerId = findViewById(R.id.btnSortBillerId);
 
-        //CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(),transactions,billers,tDates);
-        //listViewTransactions.setAdapter(adapterTransactions);
+        final boolean[] isAscending = {false};
+        final boolean[] isAscendingBillerId = {true};
+        final boolean[] isAscendingDate = {true};
 
-        // display list of clients
-        ArrayList<String> listOfClientsFromAdmin = oneAdmin.getListOfClients();
-        CustomCustomersAdapter adapterCustomers = new CustomCustomersAdapter(getApplicationContext(),listOfClientsFromAdmin,oneAdmin,"manager_dashboard");
-        listViewCustomers.setAdapter(adapterCustomers);
+        btnSortClients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAscending[0]) {
+                    Collections.sort(listOfClientsFromAdmin);
+                    isAscending[0] = false;
+                } else {
+                    Collections.sort(listOfClientsFromAdmin, Collections.reverseOrder());
+                    isAscending[0] = true;
+                }
+                adapterCustomers.notifyDataSetChanged();
+            }
+        });
 
+        final boolean[] isAscendingTransactions = {true};
+        btnSortTransactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAscendingTransactions[0] = !isAscendingTransactions[0];
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getTransactionID().compareTo(t2.getTransactionID());
+                        return isAscendingTransactions[0] ? result : -result;
+                    }
+                });
+                adapterTransactions.notifyDataSetChanged();
+            }
+        });
+
+        btnSortDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sort transactions by date
+                isAscendingDate[0] = !isAscendingDate[0];
+
+                // Sort transactions by date
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = new DateModelComparator().compare(t1.getDateUpdated(), t2.getDateUpdated());
+                        // If sorting in descending order, reverse the result
+                        return isAscendingDate[0] ? result : -result;
+                    }
+                });
+                adapterTransactions.notifyDataSetChanged();
+            }
+        });
+
+
+        btnSortBillerId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sort transactions by status
+                isAscendingBillerId[0] = !isAscendingBillerId[0];
+
+                // Sort transactions by biller ID
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getBillerID().compareTo(t2.getBillerID());
+                        // If sorting in descending order, reverse the result
+                        return isAscendingBillerId[0] ? result : -result;
+                    }
+                });
+                adapterTransactions.notifyDataSetChanged();
+            }
+        });
+
+        // Set listener for "View All Customers" button
         linkAllCustomers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,11 +209,15 @@ public class ManagerDashboard extends AppCompatActivity {
             }
         });
 
+        fbaseDB = FirebaseDatabase.getInstance();
+
+        // Set listener for "View All Transactions" button
         linkAllTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerDashboard.this, ViewAllTransactionsLink.class);
                 intent.putExtra("oneAdmin", oneAdmin);
+//                intent.putExtra("clientId",clientID);
                 startActivity(intent);
                 finish();
             }
@@ -144,15 +228,15 @@ public class ManagerDashboard extends AppCompatActivity {
         btnProfile = navIcons.findViewById(R.id.btnProfile);
         btnHome = navIcons.findViewById(R.id.btnHome);
 
+        // Set listener for "Profile" button
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ManagerDashboard.this, ClientProfilePageActivity.class);
+                Intent intent = new Intent(ManagerDashboard.this, ActivityManagerProfile.class);
                 intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();
             }
         });
-
     }
 }
