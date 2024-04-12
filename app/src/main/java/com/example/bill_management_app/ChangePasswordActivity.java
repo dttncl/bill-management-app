@@ -42,16 +42,26 @@ public class ChangePasswordActivity extends AppCompatActivity {
         // extract the intent extras
         Intent intent = getIntent();
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
+        Admin oneAdmin = (Admin) intent.getSerializableExtra("oneAdmin");
 
-        String oldPassword = oneClient.getPassword();
+        String oldPassword = oneAdmin.getPassword();
 
         buttonUpdateCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
-                intent.putExtra("oneClient", oneClient);
-                startActivity(intent);
-                finish();
+
+                if (oneClient != null) {
+                    Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
+                    intent.putExtra("oneClient", oneClient);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(ChangePasswordActivity.this, ActivityManagerProfile.class);
+                    intent.putExtra("oneAdmin", oneAdmin);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
 
@@ -59,57 +69,113 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String currentPassword = txtCurrentPassword.getText().toString().trim();
-                if (oldPassword.equals(currentPassword)) {
-                    String newPassword = txtNewPassword.getText().toString().trim();
-                    String newConfirmPassword = txtConfirmNewPassword.getText().toString().trim();
 
-                    if(!Validator.isValidPassword(newPassword)) {
-                        txtNewPassword.setError("Password must contain the following: \n - Between 8 and 12 characters in length.\n" +
-                                "Contain at least one digit.\n" +
-                                "Contain at least one special character [!@#$%^&*()_+\\-=[]{};':\"|,.<>/?].\n" +
-                                "Contain at least one alphabet character.");
-                        txtNewPassword.setText("");
-                        txtNewPassword.requestFocus();
-                        return;
-                    }
+                if (oneClient != null) {
+                    if (oldPassword.equals(currentPassword)) {
+                        String newPassword = txtNewPassword.getText().toString().trim();
+                        String newConfirmPassword = txtConfirmNewPassword.getText().toString().trim();
 
-                    if(!newConfirmPassword.equals(newPassword)) {
-                        txtConfirmNewPassword.setError("Password and Confirm Password does not match");
-                        txtConfirmNewPassword.setText("");
-                        return;
-                    }
-
-                    oneClient.setPassword(newPassword);
-
-                    // update auth password
-                    FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                // update clients table
-                                fbaseDB = FirebaseDatabase.getInstance();
-                                DatabaseReference clients = fbaseDB.getReference("clients");
-                                clients.child(oneClient.getUserID()).setValue(oneClient);
-
-                                Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
-                                intent.putExtra("oneClient", oneClient);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(ChangePasswordActivity.this, "Password update failed.", Toast.LENGTH_SHORT).show();
-
-                            }
+                        if(!Validator.isValidPassword(newPassword)) {
+                            txtNewPassword.setError("Password must contain the following: \n - Between 8 and 12 characters in length.\n" +
+                                    "Contain at least one digit.\n" +
+                                    "Contain at least one special character [!@#$%^&*()_+\\-=[]{};':\"|,.<>/?].\n" +
+                                    "Contain at least one alphabet character.");
+                            txtNewPassword.setText("");
+                            txtNewPassword.requestFocus();
+                            return;
                         }
-                    });
+
+                        if(!newConfirmPassword.equals(newPassword)) {
+                            txtConfirmNewPassword.setError("Password and Confirm Password does not match");
+                            txtConfirmNewPassword.setText("");
+                            return;
+                        }
+
+                        oneClient.setPassword(newPassword);
+
+                        // update auth password
+                        FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // update clients table
+                                    fbaseDB = FirebaseDatabase.getInstance();
+                                    DatabaseReference clients = fbaseDB.getReference("clients");
+                                    clients.child(oneClient.getUserID()).setValue(oneClient);
+
+                                    Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
+                                    intent.putExtra("oneClient", oneClient);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(ChangePasswordActivity.this, "Password update failed.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
 
 
 
+                    } else {
+                        txtCurrentPassword.setError("Incorrect Password");
+                        txtCurrentPassword.setText("");
+                        return;
+                    }
                 } else {
-                    txtCurrentPassword.setError("Incorrect Password");
-                    txtCurrentPassword.setText("");
-                    return;
+                    if (oldPassword.equals(currentPassword)) {
+                        String newPassword = txtNewPassword.getText().toString().trim();
+                        String newConfirmPassword = txtConfirmNewPassword.getText().toString().trim();
+
+                        if(!Validator.isValidPassword(newPassword)) {
+                            txtNewPassword.setError("Password must contain the following: \n - Between 8 and 12 characters in length.\n" +
+                                    "Contain at least one digit.\n" +
+                                    "Contain at least one special character [!@#$%^&*()_+\\-=[]{};':\"|,.<>/?].\n" +
+                                    "Contain at least one alphabet character.");
+                            txtNewPassword.setText("");
+                            txtNewPassword.requestFocus();
+                            return;
+                        }
+
+                        if(!newConfirmPassword.equals(newPassword)) {
+                            txtConfirmNewPassword.setError("Password and Confirm Password does not match");
+                            txtConfirmNewPassword.setText("");
+                            return;
+                        }
+
+                        oneAdmin.setPassword(newPassword);
+
+                        // update auth password
+                        FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // update clients table
+                                    fbaseDB = FirebaseDatabase.getInstance();
+                                    DatabaseReference clients = fbaseDB.getReference("admins");
+                                    clients.child(oneAdmin.getUserID()).setValue(oneAdmin);
+
+                                    Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ChangePasswordActivity.this, ActivityManagerProfile.class);
+                                    intent.putExtra("oneAdmin", oneAdmin);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(ChangePasswordActivity.this, "Password update failed.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+
+
+
+                    } else {
+                        txtCurrentPassword.setError("Incorrect Password");
+                        txtCurrentPassword.setText("");
+                        return;
+                    }
                 }
+
             }
         });
 

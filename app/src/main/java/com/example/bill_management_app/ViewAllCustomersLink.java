@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ViewAllCustomersLink extends AppCompatActivity {
 
@@ -24,6 +26,8 @@ public class ViewAllCustomersLink extends AppCompatActivity {
     LinearLayout navIcons;
     ImageButton btnHome, btnProfile;
     TextView textViewManagerName;
+
+    AppCompatButton btnSortClients;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,32 @@ public class ViewAllCustomersLink extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewAllCustomersLink.this, ManagerDashboard.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnSortClients = findViewById(R.id.btnSortClients);
+        final boolean[] isAscending = {false};
+        btnSortClients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAscending[0]) {
+                    Collections.sort(listOfClientsFromAdmin);
+                    isAscending[0] = false;
+                } else {
+                    Collections.sort(listOfClientsFromAdmin, Collections.reverseOrder());
+                    isAscending[0] = true;
+                }
+                adapterCustomers.notifyDataSetChanged();
+            }
+        });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewAllCustomersLink.this, ActivityManagerProfile.class);
                 intent.putExtra("oneAdmin", oneAdmin);
                 startActivity(intent);
                 finish();

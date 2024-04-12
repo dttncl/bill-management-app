@@ -273,6 +273,7 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 clientRef.child("firstName").setValue(oneClient.getFirstName());
                                 clientRef.child("lastName").setValue(oneClient.getLastName());
                                 clientRef.child("email").setValue(oneClient.getEmail());
+                                clientRef.child("phone").setValue(oneClient.getPhone());
                                 clientRef.child("password").setValue(oneClient.getPassword());
                                 clientRef.child("credit").setValue(oneClient.getCredit());
 
