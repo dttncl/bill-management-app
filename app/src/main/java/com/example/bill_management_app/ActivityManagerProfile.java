@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.telephony.PhoneNumberUtils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +57,10 @@ public class ActivityManagerProfile extends AppCompatActivity {
         assert oneAdmin != null;
         textViewRealFirstNameManager.setText(oneAdmin.getFirstName());
         textViewRealLastNameManager.setText(oneAdmin.getLastName());
-        textViewRealPhoneManager.setText(oneAdmin.getPhone());
+
+        String formattedPhone = PhoneNumberUtils.formatNumber(oneAdmin.getPhone());
+
+        textViewRealPhoneManager.setText(formattedPhone);
         textViewRealEmailManager.setText(oneAdmin.getEmail());
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +95,7 @@ public class ActivityManagerProfile extends AppCompatActivity {
 
         final String[] tempFirstName = {oneAdmin.getFirstName()};
         final String[] tempLastName = {oneAdmin.getLastName()};
-        final String[] tempPhone = {oneAdmin.getPhone()};
+        final String[] tempPhone = {oneAdmin.getPhone().trim()};
         final String[] tempEmail = {oneAdmin.getEmail()};
 
         buttonSaveChanges.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +107,7 @@ public class ActivityManagerProfile extends AppCompatActivity {
 
                 String firstName = textViewRealFirstNameManager.getText().toString();
                 String lastName = textViewRealLastNameManager.getText().toString();
-                String phone = textViewRealPhoneManager.getText().toString();
+                String phone = textViewRealPhoneManager.getText().toString().trim();
                 String email = textViewRealEmailManager.getText().toString();
 
                 boolean isChangesMade = false;
@@ -315,9 +319,11 @@ public class ActivityManagerProfile extends AppCompatActivity {
         String phone = oneAdmin.getPhone();
         String email = oneAdmin.getEmail();
 
+        String formattedPhone = PhoneNumberUtils.formatNumber(phone);
+
         textViewRealFirstNameManager.setText(firstName);
         textViewRealLastNameManager.setText(lastName);
-        textViewRealPhoneManager.setText(phone);
+        textViewRealPhoneManager.setText(formattedPhone);
         textViewRealEmailManager.setText(email);
     }
 }

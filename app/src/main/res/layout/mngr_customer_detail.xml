@@ -195,6 +195,17 @@
             android:layout_below="@id/cidTitle"
             android:textColor="@color/darkerYellow"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSaveChangesDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CustomButtonStyle3"
+            android:paddingHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Save Changes"
+            android:layout_below="@+id/customerId"
+            > </androidx.appcompat.widget.AppCompatButton>
+
     </RelativeLayout>
 
 

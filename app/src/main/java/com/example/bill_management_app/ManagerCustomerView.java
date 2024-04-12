@@ -1,11 +1,14 @@
 package com.example.bill_management_app;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +45,7 @@ public class ManagerCustomerView extends AppCompatActivity {
     TextView textViewManagerName, textViewClientId;
     EditText editTextFirstName, editTextLastName, editTextPhone, editTextEmail;
     AppCompatButton buttonFirstNameManagerPage, buttonLastNameManagerPage, buttonPhoneManagerPage, buttonEmailManagerPage;
-    AppCompatButton buttonSortTransactionManager, buttonSortDateManager, buttonSortStatusManager;
+    AppCompatButton buttonSortTransactionManager, buttonSortDateManager, buttonSortStatusManager, buttonSaveChangesDetail;
     Button linkAllTransactionsManager;
 
     FirebaseDatabase fbaseDB;
@@ -74,13 +77,18 @@ public class ManagerCustomerView extends AppCompatActivity {
         buttonPhoneManagerPage = findViewById(R.id.buttonPhoneManagerPage);
         buttonEmailManagerPage = findViewById(R.id.buttonEmailManagerPage);
 
+        buttonSaveChangesDetail = findViewById(R.id.buttonSaveChangesDetail);
+
         linkAllTransactionsManager = findViewById(R.id.linkAllTransactionsManager);
 
         textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
 
         editTextFirstName.setText(oneClient.getFirstName());
         editTextLastName.setText(oneClient.getLastName());
-        editTextPhone.setText(oneClient.getPhone());
+
+        String formattedPhone = PhoneNumberUtils.formatNumber(oneClient.getPhone());
+
+        editTextPhone.setText(formattedPhone);
         editTextEmail.setText(oneClient.getEmail());
         textViewClientId.setText(oneClient.getUserID());
 
@@ -222,6 +230,188 @@ public class ManagerCustomerView extends AppCompatActivity {
             }
         });
 
+        final String[] tempFirstName = {oneClient.getFirstName()};
+        final String[] tempLastName = {oneClient.getLastName()};
+        final String[] tempPhone = {oneClient.getPhone()};
+        final String[] tempEmail = {oneClient.getEmail()};
+
+        buttonSaveChangesDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                StringBuilder messageBuilder = new StringBuilder("Are you sure you want to make the following changes?\n");
+                StringBuilder messageNotValidated = new StringBuilder("Wrong format for:\n");
+
+                String firstName = editTextFirstName.getText().toString();
+                String lastName = editTextLastName.getText().toString();
+                String phone = editTextPhone.getText().toString();
+                String email = editTextEmail.getText().toString();
+
+                boolean isChangesMade = false;
+                boolean isValidated = true;
+
+                if(!tempFirstName[0].equals(firstName)) {
+                    messageBuilder.append("\n - First name from " + tempFirstName[0] + " to " + firstName + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempLastName[0].equals(lastName)) {
+                    messageBuilder.append("\n - Last name from " + tempLastName[0] + " to " + lastName + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempPhone[0].equals(phone)) {
+                    messageBuilder.append("\n - Phone from " + tempPhone[0] + " to " + phone + ".");
+                    isChangesMade = true;
+                }
+
+                if(!tempEmail[0].equals(email)) {
+                    messageBuilder.append("\n - Email from " + tempEmail[0] + " to " + email + ".");
+                    isChangesMade = true;
+                }
+
+                if(!Validator.isValidName(firstName)) {
+                    messageNotValidated.append("\n - First Name.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidName(lastName)) {
+                    messageNotValidated.append("\n - Last Name.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidPhone(phone)) {
+                    messageNotValidated.append("\n - Phone.");
+                    isValidated = false;
+                }
+
+                if(!Validator.isValidEmail(email)) {
+                    messageNotValidated.append("\n - Email.");
+                    isValidated = false;
+                }
+
+                if (!isChangesMade) {
+                    AlertDialog.Builder noChangesDialog = new AlertDialog.Builder(ManagerCustomerView.this);
+                    noChangesDialog.setTitle("No Changes Made")
+                            .setMessage("No changes were made.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Dismiss the dialog
+                                    DisplayProfile(oneClient);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
+                if (!isValidated) {
+                    AlertDialog.Builder noChangesDialog = new AlertDialog.Builder(ManagerCustomerView.this);
+                    noChangesDialog.setTitle("Error")
+                            .setMessage(messageNotValidated)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    editTextFirstName.setText(tempFirstName[0]);
+                                    editTextLastName.setText(tempLastName[0]);
+                                    editTextPhone.setText(tempPhone[0]);
+                                    editTextEmail.setText(tempEmail[0]);
+
+                                    buttonFirstNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonLastNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonPhoneManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                    buttonEmailManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                    editTextFirstName.setFocusable(false);
+                                    editTextLastName.setFocusable(false);
+                                    editTextPhone.setFocusable(false);
+                                    editTextEmail.setFocusable(false);
+
+                                    DisplayProfile(oneClient);
+
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ManagerCustomerView.this);
+                builder.setTitle("Review your changes")
+                        .setMessage(messageBuilder)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nfName = editTextFirstName.getText().toString().trim();
+                                String nlName = editTextLastName.getText().toString().trim();
+                                String nPhone = editTextPhone.getText().toString().trim();
+                                String nEmail = editTextEmail.getText().toString().trim();
+
+                                oneClient.setFirstName(nfName);
+                                oneClient.setLastName(nlName);
+                                oneClient.setPhone(nPhone);
+                                oneClient.setEmail(nEmail);
+
+                                tempFirstName[0] = nfName;
+                                tempLastName[0] = nlName;
+                                tempPhone[0] = nPhone;
+                                tempEmail[0] = nEmail;
+
+                                Toast.makeText(ManagerCustomerView.this, "Successfully Updated Profile", Toast.LENGTH_LONG).show();
+
+                                fbaseDB = FirebaseDatabase.getInstance();
+                                DatabaseReference clients = fbaseDB.getReference("clients");
+
+                                //clients.child(oneClient.getUserID()).setValue(oneClient);
+                                DatabaseReference clientsRef = clients.child(oneClient.getUserID());
+                                clientsRef.child("firstName").setValue(oneClient.getFirstName());
+                                clientsRef.child("lastName").setValue(oneClient.getLastName());
+                                clientsRef.child("email").setValue(oneClient.getEmail());
+                                clientsRef.child("phone").setValue(oneClient.getPhone());
+
+                                buttonFirstNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonLastNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonPhoneManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonEmailManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                editTextFirstName.setFocusable(false);
+                                editTextLastName.setFocusable(false);
+                                editTextPhone.setFocusable(false);
+                                editTextEmail.setFocusable(false);
+
+                                DisplayProfile(oneClient);
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                editTextFirstName.setText(tempFirstName[0]);
+                                editTextLastName.setText(tempLastName[0]);
+                                editTextPhone.setText(tempPhone[0]);
+                                editTextEmail.setText(tempEmail[0]);
+
+                                buttonFirstNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonLastNameManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonPhoneManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+                                buttonEmailManagerPage.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_edit_24,0,0,0);
+
+                                editTextFirstName.setFocusable(false);
+                                editTextLastName.setFocusable(false);
+                                editTextPhone.setFocusable(false);
+                                editTextEmail.setFocusable(false);
+
+                                DisplayProfile(oneClient);
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
 
 
         onClickEditButton(editTextFirstName,buttonFirstNameManagerPage);
@@ -260,5 +450,19 @@ public class ManagerCustomerView extends AppCompatActivity {
                 toggleFocusable(editText, isChecked[0]);
             }
         });
+    }
+
+    private void DisplayProfile (Client oneClient){
+        String firstName = oneClient.getFirstName();
+        String lastName = oneClient.getLastName();
+        String phone = oneClient.getPhone();
+        String email = oneClient.getEmail();
+
+        String formattedPhone = PhoneNumberUtils.formatNumber(phone);
+
+        editTextFirstName.setText(firstName);
+        editTextLastName.setText(lastName);
+        editTextPhone.setText(formattedPhone);
+        editTextEmail.setText(email);
     }
 }
