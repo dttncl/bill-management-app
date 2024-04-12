@@ -195,8 +195,8 @@ public class LoginPageActivity extends AppCompatActivity {
 
                         oneClient.setListOfBills(listOfBills);
 
+                        // trigger notification
                         if (oneClient != null) {
-                            //boolean isDue = checkBillsForClient(oneClient);
                             checkBillsForClient(oneClient, new OnCheckCompleteListener() {
                                 @Override
                                 public void onCheckComplete(boolean isDue) {
@@ -343,7 +343,7 @@ public class LoginPageActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         String title = "Buzz! Buzz!";
-        String content = "Reminder: A bill is due today. Kindly check your dashboard for more details.";
+        String content = "Reminder: An unpaid bill is due today. Kindly check your dashboard for more details.";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.bee_nobg)
                 .setContentTitle(title)

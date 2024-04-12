@@ -89,7 +89,7 @@ public class ManagerCustomerView extends AppCompatActivity {
         ViewGroup headerTransacHistory = (ViewGroup)inflaterTransacHistory.inflate(R.layout.list_cust_transactions_header,listViewTransactions,false);
         listViewTransactions.addHeaderView(headerTransacHistory,null,false);
 
-        // display list of transactions
+        // display list of transaction history
         ArrayList<Transaction> listOfTransactions = new ArrayList<>();
         DatabaseReference transactions = fbaseDB.getReference("transactions");
         CustomTransactionsHistoryAdapter adapterTransacHistory = new CustomTransactionsHistoryAdapter(getApplicationContext(),listOfTransactions,oneAdmin,oneClient,"manager_customer_dashboard");
@@ -191,32 +191,11 @@ public class ManagerCustomerView extends AppCompatActivity {
         btnProfile = navIcons.findViewById(R.id.btnProfile);
         btnHome = navIcons.findViewById(R.id.btnHome);
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ManagerCustomerView.this, ClientProfilePageActivity.class);
-                intent.putExtra("oneAdmin", oneAdmin);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerCustomerView.this, ManagerDashboard.class);
                 intent.putExtra("oneAdmin", oneAdmin);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        linkAllTransactionsManager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ManagerCustomerView.this, ViewAllTransactionsLink.class);
-                intent.putExtra("oneAdmin", oneAdmin);
-                intent.putExtra("clientId",oneClient.getUserID());
                 startActivity(intent);
                 finish();
             }
@@ -231,6 +210,19 @@ public class ManagerCustomerView extends AppCompatActivity {
                 finish();
             }
         });
+
+        linkAllTransactionsManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerCustomerView.this, ViewAllTransactionsHistoryLink.class);
+                intent.putExtra("oneAdmin", oneAdmin);
+                intent.putExtra("oneClient",oneClient);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
 
         onClickEditButton(editTextFirstName,buttonFirstNameManagerPage);
         onClickEditButton(editTextLastName,buttonLastNameManagerPage);

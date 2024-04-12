@@ -83,7 +83,7 @@ public class ManagerDashboard extends AppCompatActivity {
 
         // display list of transactions
         ArrayList<Transaction> listOfTransactions = new ArrayList<>();
-        CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard");
+        CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin,  "manager_dashboard");
         listViewTransactions.setAdapter(adapterTransactions);
 
         DatabaseReference transactions = fbaseDB.getReference("transactions");

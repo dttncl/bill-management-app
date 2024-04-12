@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -52,7 +53,9 @@ public class ViewAllTransactionsLink extends AppCompatActivity {
         // extract the intent extras
         Intent intent = getIntent();
         Admin oneAdmin = (Admin) intent.getSerializableExtra("oneAdmin");
-        String clientId = intent.getStringExtra("clientId");
+        Client oneClient = (Client) intent.getSerializableExtra("oneClient");
+        String sender = intent.getStringExtra("sender");
+
 
         if (oneAdmin != null) {
             textViewManagerName.setText("Hello, " + oneAdmin.getFirstName());
@@ -68,45 +71,46 @@ public class ViewAllTransactionsLink extends AppCompatActivity {
         // display list of transactions
         ArrayList<Transaction> listOfTransactions = new ArrayList<>();
         DatabaseReference transactions = fbaseDB.getReference("transactions");
-
         CustomTransactionsAdapter adapterTransactions = new CustomTransactionsAdapter(getApplicationContext(), listOfTransactions, oneAdmin, "manager_dashboard_expanded");
         listViewTransactions.setAdapter(adapterTransactions);
 
         transactions.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    //Transaction transaction = snapshot.getValue(Transaction.class);
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    Transaction oneTransaction;
-                    String transactionID = snapshot.child("transactionID").getValue(String.class);
+                        Transaction oneTransaction;
+                        String transactionID = snapshot.child("transactionID").getValue(String.class);
 
-                    String billerID = snapshot.child("billerID").getValue(String.class);
-                    int billID = snapshot.child("billID").getValue(Integer.class);
+                        String billerID = snapshot.child("billerID").getValue(String.class);
+                        int billID = snapshot.child("billID").getValue(Integer.class);
 
-                    DataSnapshot dateSnapshot = snapshot.child("dateUpdated");
-                    int day = dateSnapshot.child("day").getValue(Integer.class);
-                    int month = dateSnapshot.child("month").getValue(Integer.class);
-                    int year = dateSnapshot.child("year").getValue(Integer.class);
-                    DateModel dateUpdated = new DateModel(day, month, year);
+                        DataSnapshot dateSnapshot = snapshot.child("dateUpdated");
+                        int day = dateSnapshot.child("day").getValue(Integer.class);
+                        int month = dateSnapshot.child("month").getValue(Integer.class);
+                        int year = dateSnapshot.child("year").getValue(Integer.class);
+                        DateModel dateUpdated = new DateModel(day, month, year);
 
-                    double amount = snapshot.child("amount").getValue(Double.class);
-                    EnumTransactionStatus status = EnumTransactionStatus.valueOf(snapshot.child("status").getValue(String.class));
+                        double amount = snapshot.child("amount").getValue(Double.class);
+                        EnumTransactionStatus status = EnumTransactionStatus.valueOf(snapshot.child("status").getValue(String.class));
 
-                    oneTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
+                        oneTransaction = new Transaction(transactionID, billerID, billID, dateUpdated, amount, status);
 
-                    if (oneTransaction != null) {
-                        listOfTransactions.add(oneTransaction);
+                        if (oneTransaction != null) {
+                            listOfTransactions.add(oneTransaction);
+                        }
                     }
+
+                    adapterTransactions.notifyDataSetChanged();;
                 }
 
-                adapterTransactions.notifyDataSetChanged();;
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+
+
 
         // HEADER ICONS FUNCTIONALITY
         navIcons = findViewById(R.id.includeTopIcons);

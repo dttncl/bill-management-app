@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Transaction {
 
-    private String transactionID;
-    private String billerID;
-    private int billID;
-    private DateModel dateUpdated;
-    private double amount;
-    private EnumTransactionStatus status;
+        private String transactionID;
+        private String billerID;
+        private int billID;
+        private DateModel dateUpdated;
+        private double amount;
+        private EnumTransactionStatus status;
 
     public Transaction() {
         transactionID = "";
