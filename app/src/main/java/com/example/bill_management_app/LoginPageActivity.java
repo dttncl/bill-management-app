@@ -127,7 +127,7 @@ public class LoginPageActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    Toast.makeText(LoginPageActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginPageActivity.this, "Invalid email or password.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

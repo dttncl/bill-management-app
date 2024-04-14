@@ -100,7 +100,7 @@ public class RegisterPageActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(RegisterPageActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPageActivity.this, "This user already exists.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
