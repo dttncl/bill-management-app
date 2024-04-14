@@ -61,9 +61,6 @@ public class BillDetailsActivity extends AppCompatActivity {
     FirebaseDatabase fbaseDB;
 
     Button buttonModify, buttonDelete, buttonPayNow;
-    //String publishableKey = "PUB_KEY";
-    //String secretKey = "SECRET_KEY";
-
     String publishableKey = "pk_test_51OykuDJJZhzbFhSM6mBfPSkDdDijstc6322RrgAKusLOS6dVPS2O1EtkzXNrjD1FWxTvUOBVgtZjHRaEwotiRawm00YIuixeUV";
     String secretKey = "sk_test_51OykuDJJZhzbFhSMFO9fWjqZ7nkpNhUZQq2phyLQv8QFvwrA2Rttwu0no9LorNDxrciYpmykL5nLQKy7idbTfkaw001ovvJXCr";
 

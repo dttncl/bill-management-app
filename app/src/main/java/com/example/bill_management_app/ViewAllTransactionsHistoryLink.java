@@ -27,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ViewAllTransactionsHistoryLink extends AppCompatActivity {
 
@@ -124,6 +126,63 @@ public class ViewAllTransactionsHistoryLink extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        buttonSortTransactionManager = findViewById(R.id.btnSortTransactionsManager);
+        buttonSortDateManager = findViewById(R.id.btnSortDateManager);
+        buttonSortStatusManager = findViewById(R.id.btnSortStatusManager);
+
+        final boolean[] isAscendingTransaction = {true};
+        final boolean[] isAscendingDate = {true};
+        final boolean[] isAscendingStatus = {true};
+
+        buttonSortTransactionManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAscendingTransaction[0] = !isAscendingTransaction[0];
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getTransactionID().compareTo(t2.getTransactionID());
+                        return isAscendingTransaction[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
+            }
+        });
+
+        buttonSortDateManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sort transactions by date
+                isAscendingDate[0] = !isAscendingDate[0];
+
+                // Sort transactions by date
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = new DateModelComparator().compare(t1.getDateUpdated(), t2.getDateUpdated());
+                        // If sorting in descending order, reverse the result
+                        return isAscendingDate[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
+            }
+        });
+
+        buttonSortStatusManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAscendingStatus[0] = !isAscendingStatus[0];
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction t1, Transaction t2) {
+                        int result = t1.getStatus().compareTo(t2.getStatus());
+                        return isAscendingStatus[0] ? result : -result;
+                    }
+                });
+                adapterTransacHistory.notifyDataSetChanged();
             }
         });
 

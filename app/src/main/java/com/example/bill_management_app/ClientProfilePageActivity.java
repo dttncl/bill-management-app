@@ -3,6 +3,7 @@ package com.example.bill_management_app;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -336,9 +337,11 @@ public class ClientProfilePageActivity extends AppCompatActivity {
         String email = oneClient.getEmail();
         double credit = oneClient.getCredit();
 
+        String formattedPhone = PhoneNumberUtils.formatNumber(phone);
+
         textViewFirstName.setText(firstName);
         textViewLastName.setText(lastName);
-        textViewPhone.setText(phone);
+        textViewPhone.setText(formattedPhone);
         textViewEmail.setText(email);
         textViewCredit.setText(formatCreditText(credit));
     }
