@@ -44,8 +44,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         Client oneClient = (Client) intent.getSerializableExtra("oneClient");
         Admin oneAdmin = (Admin) intent.getSerializableExtra("oneAdmin");
 
-        String oldPassword = oneAdmin.getPassword();
-
         buttonUpdateCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +69,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 String currentPassword = txtCurrentPassword.getText().toString().trim();
 
                 if (oneClient != null) {
+                    String oldPassword = oneClient.getPassword();
                     if (oldPassword.equals(currentPassword)) {
                         String newPassword = txtNewPassword.getText().toString().trim();
                         String newConfirmPassword = txtConfirmNewPassword.getText().toString().trim();
@@ -123,6 +122,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         return;
                     }
                 } else {
+                    String oldPassword = oneAdmin.getPassword();
+
                     if (oldPassword.equals(currentPassword)) {
                         String newPassword = txtNewPassword.getText().toString().trim();
                         String newConfirmPassword = txtConfirmNewPassword.getText().toString().trim();

@@ -112,7 +112,6 @@ public class LoginPageActivity extends AppCompatActivity {
 
                                 if (userType.equals(EnumUserType.Client.toString())) {
                                     LoginAsClient(userId);
-
                                 } else {
                                     LoginAsAdmin(userId);
                                 }

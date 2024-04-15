@@ -34,7 +34,7 @@ public class CustomTransactionsAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (displayType.equals("manager_dashboard")) {
-            return Math.min(transactionList.size(), 5);
+            return Math.min(transactionList.size(), 3);
         } else {
             return transactionList.size();
         }
