@@ -34,4 +34,5 @@ public class Admin extends User implements Serializable {
     public void setListOfBillers(ArrayList<String> listOfBillers) {
         this.listOfBillers = listOfBillers;
     }
+
 }

@@ -94,11 +94,25 @@ public class CustomCustomersAdapter extends BaseAdapter {
 
                                 ArrayList<String> listOfBills = new ArrayList<>();
 
-                                for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
-                                    if (billSnapshot.getValue(boolean.class)) {
-                                        listOfBills.add(billSnapshot.getKey());
+                                DataSnapshot listOfBillsSnapshot = childSnapshot.child("listOfBills");
+
+                                if (listOfBillsSnapshot.exists()) {
+                                    listOfBills = new ArrayList<>();
+                                    for (DataSnapshot billSnapshot : listOfBillsSnapshot.getChildren()) {
+                                        Object billValue = billSnapshot.getValue();
+                                        if (billValue instanceof Boolean && (Boolean) billValue) {
+                                            listOfBills.add(billSnapshot.getKey());
+                                        }
                                     }
+                                } else {
+                                    listOfBills = new ArrayList<>();
                                 }
+
+//                                for (DataSnapshot billSnapshot : childSnapshot.child("listOfBills").getChildren()) {
+//                                    if (billSnapshot.getValue(boolean.class)) {
+//                                        listOfBills.add(billSnapshot.getKey());
+//                                    }
+//                                }
 
                                 oneClient.setListOfBills(listOfBills);
 

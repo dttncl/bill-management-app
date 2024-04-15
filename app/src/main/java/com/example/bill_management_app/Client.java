@@ -36,5 +36,4 @@ public class Client extends User implements Serializable {
         this.listOfBills = listOfBills;
     }
 
-
 }
