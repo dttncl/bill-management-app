@@ -269,7 +269,6 @@ public class ClientProfilePageActivity extends AppCompatActivity {
                                 fbaseDB = FirebaseDatabase.getInstance();
                                 DatabaseReference clients = fbaseDB.getReference("clients");
 
-                                //clients.child(oneClient.getUserID()).setValue(oneClient);
                                 DatabaseReference clientRef = clients.child(oneClient.getUserID());
                                 clientRef.child("firstName").setValue(oneClient.getFirstName());
                                 clientRef.child("lastName").setValue(oneClient.getLastName());

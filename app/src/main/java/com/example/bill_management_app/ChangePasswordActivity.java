@@ -100,7 +100,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                     // update clients table
                                     fbaseDB = FirebaseDatabase.getInstance();
                                     DatabaseReference clients = fbaseDB.getReference("clients");
-                                    clients.child(oneClient.getUserID()).setValue(oneClient);
+                                    //clients.child(oneClient.getUserID()).setValue(oneClient);
+                                    clients.child(oneClient.getUserID()).child("password").setValue(oneClient.getPassword());
 
                                     Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(ChangePasswordActivity.this, ClientProfilePageActivity.class);
@@ -153,8 +154,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // update clients table
                                     fbaseDB = FirebaseDatabase.getInstance();
-                                    DatabaseReference clients = fbaseDB.getReference("admins");
-                                    clients.child(oneAdmin.getUserID()).setValue(oneAdmin);
+                                    DatabaseReference admins = fbaseDB.getReference("admins");
+                                    //clients.child(oneAdmin.getUserID()).setValue(oneAdmin);
+                                    admins.child(oneAdmin.getUserID()).child("password").setValue(oneAdmin.getPassword());
+
 
                                     Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(ChangePasswordActivity.this, ActivityManagerProfile.class);
