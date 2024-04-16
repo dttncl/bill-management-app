@@ -15,6 +15,6 @@ Don't let bills sting – let BillBee keep your finances buzzing!
 BillBee is my final project for Android development utilizing Java and XML layouts. This app is integrated with Stripe for effective and seamless bills payment processes.
 
 ### 📸 Snapshots
-![image](https://github.com/dttncl/bill-management-app/assets/82695034/a48a9caf-ad35-4fc4-854a-8d4545695964)
-![image](https://github.com/dttncl/bill-management-app/assets/82695034/7e05691a-daeb-4ce9-a7f1-b24e633c45d6)
-
+![1](https://github.com/dttncl/bill-management-app/assets/82695034/04d801c1-2db0-4d8a-834f-861fd831706b)
+![8](https://github.com/dttncl/bill-management-app/assets/82695034/34ee3d9e-5e5e-4d93-9b78-28aa4580373c)
+![9](https://github.com/dttncl/bill-management-app/assets/82695034/f5871766-77e2-4dad-ba7b-e9f4b254382d)
