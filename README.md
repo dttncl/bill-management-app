@@ -4,8 +4,6 @@ Stay ahead of your bills with BillBee: the hive for hassle-free bill management!
 Buzz through due dates, track expenses, and sweeten your financial life with ease.<br>
 Don't let bills sting – let BillBee keep your finances buzzing!
 
-### 💻 Ongoing Dev
-
 ### 🛒 Features
 
 1. Centralized platform to organize all their bills and invoices in one place
